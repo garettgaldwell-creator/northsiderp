@@ -1,0 +1,17 @@
+# Fichiers systeme
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Fichiers temporaires
+*.tmp
+*.log
+
+# Ne pas versionner le script de generation
+gen.py

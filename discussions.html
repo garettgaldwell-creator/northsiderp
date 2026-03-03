@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Discussions &mdash; NORTHSIDE RP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="header-top">Serveur en developpement &mdash; Ouverture prochaine</div>
+  <div class="header-main">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">N</div>
+      <div><span class="logo-name">NORTHSIDE RP</span><span class="logo-sub">Serious Roleplay &mdash; GarrysMod</span></div>
+    </a>
+    <nav>
+      <a href="index.html" id="nh">Forum</a>
+      <a href="reglement.html" id="nr">Reglement</a>
+      <a href="candidatures.html" id="nc">Candidatures</a>
+      <a href="boutique.html" id="nb">Boutique</a>
+    </nav>
+    <div class="header-actions">
+      <a href="login.html" class="btn btn-ghost">Connexion</a>
+      <a href="register.html" class="btn btn-red">S'inscrire</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu(this)"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Forum</a>
+    <a href="reglement.html">Reglement</a>
+    <a href="candidatures.html">Candidatures</a>
+    <a href="boutique.html">Boutique</a>
+    <div class="mobile-menu-actions">
+      <a href="login.html" class="btn btn-ghost" style="flex:1">Connexion</a>
+      <a href="register.html" class="btn btn-red" style="flex:1">S'inscrire</a>
+    </div>
+  </div>
+</header>
+<div class="page-hero">
+  <div class="page-hero-bg">CHAT</div>
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Forum</a> &rsaquo; <span>Discussions</span></div>
+    <div class="page-title">&#128172; Discussions <span>Generales</span></div>
+    <div class="page-sub">Echangez librement avec la communaute</div>
+  </div>
+</div>
+<div class="container">
+<main class="fu">
+  <div style="margin-bottom:16px;display:flex;justify-content:flex-end"><a href="nouveau-sujet.html" class="btn btn-red">+ Nouveau sujet</a></div>
+  <div class="section-header"><span class="section-title">Discussions Generales</span><span class="section-meta">0 sujet</span></div>
+  <div class="thread" style="justify-content:center;padding:40px;background:var(--dark);border:1px solid var(--border);border-top:none">
+    <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:#2a2a2a;letter-spacing:3px">VIDE</div><div style="font-size:13px;color:#555;margin-top:4px">Lancez la premiere discussion !</div><a href="nouveau-sujet.html" style="display:inline-block;margin-top:16px" class="btn btn-red">Creer un sujet</a></div>
+  </div>
+</main><aside class="sidebar">
+  <div class="discord-widget">
+    <div style="font-size:28px;margin-bottom:8px">&#127918;</div>
+    <div class="discord-text">Discord Officiel</div>
+    <div class="discord-sub">Rejoignez la communaute</div>
+    <button class="btn-discord">Rejoindre le Discord</button>
+  </div>
+  <div class="widget">
+    <div class="widget-header"><div class="widget-accent"></div><span class="widget-title">En Ligne</span></div>
+    <div class="widget-body">
+      <div class="online-list">
+        <div class="online-user"><div class="online-dot admin"></div><span style="color:#e74c3c">Admin</span></div>
+        <div class="online-user"><div class="online-dot"></div><span>Joueur</span></div>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:#555;text-transform:uppercase">2 membres en ligne</div>
+    </div>
+  </div>
+  <div class="widget">
+    <div class="widget-header"><div class="widget-accent"></div><span class="widget-title">Regles Essentielles</span></div>
+    <div class="widget-body">
+      <div class="rule-item"><div class="rule-num">01</div><div>Pas de BreakRP en jeu</div></div>
+      <div class="rule-item"><div class="rule-num">02</div><div>Pas de RDM, KOS ou metagaming</div></div>
+      <div class="rule-item"><div class="rule-num">03</div><div>Respectez les joueurs et le staff</div></div>
+      <div class="rule-item"><div class="rule-num">04</div><div>Toute triche = ban definitif</div></div>
+      <a href="reglement.html" class="btn btn-ghost btn-full" style="margin-top:12px;font-size:11px">Reglement Complet</a>
+    </div>
+  </div>
+</aside></div>
+<footer>
+  <div class="footer-logo"><span>NORTH</span>SIDE RP</div>
+  <div class="footer-links">
+    <a href="reglement.html">Reglement</a>
+    <a href="#">Mentions legales</a>
+    <a href="#">Contact</a>
+    <a href="#">Discord</a>
+  </div>
+  <div class="footer-copy">2026 Northside RP &mdash; Tous droits reserves</div>
+</footer>
+<script>
+function toggleMenu(btn){btn.classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('open')}
+document.addEventListener('click',function(e){var m=document.getElementById('mobileMenu'),h=document.querySelector('.hamburger');if(m&&h&&!m.contains(e.target)&&!h.contains(e.target)){m.classList.remove('open');h.classList.remove('open')}});
+</script>
+<script>var el=document.getElementById('nh');if(el)el.classList.add('active');</script>
+</body>
+</html>

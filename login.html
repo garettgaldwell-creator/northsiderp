@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Connexion &mdash; NORTHSIDE RP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="header-top">Serveur en developpement &mdash; Ouverture prochaine</div>
+  <div class="header-main">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">N</div>
+      <div><span class="logo-name">NORTHSIDE RP</span><span class="logo-sub">Serious Roleplay &mdash; GarrysMod</span></div>
+    </a>
+    <nav>
+      <a href="index.html" id="nh">Forum</a>
+      <a href="reglement.html" id="nr">Reglement</a>
+      <a href="candidatures.html" id="nc">Candidatures</a>
+      <a href="boutique.html" id="nb">Boutique</a>
+    </nav>
+    <div class="header-actions">
+      <a href="login.html" class="btn btn-ghost">Connexion</a>
+      <a href="register.html" class="btn btn-red">S'inscrire</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu(this)"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Forum</a>
+    <a href="reglement.html">Reglement</a>
+    <a href="candidatures.html">Candidatures</a>
+    <a href="boutique.html">Boutique</a>
+    <div class="mobile-menu-actions">
+      <a href="login.html" class="btn btn-ghost" style="flex:1">Connexion</a>
+      <a href="register.html" class="btn btn-red" style="flex:1">S'inscrire</a>
+    </div>
+  </div>
+</header>
+
+<div class="auth-wrap">
+  <div class="auth-card fu">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">N</div>
+      <div class="auth-title">Connexion</div>
+      <div class="auth-sub">Content de vous revoir sur Northside RP</div>
+    </div>
+    <div class="form-group"><label class="form-label">Nom d'utilisateur</label><input class="form-input" placeholder="Votre pseudo"></div>
+    <div class="form-group"><label class="form-label">Mot de passe</label><input class="form-input" type="password" placeholder="••••••••"></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:20px"><a href="#" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;color:#555;transition:color .2s" onmouseover="this.style.color='#e74c3c'" onmouseout="this.style.color='#555'">Mot de passe oublie ?</a></div>
+    <button class="btn btn-red btn-full" style="font-size:13px;padding:11px" onclick="this.textContent='Connexion...';setTimeout(()=>window.location='index.html',800)">Se connecter</button>
+    <hr class="form-divider">
+    <div style="text-align:center;font-size:13px;color:#555">Pas encore de compte ? <a href="register.html" style="color:var(--red-bright);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px">S'inscrire</a></div>
+    <div style="margin-top:12px;text-align:center"><a href="index.html" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#444;transition:color .2s" onmouseover="this.style.color='#888'" onmouseout="this.style.color='#444'">&larr; Retour au forum</a></div>
+  </div>
+</div>
+<footer>
+  <div class="footer-logo"><span>NORTH</span>SIDE RP</div>
+  <div class="footer-links">
+    <a href="reglement.html">Reglement</a>
+    <a href="#">Mentions legales</a>
+    <a href="#">Contact</a>
+    <a href="#">Discord</a>
+  </div>
+  <div class="footer-copy">2026 Northside RP &mdash; Tous droits reserves</div>
+</footer>
+<script>
+function toggleMenu(btn){btn.classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('open')}
+document.addEventListener('click',function(e){var m=document.getElementById('mobileMenu'),h=document.querySelector('.hamburger');if(m&&h&&!m.contains(e.target)&&!h.contains(e.target)){m.classList.remove('open');h.classList.remove('open')}});
+</script>
+<script>var el=document.getElementById('nh');if(el)el.classList.add('active');</script>
+</body>
+</html>
