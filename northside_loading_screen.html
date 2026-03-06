@@ -3,557 +3,918 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Northside RP — Loading Screen</title>
+  <title>Northside RP — Loading</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #070707;
-      --bg-soft: rgba(8, 8, 8, 0.72);
-      --line: rgba(255, 70, 70, 0.18);
-      --line-soft: rgba(255, 255, 255, 0.06);
-      --red: #d93b3b;
-      --red-2: #ff5b5b;
-      --red-3: #8f1f1f;
-      --text: #f2f2f2;
-      --muted: #c8c8c8;
-      --shadow: 0 20px 60px rgba(0,0,0,0.55);
+      --red:     #c0392b;
+      --red-hot: #ff4d3a;
+      --red-dim: #7a1f16;
+      --gold:    #d4a843;
+      --bg:      #050507;
+      --panel:   rgba(8, 8, 12, 0.82);
+      --text:    #e8e4de;
+      --muted:   #7a7672;
+      --line:    rgba(192, 57, 43, 0.25);
     }
 
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       overflow: hidden;
       background: var(--bg);
       color: var(--text);
-      font-family: Inter, system-ui, sans-serif;
+      font-family: 'Rajdhani', sans-serif;
     }
 
-    body {
-      position: relative;
-      background:
-        radial-gradient(circle at 50% 35%, rgba(217,59,59,0.18), transparent 30%),
-        radial-gradient(circle at 50% 100%, rgba(217,59,59,0.10), transparent 40%),
-        linear-gradient(180deg, #0a0909 0%, #070707 100%);
-    }
-
-    .background {
-      position: absolute;
+    /* ─── CANVAS PARTICULES ─── */
+    #canvas {
+      position: fixed;
       inset: 0;
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,0.28), rgba(0,0,0,0.58)),
-        url('YOUR_IMAGE_HERE.png') center center / cover no-repeat;
-      filter: saturate(1.05) brightness(0.58);
-      transform: scale(1.03);
-      animation: zoomDrift 18s ease-in-out infinite alternate;
+      z-index: 0;
+      opacity: 0.55;
     }
 
-    .overlay {
-      position: absolute;
+    /* ─── FOND IMAGE ─── */
+    .bg-image {
+      position: fixed;
       inset: 0;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.32) 35%, rgba(0,0,0,0.5) 100%),
-        radial-gradient(circle at 50% 30%, rgba(255, 64, 64, 0.08), transparent 30%);
-      pointer-events: none;
+      z-index: 1;
+      background: url('YOUR_IMAGE_HERE.jpg') center/cover no-repeat;
+      filter: brightness(0.28) saturate(0.7);
+      animation: bgDrift 22s ease-in-out infinite alternate;
+      transform-origin: center center;
     }
 
-    .grid {
-      position: absolute;
+    @keyframes bgDrift {
+      0%   { transform: scale(1.06) translate(0px, 0px); }
+      33%  { transform: scale(1.09) translate(-8px, -5px); }
+      66%  { transform: scale(1.07) translate(6px, -8px); }
+      100% { transform: scale(1.1)  translate(-4px, 4px); }
+    }
+
+    /* ─── VIGNETTE ─── */
+    .vignette {
+      position: fixed;
       inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
-      opacity: .35;
-    }
-
-    .noise {
-      position: absolute;
-      inset: 0;
-      opacity: 0.05;
-      pointer-events: none;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter><rect width="120" height="120" filter="url(%23n)" opacity="1"/></svg>');
-      mix-blend-mode: screen;
-    }
-
-    .frame {
-      position: relative;
       z-index: 2;
-      height: 100%;
-      width: 100%;
-      display: grid;
-      place-items: center;
-      padding: 32px;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 45%, transparent 0%, rgba(0,0,0,0.72) 100%),
+        linear-gradient(to bottom, rgba(5,5,7,0.55) 0%, transparent 25%, transparent 70%, rgba(5,5,7,0.9) 100%);
+      pointer-events: none;
     }
 
-    .content {
-      width: min(1200px, 100%);
-      display: grid;
-      grid-template-rows: 1fr auto auto;
-      gap: 24px;
-      align-items: center;
-      min-height: 100%;
+    /* ─── LUEUR ROUGE AMBIANCE ─── */
+    .glow-orb {
+      position: fixed;
+      z-index: 2;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+      animation: orbPulse 6s ease-in-out infinite;
+    }
+    .glow-orb.top {
+      width: 600px; height: 300px;
+      top: -80px; left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(192,57,43,0.22), transparent 70%);
+    }
+    .glow-orb.bottom {
+      width: 800px; height: 200px;
+      bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(192,57,43,0.12), transparent 70%);
+      animation-delay: -3s;
+    }
+    @keyframes orbPulse {
+      0%, 100% { opacity: 0.7; }
+      50%       { opacity: 1; }
     }
 
+    /* ─── LIGNES SCANLINES ─── */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.06) 2px,
+        rgba(0,0,0,0.06) 4px
+      );
+    }
+
+    /* ─── COINS DECORATIFS ─── */
+    .corners {
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .corner {
+      position: absolute;
+      width: 56px; height: 56px;
+    }
+    .corner::before, .corner::after {
+      content: '';
+      position: absolute;
+      background: var(--red);
+    }
+    .corner::before { width: 100%; height: 1px; }
+    .corner::after  { width: 1px; height: 100%; }
+    .corner.tl { top: 20px; left: 20px; }
+    .corner.tl::before { top: 0; left: 0; }
+    .corner.tl::after  { top: 0; left: 0; }
+    .corner.tr { top: 20px; right: 20px; transform: scaleX(-1); }
+    .corner.tr::before { top: 0; left: 0; }
+    .corner.tr::after  { top: 0; left: 0; }
+    .corner.bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
+    .corner.bl::before { top: 0; left: 0; }
+    .corner.bl::after  { top: 0; left: 0; }
+    .corner.br { bottom: 20px; right: 20px; transform: scale(-1); }
+    .corner.br::before { top: 0; left: 0; }
+    .corner.br::after  { top: 0; left: 0; }
+
+    /* ─── LIGNE HORIZONTALE TOP ─── */
+    .h-line-top, .h-line-bot {
+      position: fixed;
+      left: 0; right: 0;
+      height: 1px;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .h-line-top {
+      top: 68px;
+      background: linear-gradient(90deg, transparent, var(--red) 20%, var(--red) 80%, transparent);
+      opacity: 0.3;
+    }
+    .h-line-bot {
+      bottom: 78px;
+      background: linear-gradient(90deg, transparent, var(--red) 20%, var(--red) 80%, transparent);
+      opacity: 0.2;
+    }
+
+    /* ─── LAYOUT ─── */
+    .frame {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 36px;
+      animation: fadeIn 1.2s ease both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── TOPBAR ─── */
     .topbar {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
       color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.18em;
       text-transform: uppercase;
-      font-weight: 600;
     }
+    .topbar-left { display: flex; gap: 20px; align-items: center; }
+    .topbar-right { display: flex; gap: 20px; align-items: center; }
 
-    .topbar .left,
-    .topbar .right {
+    .tag {
+      padding: 5px 10px;
+      border: 1px solid rgba(192,57,43,0.2);
+      background: rgba(192,57,43,0.06);
+      color: rgba(232,228,222,0.6);
+      letter-spacing: 0.1em;
+    }
+    .tag.live {
+      border-color: rgba(192,57,43,0.4);
+      color: var(--red-hot);
       display: flex;
-      gap: 14px;
       align-items: center;
-      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag.live::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--red-hot);
+      box-shadow: 0 0 6px var(--red-hot);
+      animation: blink 1.4s ease infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
     }
 
-    .pill {
-      padding: 9px 12px;
-      border: 1px solid var(--line-soft);
-      background: rgba(0,0,0,0.32);
-      border-radius: 999px;
-      backdrop-filter: blur(8px);
-      box-shadow: var(--shadow);
-    }
-
-    .main {
-      display: grid;
-      justify-items: center;
+    /* ─── CENTRE ─── */
+    .center {
+      display: flex;
+      flex-direction: column;
       align-items: center;
+      gap: 0;
       text-align: center;
-      gap: 14px;
+      animation: centerReveal 1.4s cubic-bezier(.16,1,.3,1) 0.2s both;
+    }
+    @keyframes centerReveal {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .skyline {
-      width: 340px;
-      max-width: 70vw;
-      height: 46px;
-      opacity: 0.92;
-      filter: drop-shadow(0 0 16px rgba(255,60,60,0.24));
+    /* Skyline SVG */
+    .skyline-wrap {
+      margin-bottom: -4px;
+      opacity: 0.75;
+      filter: drop-shadow(0 0 20px rgba(192,57,43,0.5));
+    }
+    .skyline-wrap svg {
+      width: clamp(280px, 45vw, 580px);
+      height: auto;
     }
 
+    /* Titre principal */
+    .title-wrap {
+      position: relative;
+      display: inline-block;
+    }
     .title {
-      margin: 0;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: clamp(64px, 12vw, 152px);
-      line-height: 0.9;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      font-weight: 800;
-      background: linear-gradient(180deg, #ff8d8d 0%, #ff6363 32%, #d13d3d 58%, #7f2020 100%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 14vw, 190px);
+      line-height: 0.88;
+      letter-spacing: 0.04em;
+      color: transparent;
+      background: linear-gradient(175deg,
+        #ffffff 0%,
+        #f0c8c8 15%,
+        #e07070 35%,
+        #c0392b 55%,
+        #8a1e14 75%,
+        #4a0e08 100%
+      );
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 28px rgba(255, 59, 59, 0.12);
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+    /* Ombre rouge en dessous */
+    .title-shadow {
+      position: absolute;
+      inset: 0;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 14vw, 190px);
+      line-height: 0.88;
+      letter-spacing: 0.04em;
+      color: var(--red);
+      filter: blur(28px);
+      opacity: 0.35;
+      z-index: 0;
+      animation: titleGlow 4s ease-in-out infinite;
+      pointer-events: none;
+      -webkit-user-select: none;
+    }
+    @keyframes titleGlow {
+      0%, 100% { opacity: 0.25; filter: blur(28px); }
+      50%       { opacity: 0.45; filter: blur(20px); }
     }
 
     .subtitle {
-      margin-top: -6px;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: clamp(18px, 2vw, 32px);
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: rgba(255,255,255,0.5);
-    }
-
-    .status {
-      margin-top: 28px;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: clamp(26px, 3vw, 54px);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(13px, 1.8vw, 22px);
       font-weight: 600;
-      color: rgba(255,255,255,0.88);
-      text-shadow: 0 0 16px rgba(0,0,0,0.35);
-    }
-
-    .loader-wrap {
-      width: min(760px, 86vw);
+      letter-spacing: 0.48em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
       margin-top: 6px;
-      display: grid;
-      gap: 12px;
+      margin-bottom: 28px;
     }
 
-    .loader {
-      height: 46px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(16,16,16,0.88), rgba(6,6,6,0.92));
-      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.36), 0 10px 35px rgba(0,0,0,0.38);
+    /* Séparateur rouge */
+    .sep {
+      width: clamp(120px, 18vw, 260px);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      margin: 0 auto 28px;
+      position: relative;
+    }
+    .sep::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: 50%; transform: translateX(-50%);
+      width: 5px; height: 5px;
+      background: var(--red-hot);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--red-hot);
+    }
+
+    /* Status text */
+    .status {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(12px, 1.3vw, 16px);
+      letter-spacing: 0.12em;
+      color: rgba(232,228,222,0.45);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      min-height: 20px;
+      transition: opacity 0.4s ease;
+    }
+    .status .cursor {
+      display: inline-block;
+      width: 7px; height: 13px;
+      background: var(--red-hot);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: cursor 1s step-end infinite;
+    }
+    @keyframes cursor {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ─── BARRE DE PROGRESSION ─── */
+    .progress-wrap {
+      width: clamp(280px, 55vw, 700px);
+      animation: progressReveal 1.6s cubic-bezier(.16,1,.3,1) 0.5s both;
+    }
+    @keyframes progressReveal {
+      from { opacity: 0; transform: scaleX(0.85); }
+      to   { opacity: 1; transform: scaleX(1); }
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .progress-labels .phase { color: rgba(232,228,222,0.55); }
+
+    .bar-outer {
+      position: relative;
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      overflow: visible;
+    }
+    .bar-track {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--red-dim), var(--red), var(--red-hot));
+      transition: width 0.6s cubic-bezier(.4,0,.2,1);
+      position: relative;
+    }
+    .bar-fill::after {
+      content: '';
+      position: absolute;
+      right: 0; top: -3px;
+      width: 3px; height: 9px;
+      background: #fff;
+      box-shadow: 0 0 10px var(--red-hot), 0 0 20px var(--red-hot);
+    }
+    /* Reflet sweep */
+    .bar-sweep {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .bar-sweep::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -60px;
+      width: 60px; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      animation: sweep 2.8s ease-in-out infinite;
+    }
+    @keyframes sweep {
+      0%   { left: -60px; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { left: 110%; opacity: 0; }
+    }
+
+    .bar-percent {
+      position: absolute;
+      right: 0; top: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 0.04em;
+      color: var(--red-hot);
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(255,77,58,0.5);
+      transition: all 0.4s ease;
+    }
+
+    /* Segments décoratifs sous la barre */
+    .bar-segments {
+      display: flex;
+      gap: 2px;
+      margin-top: 6px;
+    }
+    .seg {
+      flex: 1;
+      height: 2px;
+      background: rgba(255,255,255,0.05);
+      transition: background 0.4s ease;
+    }
+    .seg.active { background: rgba(192,57,43,0.45); }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      animation: fadeIn 1.8s ease 0.8s both;
+    }
+
+    .footer-left { display: flex; flex-direction: column; gap: 8px; }
+    .footer-right { display: flex; gap: 12px; align-items: center; }
+
+    /* Tips */
+    .tip-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      max-width: clamp(280px, 45vw, 560px);
+    }
+    .tip-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      white-space: nowrap;
+      padding-top: 2px;
+      text-shadow: 0 0 10px rgba(212,168,67,0.4);
+    }
+    .tip-text {
+      font-size: clamp(13px, 1.4vw, 16px);
+      font-weight: 500;
+      color: rgba(232,228,222,0.65);
+      line-height: 1.4;
+      transition: opacity 0.5s ease;
+    }
+    .tip-text.fade { opacity: 0; }
+
+    /* Boutons */
+    .btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: none;
+      border: 1px solid rgba(192,57,43,0.3);
+      color: var(--muted);
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
       position: relative;
       overflow: hidden;
     }
-
-    .loader::before {
-      content: "";
+    .btn::before {
+      content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, rgba(255,255,255,0.05), transparent 15%, transparent 85%, rgba(255,255,255,0.04));
-      pointer-events: none;
+      background: rgba(192,57,43,0.08);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s ease;
     }
+    .btn:hover { color: var(--text); border-color: var(--red); }
+    .btn:hover::before { transform: scaleX(1); }
+    .btn.music-on { color: var(--red-hot); border-color: rgba(192,57,43,0.5); }
 
-    .fill {
-      position: absolute;
-      inset: 4px auto 4px 4px;
-      width: 45%;
-      background: linear-gradient(90deg, #ffa2a2 0%, #ff6c6c 20%, #ea4545 50%, #b12525 100%);
-      box-shadow: 0 0 18px rgba(255,70,70,0.45), inset 0 0 18px rgba(255,255,255,0.22);
-      transition: width .45s ease;
+    /* Infos server */
+    .server-info {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      text-align: right;
+      text-transform: uppercase;
     }
+    .server-info span { opacity: 0.6; }
+    .server-info strong { color: rgba(232,228,222,0.7); font-weight: normal; }
 
-    .fill::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: -80px;
-      width: 100px;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent);
-      transform: skewX(-20deg);
-      animation: sweep 2.2s linear infinite;
-    }
-
-    .loader-text {
-      position: absolute;
+    /* ─── INTRO CINÉMATIQUE ─── */
+    .intro {
+      position: fixed;
       inset: 0;
+      z-index: 100;
+      background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: clamp(20px, 2vw, 34px);
+      animation: introFade 0.8s ease 1.8s forwards;
+    }
+    @keyframes introFade {
+      to { opacity: 0; pointer-events: none; }
+    }
+    .intro-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 6vw, 80px);
+      letter-spacing: 0.3em;
+      color: var(--red);
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-weight: 700;
-      color: #ff6a6a;
-      text-shadow: 0 0 14px rgba(255, 76, 76, 0.2);
-      pointer-events: none;
+      animation: introReveal 1.4s cubic-bezier(.16,1,.3,1) both;
+      text-shadow: 0 0 40px rgba(192,57,43,0.6);
     }
-
-    .progress-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      color: rgba(255,255,255,0.62);
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 600;
+    @keyframes introReveal {
+      from { opacity: 0; letter-spacing: 0.8em; filter: blur(8px); }
+      to   { opacity: 1; letter-spacing: 0.3em; filter: blur(0); }
     }
-
-    .bottom {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 18px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: 18px;
-    }
-
-    .music-btn,
-    .action-btn {
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(10,10,10,0.62);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 14px 18px;
-      font: inherit;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      transition: transform .18s ease, border-color .18s ease, background .18s ease;
-    }
-
-    .music-btn:hover,
-    .action-btn:hover {
-      transform: translateY(-1px);
-      border-color: rgba(255,90,90,0.32);
-      background: rgba(18,18,18,0.8);
-    }
-
-    .music-btn strong,
-    .accent {
-      color: #ff6a6a;
-    }
-
-    .tipbar {
-      min-height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0 10px;
-      color: rgba(255,255,255,0.92);
-      font-size: clamp(16px, 1.5vw, 24px);
-      font-family: "Barlow Condensed", sans-serif;
-      letter-spacing: 0.02em;
-    }
-
-    .tipbar .label {
-      color: #ffb34d;
-      margin-right: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-weight: 700;
-    }
-
-    .corner {
+    .intro-line {
       position: absolute;
-      width: 80px;
-      height: 80px;
-      border-color: rgba(255, 70, 70, 0.22);
-      pointer-events: none;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      animation: introLine 1.2s ease 0.3s both;
+    }
+    .intro-line.top { top: 38%; }
+    .intro-line.bot { bottom: 38%; }
+    @keyframes introLine {
+      from { opacity: 0; transform: scaleX(0); }
+      to   { opacity: 0.5; transform: scaleX(1); }
     }
 
-    .corner.tl { top: 22px; left: 22px; border-top: 1px solid; border-left: 1px solid; }
-    .corner.tr { top: 22px; right: 22px; border-top: 1px solid; border-right: 1px solid; }
-    .corner.bl { bottom: 22px; left: 22px; border-bottom: 1px solid; border-left: 1px solid; }
-    .corner.br { bottom: 22px; right: 22px; border-bottom: 1px solid; border-right: 1px solid; }
-
-    @keyframes zoomDrift {
-      from { transform: scale(1.03) translateY(0px); }
-      to { transform: scale(1.08) translateY(-10px); }
-    }
-
-    @keyframes sweep {
-      from { transform: translateX(-140px) skewX(-20deg); }
-      to { transform: translateX(300px) skewX(-20deg); }
-    }
-
-    @media (max-width: 900px) {
-      .bottom {
-        grid-template-columns: 1fr;
-        justify-items: center;
-      }
-
-      .topbar {
-        justify-content: center;
-        text-align: center;
-      }
-
-      .topbar .left,
-      .topbar .right {
-        justify-content: center;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .frame { padding: 18px; }
-      .loader { height: 40px; }
-      .topbar { font-size: 10px; }
-      .music-btn, .action-btn { padding: 12px 16px; }
-      .corner { width: 48px; height: 48px; }
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .frame { padding: 16px 20px; }
+      .footer { flex-direction: column; gap: 16px; align-items: center; }
+      .tip-wrap { max-width: 100%; }
+      .server-info { text-align: center; }
+      .topbar-right .tag:not(.live) { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="background"></div>
-  <div class="overlay"></div>
-  <div class="grid"></div>
-  <div class="noise"></div>
 
-  <div class="corner tl"></div>
-  <div class="corner tr"></div>
-  <div class="corner bl"></div>
-  <div class="corner br"></div>
+  <!-- INTRO CINÉMATIQUE -->
+  <div class="intro">
+    <div class="intro-line top"></div>
+    <div class="intro-text">Northside RP</div>
+    <div class="intro-line bot"></div>
+  </div>
 
-  <main class="frame">
-    <section class="content">
-      <header class="topbar">
-        <div class="left">
-          <span class="pill">Northside RP</span>
-          <span class="pill">Serveur serious roleplay</span>
-        </div>
-        <div class="right">
-          <span class="pill" id="dateTime">00:00</span>
-          <button class="action-btn" id="themePulse">Accent rouge</button>
-        </div>
-      </header>
+  <!-- CANVAS PARTICULES -->
+  <canvas id="canvas"></canvas>
 
-      <section class="main">
-        <svg class="skyline" viewBox="0 0 600 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M8 64H62V36H84V18H110V45H133V9H156V30H175V4H202V49H221V25H247V12H266V41H284V2H320V52H337V28H361V18H389V44H407V8H432V36H458V24H487V14H512V49H540V33H592V64" fill="url(#g)"/>
-          <path d="M0 70H600" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <!-- FOND -->
+  <div class="bg-image"></div>
+  <div class="vignette"></div>
+  <div class="glow-orb top"></div>
+  <div class="glow-orb bottom"></div>
+  <div class="scanlines"></div>
+
+  <!-- COINS -->
+  <div class="corners">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+  </div>
+
+  <div class="h-line-top"></div>
+  <div class="h-line-bot"></div>
+
+  <!-- CONTENU -->
+  <div class="frame">
+
+    <!-- TOP -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="tag live">EN LIGNE</div>
+        <div class="tag">Northside RP</div>
+        <div class="tag">Serious Roleplay</div>
+      </div>
+      <div class="topbar-right">
+        <div class="tag" id="clock">00:00</div>
+        <div class="tag" id="playerCount">-- / 64</div>
+      </div>
+    </div>
+
+    <!-- CENTRE -->
+    <div class="center">
+
+      <!-- Skyline SVG ville -->
+      <div class="skyline-wrap">
+        <svg viewBox="0 0 700 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="
+            M0,80 L0,58 L18,58 L18,42 L26,42 L26,28 L34,28 L34,42 L42,42 L42,20 L48,20
+            L48,10 L54,10 L54,6 L60,6 L60,10 L66,10 L66,20 L72,20 L72,42 L80,42
+            L80,35 L88,35 L88,22 L94,22 L94,35 L102,35 L102,48 L110,48 L110,32
+            L116,32 L116,18 L124,18 L124,32 L130,32 L130,48 L140,48 L140,25
+            L146,25 L146,14 L150,14 L150,8 L156,8 L156,14 L160,14 L160,25
+            L168,25 L168,52 L178,52 L178,38 L186,38 L186,22 L192,22 L192,16
+            L198,16 L198,22 L204,22 L204,38 L212,38 L212,52 L220,52 L220,30
+            L228,30 L228,18 L236,18 L236,30 L244,30 L244,45 L252,45 L252,28
+            L260,28 L260,12 L264,12 L264,4 L270,4 L270,12 L274,12 L274,28
+            L282,28 L282,45 L290,45 L290,35 L300,35 L300,50 L308,50 L308,36
+            L316,36 L316,20 L322,20 L322,12 L328,12 L328,20 L334,20 L334,36
+            L342,36 L342,50 L352,50 L352,38 L360,38 L360,24 L368,24 L368,38
+            L376,38 L376,55 L384,55 L384,40 L392,40 L392,26 L398,26 L398,40
+            L406,40 L406,55 L416,55 L416,30 L422,30 L422,16 L430,16 L430,30
+            L438,30 L438,44 L446,44 L446,32 L454,32 L454,18 L460,18 L460,32
+            L468,32 L468,48 L478,48 L478,36 L486,36 L486,22 L494,22 L494,36
+            L502,36 L502,52 L512,52 L512,40 L518,40 L518,28 L526,28 L526,40
+            L532,40 L532,55 L542,55 L542,38 L550,38 L550,24 L558,24 L558,38
+            L566,38 L566,52 L576,52 L576,42 L584,42 L584,55 L594,55 L594,45
+            L602,45 L602,60 L612,60 L612,50 L620,50 L620,38 L628,38 L628,50
+            L636,50 L636,60 L650,60 L650,70 L700,70 L700,80 Z
+          " fill="url(#skyGrad)" opacity="0.9"/>
+          <!-- Fenêtres lumineuses -->
+          <rect x="49" y="12" width="4" height="4" fill="rgba(255,200,100,0.6)"/>
+          <rect x="55" y="16" width="4" height="4" fill="rgba(255,200,100,0.4)"/>
+          <rect x="147" y="16" width="4" height="4" fill="rgba(255,200,100,0.5)"/>
+          <rect x="153" y="20" width="4" height="4" fill="rgba(255,200,100,0.3)"/>
+          <rect x="261" y="8"  width="4" height="4" fill="rgba(255,200,100,0.6)"/>
+          <rect x="267" y="14" width="4" height="4" fill="rgba(255,200,100,0.4)"/>
+          <rect x="323" y="14" width="4" height="4" fill="rgba(255,200,100,0.5)"/>
+          <rect x="393" y="28" width="4" height="4" fill="rgba(255,200,100,0.4)"/>
+          <rect x="423" y="18" width="4" height="4" fill="rgba(255,200,100,0.6)"/>
+          <rect x="455" y="20" width="4" height="4" fill="rgba(255,200,100,0.3)"/>
+          <rect x="519" y="30" width="4" height="4" fill="rgba(255,200,100,0.5)"/>
+          <rect x="551" y="26" width="4" height="4" fill="rgba(255,200,100,0.4)"/>
+          <rect x="621" y="40" width="4" height="4" fill="rgba(255,200,100,0.5)"/>
+          <!-- Ligne sol -->
+          <line x1="0" y1="70" x2="700" y2="70" stroke="rgba(192,57,43,0.4)" stroke-width="1"/>
           <defs>
-            <linearGradient id="g" x1="0" y1="0" x2="600" y2="90" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#ff7a7a"/>
-              <stop offset="0.45" stop-color="#e74444"/>
-              <stop offset="1" stop-color="#911f1f"/>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="80" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#c0392b" stop-opacity="0.9"/>
+              <stop offset="60%"  stop-color="#7a1f16" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#1a0a08" stop-opacity="0.6"/>
             </linearGradient>
           </defs>
         </svg>
+      </div>
 
-        <h1 class="title">Northside RP</h1>
-        <div class="subtitle">Garry's Mod Roleplay</div>
+      <!-- Titre -->
+      <div class="title-wrap">
+        <div class="title-shadow" aria-hidden="true">NORTHSIDE RP</div>
+        <h1 class="title">NORTHSIDE RP</h1>
+      </div>
 
-        <div class="status" id="statusText">Connecting to server...</div>
+      <div class="subtitle">Garry's Mod &nbsp;·&nbsp; Serious Roleplay</div>
+      <div class="sep"></div>
 
-        <div class="loader-wrap">
-          <div class="loader">
-            <div class="fill" id="fill"></div>
-            <div class="loader-text" id="loaderText">Loading... 45%</div>
-          </div>
-          <div class="progress-meta">
-            <span id="phaseText">Initialisation des ressources</span>
-            <span id="percentText">45%</span>
-          </div>
+      <div class="status" id="statusText">
+        <span id="statusInner">Connexion au serveur</span><span class="cursor"></span>
+      </div>
+
+      <!-- Barre de progression -->
+      <div class="progress-wrap">
+        <div class="progress-labels">
+          <span class="phase" id="phaseText">Initialisation</span>
+          <span id="etaText">—</span>
         </div>
-      </section>
-
-      <footer class="bottom">
-        <button class="music-btn" id="musicToggle">♫ <strong>Musique OFF</strong></button>
-
-        <div class="tipbar">
-          <span class="label">Astuce :</span>
-          <span id="tipText">Utilise /me pour décrire précisément les actions de ton personnage.</span>
+        <div class="bar-outer">
+          <div class="bar-track">
+            <div class="bar-fill" id="barFill"></div>
+          </div>
+          <div class="bar-sweep"></div>
+          <div class="bar-percent" id="barPercent">0%</div>
         </div>
+        <div class="bar-segments" id="segments"></div>
+      </div>
+    </div>
 
-        <button class="action-btn" id="simulateBtn">Simuler le chargement</button>
-      </footer>
-    </section>
-  </main>
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="footer-left">
+        <div class="tip-wrap">
+          <span class="tip-label">ASTUCE</span>
+          <span class="tip-text" id="tipText">Utilise /me pour décrire les actions de ton personnage.</span>
+        </div>
+      </div>
+      <div class="footer-right">
+        <button class="btn" id="musicBtn">♫ MUSIQUE</button>
+        <div class="server-info">
+          <span>Northside RP &nbsp;<strong>v2.0</strong></span>
+          <span id="dateDisplay">—</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
   <audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
+    // ─── PARTICULES ───
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size  = Math.random() * 1.2 + 0.2;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = -Math.random() * 0.4 - 0.1;
+        this.life  = 0;
+        this.maxLife = Math.random() * 200 + 100;
+        this.type  = Math.random() > 0.7 ? 'ember' : 'dust';
+        if (this.type === 'ember') {
+          this.x = Math.random() * canvas.width;
+          this.y = canvas.height + 10;
+          this.speedY = -Math.random() * 0.8 - 0.3;
+          this.speedX = (Math.random() - 0.5) * 0.6;
+          this.size   = Math.random() * 1.5 + 0.5;
+        }
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life++;
+        if (this.life > this.maxLife || this.y < -10) this.reset();
+      }
+      draw() {
+        const prog = this.life / this.maxLife;
+        const alpha = this.type === 'ember'
+          ? Math.sin(prog * Math.PI) * 0.7
+          : (prog < 0.2 ? prog / 0.2 : prog > 0.8 ? (1 - prog) / 0.2 : 1) * 0.25;
+        if (this.type === 'ember') {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${192 + Math.random()*40}, ${57 + Math.random()*30}, 43, ${alpha})`;
+          ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(232, 228, 222, ${alpha * 0.4})`;
+          ctx.fill();
+        }
+      }
+    }
+
+    for (let i = 0; i < 120; i++) {
+      const p = new Particle();
+      p.life = Math.random() * p.maxLife;
+      particles.push(p);
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // ─── SEGMENTS ───
+    const segCount = 20;
+    const segWrap = document.getElementById('segments');
+    for (let i = 0; i < segCount; i++) {
+      const s = document.createElement('div');
+      s.className = 'seg';
+      s.id = 'seg' + i;
+      segWrap.appendChild(s);
+    }
+
+    // ─── DONNÉES ───
     const tips = [
       "Utilise /me pour décrire précisément les actions de ton personnage.",
-      "Un personnage cohérent rend le roleplay plus crédible pour tout le monde.",
-      "Privilégie des scènes calmes et construites plutôt qu'un RP précipité.",
-      "Lis les règles et les annexes avant de rejoindre une faction du serveur.",
-      "Un serveur serious repose autant sur l'ambiance que sur le respect mutuel."
+      "Un personnage cohérent et réaliste rend le roleplay plus immersif.",
+      "Privilégie des scènes construites plutôt qu'un RP précipité.",
+      "Lis le règlement et les annexes avant de rejoindre une faction.",
+      "Le serious RP repose autant sur l'ambiance que sur le respect mutuel.",
+      "Reste dans le personnage même dans les situations difficiles.",
+      "Communique avec les autres joueurs hors RP si nécessaire via /ooc.",
     ];
-
     const phases = [
       "Connexion au serveur",
-      "Initialisation des ressources",
+      "Vérification des ressources",
       "Téléchargement du contenu",
-      "Chargement de l'interface",
+      "Chargement des modèles",
+      "Initialisation du HUD",
       "Synchronisation des données",
-      "Préparation de la session"
+      "Préparation de la session",
+      "Finalisation...",
     ];
 
-    const statuses = [
-      "Connecting to server...",
-      "Downloading content...",
-      "Preparing interface...",
-      "Synchronizing data...",
-      "Finalizing connection..."
-    ];
+    let tipIdx = 0, phaseIdx = 0, progress = 0;
+    const tipEl     = document.getElementById('tipText');
+    const phaseEl   = document.getElementById('phaseText');
+    const statusEl  = document.getElementById('statusInner');
+    const fillEl    = document.getElementById('barFill');
+    const percentEl = document.getElementById('barPercent');
+    const etaEl     = document.getElementById('etaText');
+    const clockEl   = document.getElementById('clock');
+    const dateEl    = document.getElementById('dateDisplay');
 
-    const tipText = document.getElementById('tipText');
-    const phaseText = document.getElementById('phaseText');
-    const statusText = document.getElementById('statusText');
-    const loaderText = document.getElementById('loaderText');
-    const percentText = document.getElementById('percentText');
-    const fill = document.getElementById('fill');
-    const dateTime = document.getElementById('dateTime');
-    const simulateBtn = document.getElementById('simulateBtn');
-    const themePulse = document.getElementById('themePulse');
-    const musicToggle = document.getElementById('musicToggle');
-    const bgMusic = document.getElementById('bgMusic');
-
-    let tipIndex = 0;
-    let phaseIndex = 1;
-    let statusIndex = 0;
-    let progress = 45;
-    let isPlaying = false;
+    function updateProgress(val) {
+      progress = Math.max(0, Math.min(100, val));
+      fillEl.style.width = progress + '%';
+      percentEl.textContent = Math.round(progress) + '%';
+      phaseEl.textContent = phases[Math.min(phases.length - 1, Math.floor(progress / (100 / phases.length)))];
+      const remaining = Math.round((100 - progress) / 3.5);
+      etaEl.textContent = progress >= 99 ? 'Prêt !' : remaining + 's restantes';
+      // Segments
+      const activeSeg = Math.floor(progress / 100 * segCount);
+      for (let i = 0; i < segCount; i++) {
+        document.getElementById('seg' + i).className = 'seg' + (i < activeSeg ? ' active' : '');
+      }
+    }
 
     function updateClock() {
       const now = new Date();
-      dateTime.textContent = now.toLocaleString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        day: '2-digit',
-        month: '2-digit'
-      });
+      clockEl.textContent = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      dateEl.textContent  = now.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
     }
 
-    function updateProgress(value) {
-      progress = Math.max(0, Math.min(100, value));
-      fill.style.width = progress + '%';
-      loaderText.textContent = `Loading... ${progress}%`;
-      percentText.textContent = `${progress}%`;
-      phaseText.textContent = phases[Math.min(phases.length - 1, Math.floor(progress / 20))];
-      statusText.textContent = statuses[Math.min(statuses.length - 1, Math.floor(progress / 25))];
-    }
-
+    // Rotation tips avec fondu
     setInterval(() => {
-      tipIndex = (tipIndex + 1) % tips.length;
-      tipText.textContent = tips[tipIndex];
-    }, 4500);
+      tipEl.classList.add('fade');
+      setTimeout(() => {
+        tipIdx = (tipIdx + 1) % tips.length;
+        tipEl.textContent = tips[tipIdx];
+        tipEl.classList.remove('fade');
+      }, 500);
+    }, 5500);
 
-    setInterval(() => {
-      phaseIndex = (phaseIndex + 1) % phases.length;
-      statusIndex = (statusIndex + 1) % statuses.length;
-      if (progress < 95) updateProgress(progress + 1);
-    }, 2600);
+    // Auto-progress simulé (remplacé par les hooks GMod en prod)
+    let autoInt = setInterval(() => {
+      if (progress < 92) {
+        const step = Math.random() * 2.5 + 0.5;
+        updateProgress(progress + step);
+      }
+    }, 900);
 
     setInterval(updateClock, 1000);
     updateClock();
-    updateProgress(progress);
+    updateProgress(0);
 
-    simulateBtn.addEventListener('click', () => {
-      let fakeProgress = 0;
-      const runner = setInterval(() => {
-        fakeProgress += Math.floor(Math.random() * 8) + 3;
-        updateProgress(fakeProgress);
-        if (fakeProgress >= 100) {
-          updateProgress(100);
-          statusText.textContent = 'Connection established';
-          phaseText.textContent = 'Chargement terminé';
-          clearInterval(runner);
-          setTimeout(() => {
-            updateProgress(45);
-            statusText.textContent = 'Connecting to server...';
-            phaseText.textContent = 'Initialisation des ressources';
-          }, 1800);
-        }
-      }, 260);
-    });
+    // ─── HOOKS GMOD ───
+    // Ces fonctions sont appelées automatiquement par GMod
+    function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
+      document.getElementById('playerCount').textContent = '— / ' + maxplayers;
+    }
+    function SetStatusChanged(status) {
+      statusEl.textContent = status;
+    }
+    function DownloadingFile(fileName) {
+      statusEl.textContent = 'Téléchargement : ' + fileName;
+    }
+    function LoadingProgress(progress_val) {
+      clearInterval(autoInt);
+      updateProgress(progress_val * 100);
+    }
 
-    musicToggle.addEventListener('click', async () => {
+    // ─── MUSIQUE ───
+    const musicBtn = document.getElementById('musicBtn');
+    const bgMusic  = document.getElementById('bgMusic');
+    let playing = false;
+    musicBtn.addEventListener('click', async () => {
       try {
-        if (!isPlaying) {
+        if (!playing) {
           await bgMusic.play();
-          isPlaying = true;
-          musicToggle.innerHTML = '♫ <strong>Musique ON</strong>';
+          playing = true;
+          musicBtn.textContent = '■ MUSIQUE';
+          musicBtn.classList.add('music-on');
         } else {
           bgMusic.pause();
-          isPlaying = false;
-          musicToggle.innerHTML = '♫ <strong>Musique OFF</strong>';
+          playing = false;
+          musicBtn.textContent = '♫ MUSIQUE';
+          musicBtn.classList.remove('music-on');
         }
-      } catch (err) {
-        musicToggle.innerHTML = '♫ <strong>Lecture bloquée</strong>';
-      }
+      } catch {}
     });
 
-    themePulse.addEventListener('click', () => {
-      document.body.animate([
-        { filter: 'brightness(1)' },
-        { filter: 'brightness(1.08)' },
-        { filter: 'brightness(1)' }
-      ], {
-        duration: 600,
-        easing: 'ease-out'
-      });
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 12;
-      const y = (e.clientY / window.innerHeight - 0.5) * 10;
-      document.querySelector('.background').style.transform = `scale(1.06) translate(${x}px, ${y}px)`;
+    // ─── PARALLAXE SOURIS ───
+    document.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth  - 0.5) * 10;
+      const y = (e.clientY / window.innerHeight - 0.5) * 8;
+      document.querySelector('.bg-image').style.transform =
+        `scale(1.08) translate(${x}px, ${y}px)`;
     });
   </script>
 </body>
