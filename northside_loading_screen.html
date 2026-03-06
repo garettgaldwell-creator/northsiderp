@@ -14,10 +14,8 @@
       --red-dim: #7a1f16;
       --gold:    #d4a843;
       --bg:      #050507;
-      --panel:   rgba(8, 8, 12, 0.82);
       --text:    #e8e4de;
       --muted:   #7a7672;
-      --line:    rgba(192, 57, 43, 0.25);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,149 +28,88 @@
       font-family: 'Rajdhani', sans-serif;
     }
 
-    /* ─── CANVAS PARTICULES ─── */
     #canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      opacity: 0.55;
+      position: fixed; inset: 0; z-index: 0; opacity: 0.5;
     }
 
-    /* ─── FOND IMAGE ─── */
     .bg-image {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
+      position: fixed; inset: 0; z-index: 1;
       background: url('YOUR_IMAGE_HERE.jpg') center/cover no-repeat;
-      filter: brightness(0.28) saturate(0.7);
+      filter: brightness(0.25) saturate(0.6);
       animation: bgDrift 22s ease-in-out infinite alternate;
-      transform-origin: center center;
     }
-
     @keyframes bgDrift {
       0%   { transform: scale(1.06) translate(0px, 0px); }
-      33%  { transform: scale(1.09) translate(-8px, -5px); }
-      66%  { transform: scale(1.07) translate(6px, -8px); }
-      100% { transform: scale(1.1)  translate(-4px, 4px); }
+      50%  { transform: scale(1.09) translate(-8px, -5px); }
+      100% { transform: scale(1.07) translate(6px, -4px); }
     }
 
-    /* ─── VIGNETTE ─── */
     .vignette {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
       background:
-        radial-gradient(ellipse 80% 60% at 50% 45%, transparent 0%, rgba(0,0,0,0.72) 100%),
-        linear-gradient(to bottom, rgba(5,5,7,0.55) 0%, transparent 25%, transparent 70%, rgba(5,5,7,0.9) 100%);
-      pointer-events: none;
+        radial-gradient(ellipse 90% 70% at 50% 50%, transparent 0%, rgba(0,0,0,0.75) 100%),
+        linear-gradient(to bottom, rgba(5,5,7,0.6) 0%, transparent 20%, transparent 75%, rgba(5,5,7,0.95) 100%);
     }
 
-    /* ─── LUEUR ROUGE AMBIANCE ─── */
-    .glow-orb {
-      position: fixed;
-      z-index: 2;
-      border-radius: 50%;
-      pointer-events: none;
-      filter: blur(80px);
-      animation: orbPulse 6s ease-in-out infinite;
+    .glow-top {
+      position: fixed; z-index: 2; pointer-events: none;
+      width: 700px; height: 350px;
+      top: -100px; left: 50%; transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(192,57,43,0.18), transparent 70%);
+      filter: blur(60px);
+      animation: orbPulse 5s ease-in-out infinite;
     }
-    .glow-orb.top {
-      width: 600px; height: 300px;
-      top: -80px; left: 50%;
-      transform: translateX(-50%);
-      background: radial-gradient(ellipse, rgba(192,57,43,0.22), transparent 70%);
-    }
-    .glow-orb.bottom {
-      width: 800px; height: 200px;
-      bottom: 40px; left: 50%;
-      transform: translateX(-50%);
-      background: radial-gradient(ellipse, rgba(192,57,43,0.12), transparent 70%);
-      animation-delay: -3s;
+    .glow-bot {
+      position: fixed; z-index: 2; pointer-events: none;
+      width: 900px; height: 250px;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(192,57,43,0.10), transparent 70%);
+      filter: blur(60px);
+      animation: orbPulse 5s ease-in-out infinite reverse;
     }
     @keyframes orbPulse {
-      0%, 100% { opacity: 0.7; }
+      0%, 100% { opacity: 0.6; }
       50%       { opacity: 1; }
     }
 
-    /* ─── LIGNES SCANLINES ─── */
     .scanlines {
-      position: fixed;
-      inset: 0;
-      z-index: 3;
-      pointer-events: none;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.06) 2px,
-        rgba(0,0,0,0.06) 4px
-      );
+      position: fixed; inset: 0; z-index: 3; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px);
     }
 
-    /* ─── COINS DECORATIFS ─── */
-    .corners {
-      position: fixed;
-      inset: 0;
-      z-index: 4;
-      pointer-events: none;
-    }
+    /* Coins */
     .corner {
-      position: absolute;
-      width: 56px; height: 56px;
+      position: fixed; width: 48px; height: 48px; z-index: 4; pointer-events: none;
     }
-    .corner::before, .corner::after {
-      content: '';
-      position: absolute;
-      background: var(--red);
-    }
-    .corner::before { width: 100%; height: 1px; }
-    .corner::after  { width: 1px; height: 100%; }
-    .corner.tl { top: 20px; left: 20px; }
-    .corner.tl::before { top: 0; left: 0; }
-    .corner.tl::after  { top: 0; left: 0; }
-    .corner.tr { top: 20px; right: 20px; transform: scaleX(-1); }
-    .corner.tr::before { top: 0; left: 0; }
-    .corner.tr::after  { top: 0; left: 0; }
-    .corner.bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
-    .corner.bl::before { top: 0; left: 0; }
-    .corner.bl::after  { top: 0; left: 0; }
-    .corner.br { bottom: 20px; right: 20px; transform: scale(-1); }
-    .corner.br::before { top: 0; left: 0; }
-    .corner.br::after  { top: 0; left: 0; }
+    .corner::before, .corner::after { content: ''; position: absolute; background: var(--red); opacity: 0.5; }
+    .corner::before { width: 100%; height: 1px; top: 0; left: 0; }
+    .corner::after  { width: 1px; height: 100%; top: 0; left: 0; }
+    .corner.tl { top: 18px; left: 18px; }
+    .corner.tr { top: 18px; right: 18px; transform: scaleX(-1); }
+    .corner.bl { bottom: 18px; left: 18px; transform: scaleY(-1); }
+    .corner.br { bottom: 18px; right: 18px; transform: scale(-1); }
 
-    /* ─── LIGNE HORIZONTALE TOP ─── */
-    .h-line-top, .h-line-bot {
-      position: fixed;
-      left: 0; right: 0;
-      height: 1px;
-      z-index: 4;
-      pointer-events: none;
+    /* Lignes horizontales */
+    .hline {
+      position: fixed; left: 0; right: 0; height: 1px; z-index: 4; pointer-events: none;
+      background: linear-gradient(90deg, transparent 5%, rgba(192,57,43,0.3) 30%, rgba(192,57,43,0.3) 70%, transparent 95%);
     }
-    .h-line-top {
-      top: 68px;
-      background: linear-gradient(90deg, transparent, var(--red) 20%, var(--red) 80%, transparent);
-      opacity: 0.3;
-    }
-    .h-line-bot {
-      bottom: 78px;
-      background: linear-gradient(90deg, transparent, var(--red) 20%, var(--red) 80%, transparent);
-      opacity: 0.2;
-    }
+    .hline.top { top: 60px; }
+    .hline.bot { bottom: 70px; }
 
-    /* ─── LAYOUT ─── */
+    /* ─── FRAME PRINCIPAL ─── */
     .frame {
       position: fixed;
       inset: 0;
       z-index: 5;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 24px 36px;
-      animation: fadeIn 1.2s ease both;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 22px 40px 26px;
+      animation: fadeIn 1s ease both;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
 
     /* ─── TOPBAR ─── */
@@ -182,171 +119,137 @@
       align-items: center;
       font-family: 'Share Tech Mono', monospace;
       font-size: 11px;
-      letter-spacing: 0.14em;
-      color: var(--muted);
+      letter-spacing: 0.12em;
       text-transform: uppercase;
+      color: var(--muted);
+      padding-bottom: 16px;
     }
-    .topbar-left { display: flex; gap: 20px; align-items: center; }
-    .topbar-right { display: flex; gap: 20px; align-items: center; }
+    .topbar-left, .topbar-right { display: flex; gap: 10px; align-items: center; }
 
     .tag {
-      padding: 5px 10px;
+      padding: 5px 12px;
       border: 1px solid rgba(192,57,43,0.2);
-      background: rgba(192,57,43,0.06);
-      color: rgba(232,228,222,0.6);
+      background: rgba(5,5,7,0.6);
+      backdrop-filter: blur(6px);
       letter-spacing: 0.1em;
+      color: rgba(232,228,222,0.55);
     }
     .tag.live {
-      border-color: rgba(192,57,43,0.4);
+      border-color: rgba(192,57,43,0.45);
       color: var(--red-hot);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      display: flex; align-items: center; gap: 6px;
     }
     .tag.live::before {
       content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
+      width: 6px; height: 6px; border-radius: 50%;
       background: var(--red-hot);
-      box-shadow: 0 0 6px var(--red-hot);
-      animation: blink 1.4s ease infinite;
+      box-shadow: 0 0 8px var(--red-hot);
+      animation: blink 1.3s ease infinite;
     }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.2; }
-    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
 
     /* ─── CENTRE ─── */
     .center {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 0;
       text-align: center;
-      animation: centerReveal 1.4s cubic-bezier(.16,1,.3,1) 0.2s both;
+      padding: 10px 0;
+      animation: slideUp 1.2s cubic-bezier(.16,1,.3,1) 0.1s both;
     }
-    @keyframes centerReveal {
-      from { opacity: 0; transform: translateY(24px); }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Skyline SVG */
+    /* Skyline */
     .skyline-wrap {
-      margin-bottom: -4px;
-      opacity: 0.75;
-      filter: drop-shadow(0 0 20px rgba(192,57,43,0.5));
+      margin-bottom: 8px;
+      opacity: 0.8;
+      filter: drop-shadow(0 0 18px rgba(192,57,43,0.45));
     }
-    .skyline-wrap svg {
-      width: clamp(280px, 45vw, 580px);
-      height: auto;
-    }
+    .skyline-wrap svg { width: clamp(320px, 48vw, 660px); height: auto; }
 
-    /* Titre principal */
-    .title-wrap {
-      position: relative;
-      display: inline-block;
-    }
+    /* Titre */
+    .title-wrap { position: relative; display: inline-block; }
     .title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(72px, 14vw, 190px);
+      font-size: clamp(68px, 13vw, 172px);
       line-height: 0.88;
       letter-spacing: 0.04em;
-      color: transparent;
-      background: linear-gradient(175deg,
-        #ffffff 0%,
-        #f0c8c8 15%,
-        #e07070 35%,
-        #c0392b 55%,
-        #8a1e14 75%,
-        #4a0e08 100%
-      );
+      background: linear-gradient(170deg, #ffffff 0%, #f0c0c0 18%, #e07070 38%, #c0392b 58%, #7a1f16 80%, #3a0a06 100%);
       -webkit-background-clip: text;
       background-clip: text;
-      position: relative;
-      z-index: 1;
+      color: transparent;
+      position: relative; z-index: 1;
     }
-    /* Ombre rouge en dessous */
-    .title-shadow {
-      position: absolute;
-      inset: 0;
+    .title-glow {
+      position: absolute; inset: 0;
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(72px, 14vw, 190px);
+      font-size: clamp(68px, 13vw, 172px);
       line-height: 0.88;
       letter-spacing: 0.04em;
       color: var(--red);
-      filter: blur(28px);
-      opacity: 0.35;
+      filter: blur(30px);
+      opacity: 0.3;
       z-index: 0;
-      animation: titleGlow 4s ease-in-out infinite;
       pointer-events: none;
-      -webkit-user-select: none;
+      animation: glowPulse 4s ease-in-out infinite;
     }
-    @keyframes titleGlow {
-      0%, 100% { opacity: 0.25; filter: blur(28px); }
-      50%       { opacity: 0.45; filter: blur(20px); }
-    }
+    @keyframes glowPulse { 0%,100%{opacity:0.2;filter:blur(30px)} 50%{opacity:0.4;filter:blur(22px)} }
 
     .subtitle {
       font-family: 'Rajdhani', sans-serif;
-      font-size: clamp(13px, 1.8vw, 22px);
       font-weight: 600;
-      letter-spacing: 0.48em;
+      font-size: clamp(12px, 1.6vw, 20px);
+      letter-spacing: 0.45em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.28);
-      margin-top: 6px;
-      margin-bottom: 28px;
+      color: rgba(255,255,255,0.25);
+      margin-top: 8px;
+      margin-bottom: 20px;
     }
 
-    /* Séparateur rouge */
+    /* Séparateur */
     .sep {
-      width: clamp(120px, 18vw, 260px);
+      width: clamp(100px, 16vw, 240px);
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--red), transparent);
-      margin: 0 auto 28px;
+      margin: 0 auto 20px;
       position: relative;
     }
     .sep::before {
       content: '';
       position: absolute;
-      top: -2px; left: 50%; transform: translateX(-50%);
-      width: 5px; height: 5px;
+      top: -3px; left: 50%; transform: translateX(-50%);
+      width: 7px; height: 7px; border-radius: 50%;
       background: var(--red-hot);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--red-hot);
+      box-shadow: 0 0 10px var(--red-hot);
     }
 
-    /* Status text */
+    /* Status */
     .status {
       font-family: 'Share Tech Mono', monospace;
-      font-size: clamp(12px, 1.3vw, 16px);
-      letter-spacing: 0.12em;
-      color: rgba(232,228,222,0.45);
+      font-size: clamp(11px, 1.2vw, 14px);
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      margin-bottom: 18px;
-      min-height: 20px;
-      transition: opacity 0.4s ease;
+      color: rgba(232,228,222,0.4);
+      margin-bottom: 16px;
+      min-height: 18px;
     }
-    .status .cursor {
-      display: inline-block;
-      width: 7px; height: 13px;
-      background: var(--red-hot);
-      margin-left: 4px;
+    .cursor {
+      display: inline-block; width: 7px; height: 12px;
+      background: var(--red-hot); margin-left: 3px;
       vertical-align: middle;
-      animation: cursor 1s step-end infinite;
+      animation: cur 1s step-end infinite;
     }
-    @keyframes cursor {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0; }
-    }
+    @keyframes cur { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    /* ─── BARRE DE PROGRESSION ─── */
+    /* Barre de progression */
     .progress-wrap {
-      width: clamp(280px, 55vw, 700px);
-      animation: progressReveal 1.6s cubic-bezier(.16,1,.3,1) 0.5s both;
-    }
-    @keyframes progressReveal {
-      from { opacity: 0; transform: scaleX(0.85); }
-      to   { opacity: 1; transform: scaleX(1); }
+      width: clamp(280px, 52vw, 680px);
+      animation: slideUp 1.4s cubic-bezier(.16,1,.3,1) 0.3s both;
     }
 
     .progress-labels {
@@ -354,53 +257,43 @@
       justify-content: space-between;
       font-family: 'Share Tech Mono', monospace;
       font-size: 10px;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       color: var(--muted);
       margin-bottom: 8px;
       text-transform: uppercase;
     }
-    .progress-labels .phase { color: rgba(232,228,222,0.55); }
+    .progress-labels .phase { color: rgba(232,228,222,0.5); }
 
     .bar-outer {
       position: relative;
       height: 3px;
-      background: rgba(255,255,255,0.06);
-      overflow: visible;
-    }
-    .bar-track {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      margin-bottom: 8px;
     }
     .bar-fill {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, var(--red-dim), var(--red), var(--red-hot));
-      transition: width 0.6s cubic-bezier(.4,0,.2,1);
+      transition: width 0.5s cubic-bezier(.4,0,.2,1);
       position: relative;
     }
     .bar-fill::after {
       content: '';
       position: absolute;
-      right: 0; top: -3px;
-      width: 3px; height: 9px;
+      right: -1px; top: -4px;
+      width: 3px; height: 11px;
       background: #fff;
-      box-shadow: 0 0 10px var(--red-hot), 0 0 20px var(--red-hot);
+      box-shadow: 0 0 12px var(--red-hot), 0 0 24px var(--red-hot);
     }
-    /* Reflet sweep */
     .bar-sweep {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none;
     }
     .bar-sweep::after {
       content: '';
       position: absolute;
-      top: 0; left: -60px;
-      width: 60px; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-      animation: sweep 2.8s ease-in-out infinite;
+      top: 0; left: -60px; width: 60px; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+      animation: sweep 2.6s ease-in-out infinite;
     }
     @keyframes sweep {
       0%   { left: -60px; opacity: 0; }
@@ -410,196 +303,158 @@
     }
 
     .bar-percent {
-      position: absolute;
-      right: 0; top: 12px;
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
+      font-size: 22px;
       letter-spacing: 0.04em;
       color: var(--red-hot);
-      line-height: 1;
-      text-shadow: 0 0 20px rgba(255,77,58,0.5);
+      text-shadow: 0 0 16px rgba(255,77,58,0.5);
+      text-align: right;
+      margin-top: 2px;
       transition: all 0.4s ease;
     }
 
-    /* Segments décoratifs sous la barre */
-    .bar-segments {
-      display: flex;
-      gap: 2px;
-      margin-top: 6px;
-    }
-    .seg {
-      flex: 1;
-      height: 2px;
-      background: rgba(255,255,255,0.05);
-      transition: background 0.4s ease;
-    }
-    .seg.active { background: rgba(192,57,43,0.45); }
+    /* Segments */
+    .bar-segments { display: flex; gap: 2px; margin-top: 4px; }
+    .seg { flex: 1; height: 2px; background: rgba(255,255,255,0.04); transition: background 0.4s ease; }
+    .seg.active { background: rgba(192,57,43,0.5); }
 
     /* ─── FOOTER ─── */
     .footer {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      animation: fadeIn 1.8s ease 0.8s both;
+      padding-top: 14px;
+      gap: 20px;
+      animation: fadeIn 1.8s ease 0.6s both;
     }
 
-    .footer-left { display: flex; flex-direction: column; gap: 8px; }
-    .footer-right { display: flex; gap: 12px; align-items: center; }
-
-    /* Tips */
     .tip-wrap {
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      max-width: clamp(280px, 45vw, 560px);
+      flex: 1;
+      min-width: 0;
     }
     .tip-label {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 14px;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       color: var(--gold);
       white-space: nowrap;
-      padding-top: 2px;
       text-shadow: 0 0 10px rgba(212,168,67,0.4);
+      padding-top: 1px;
     }
     .tip-text {
-      font-size: clamp(13px, 1.4vw, 16px);
+      font-size: clamp(12px, 1.3vw, 15px);
       font-weight: 500;
-      color: rgba(232,228,222,0.65);
+      color: rgba(232,228,222,0.55);
       line-height: 1.4;
       transition: opacity 0.5s ease;
     }
     .tip-text.fade { opacity: 0; }
 
-    /* Boutons */
+    .footer-right {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
     .btn {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      background: none;
-      border: 1px solid rgba(192,57,43,0.3);
+      background: rgba(5,5,7,0.6);
+      border: 1px solid rgba(192,57,43,0.25);
       color: var(--muted);
       padding: 8px 16px;
       cursor: pointer;
       transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
+      backdrop-filter: blur(6px);
     }
-    .btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(192,57,43,0.08);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.2s ease;
-    }
-    .btn:hover { color: var(--text); border-color: var(--red); }
-    .btn:hover::before { transform: scaleX(1); }
+    .btn:hover { color: var(--text); border-color: var(--red); background: rgba(192,57,43,0.1); }
     .btn.music-on { color: var(--red-hot); border-color: rgba(192,57,43,0.5); }
 
-    /* Infos server */
     .server-info {
       font-family: 'Share Tech Mono', monospace;
       font-size: 10px;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
       text-align: right;
       text-transform: uppercase;
+      line-height: 1.6;
     }
-    .server-info span { opacity: 0.6; }
-    .server-info strong { color: rgba(232,228,222,0.7); font-weight: normal; }
+    .server-info strong { color: rgba(232,228,222,0.6); font-weight: normal; }
 
-    /* ─── INTRO CINÉMATIQUE ─── */
+    /* ─── INTRO ─── */
     .intro {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
+      position: fixed; inset: 0; z-index: 100;
       background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: introFade 0.8s ease 1.8s forwards;
+      display: flex; align-items: center; justify-content: center;
+      animation: introOut 0.7s ease 2s forwards;
+      pointer-events: none;
     }
-    @keyframes introFade {
-      to { opacity: 0; pointer-events: none; }
-    }
+    @keyframes introOut { to { opacity: 0; pointer-events: none; } }
     .intro-text {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(36px, 6vw, 80px);
-      letter-spacing: 0.3em;
+      font-size: clamp(32px, 5vw, 72px);
+      letter-spacing: 0.35em;
       color: var(--red);
-      text-transform: uppercase;
-      animation: introReveal 1.4s cubic-bezier(.16,1,.3,1) both;
       text-shadow: 0 0 40px rgba(192,57,43,0.6);
+      animation: introReveal 1.6s cubic-bezier(.16,1,.3,1) both;
     }
     @keyframes introReveal {
-      from { opacity: 0; letter-spacing: 0.8em; filter: blur(8px); }
-      to   { opacity: 1; letter-spacing: 0.3em; filter: blur(0); }
+      from { opacity: 0; letter-spacing: 0.9em; filter: blur(10px); }
+      to   { opacity: 1; letter-spacing: 0.35em; filter: blur(0); }
     }
     .intro-line {
-      position: absolute;
-      left: 0; right: 0;
-      height: 1px;
+      position: absolute; left: 10%; right: 10%; height: 1px;
       background: linear-gradient(90deg, transparent, var(--red), transparent);
-      animation: introLine 1.2s ease 0.3s both;
+      animation: introLine 1s ease 0.4s both;
     }
-    .intro-line.top { top: 38%; }
-    .intro-line.bot { bottom: 38%; }
+    .intro-line.t { top: 35%; }
+    .intro-line.b { bottom: 35%; }
     @keyframes introLine {
       from { opacity: 0; transform: scaleX(0); }
-      to   { opacity: 0.5; transform: scaleX(1); }
+      to   { opacity: 0.4; transform: scaleX(1); }
     }
 
-    /* ─── RESPONSIVE ─── */
     @media (max-width: 768px) {
-      .frame { padding: 16px 20px; }
-      .footer { flex-direction: column; gap: 16px; align-items: center; }
+      .frame { padding: 16px 20px 20px; }
+      .footer { flex-direction: column; align-items: center; gap: 12px; }
       .tip-wrap { max-width: 100%; }
       .server-info { text-align: center; }
-      .topbar-right .tag:not(.live) { display: none; }
+      .footer-right { justify-content: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- INTRO CINÉMATIQUE -->
   <div class="intro">
-    <div class="intro-line top"></div>
+    <div class="intro-line t"></div>
     <div class="intro-text">Northside RP</div>
-    <div class="intro-line bot"></div>
+    <div class="intro-line b"></div>
   </div>
 
-  <!-- CANVAS PARTICULES -->
   <canvas id="canvas"></canvas>
-
-  <!-- FOND -->
   <div class="bg-image"></div>
   <div class="vignette"></div>
-  <div class="glow-orb top"></div>
-  <div class="glow-orb bottom"></div>
+  <div class="glow-top"></div>
+  <div class="glow-bot"></div>
   <div class="scanlines"></div>
 
-  <!-- COINS -->
-  <div class="corners">
-    <div class="corner tl"></div>
-    <div class="corner tr"></div>
-    <div class="corner bl"></div>
-    <div class="corner br"></div>
-  </div>
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+  <div class="hline top"></div>
+  <div class="hline bot"></div>
 
-  <div class="h-line-top"></div>
-  <div class="h-line-bot"></div>
-
-  <!-- CONTENU -->
   <div class="frame">
 
-    <!-- TOP -->
+    <!-- TOPBAR -->
     <div class="topbar">
       <div class="topbar-left">
         <div class="tag live">EN LIGNE</div>
@@ -608,108 +463,74 @@
       </div>
       <div class="topbar-right">
         <div class="tag" id="clock">00:00</div>
-        <div class="tag" id="playerCount">-- / 64</div>
+        <div class="tag" id="playerCount">— / 64</div>
       </div>
     </div>
 
     <!-- CENTRE -->
     <div class="center">
 
-      <!-- Skyline SVG ville -->
       <div class="skyline-wrap">
         <svg viewBox="0 0 700 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="
-            M0,80 L0,58 L18,58 L18,42 L26,42 L26,28 L34,28 L34,42 L42,42 L42,20 L48,20
-            L48,10 L54,10 L54,6 L60,6 L60,10 L66,10 L66,20 L72,20 L72,42 L80,42
-            L80,35 L88,35 L88,22 L94,22 L94,35 L102,35 L102,48 L110,48 L110,32
-            L116,32 L116,18 L124,18 L124,32 L130,32 L130,48 L140,48 L140,25
-            L146,25 L146,14 L150,14 L150,8 L156,8 L156,14 L160,14 L160,25
-            L168,25 L168,52 L178,52 L178,38 L186,38 L186,22 L192,22 L192,16
-            L198,16 L198,22 L204,22 L204,38 L212,38 L212,52 L220,52 L220,30
-            L228,30 L228,18 L236,18 L236,30 L244,30 L244,45 L252,45 L252,28
-            L260,28 L260,12 L264,12 L264,4 L270,4 L270,12 L274,12 L274,28
-            L282,28 L282,45 L290,45 L290,35 L300,35 L300,50 L308,50 L308,36
-            L316,36 L316,20 L322,20 L322,12 L328,12 L328,20 L334,20 L334,36
-            L342,36 L342,50 L352,50 L352,38 L360,38 L360,24 L368,24 L368,38
-            L376,38 L376,55 L384,55 L384,40 L392,40 L392,26 L398,26 L398,40
-            L406,40 L406,55 L416,55 L416,30 L422,30 L422,16 L430,16 L430,30
-            L438,30 L438,44 L446,44 L446,32 L454,32 L454,18 L460,18 L460,32
-            L468,32 L468,48 L478,48 L478,36 L486,36 L486,22 L494,22 L494,36
-            L502,36 L502,52 L512,52 L512,40 L518,40 L518,28 L526,28 L526,40
-            L532,40 L532,55 L542,55 L542,38 L550,38 L550,24 L558,24 L558,38
-            L566,38 L566,52 L576,52 L576,42 L584,42 L584,55 L594,55 L594,45
-            L602,45 L602,60 L612,60 L612,50 L620,50 L620,38 L628,38 L628,50
-            L636,50 L636,60 L650,60 L650,70 L700,70 L700,80 Z
-          " fill="url(#skyGrad)" opacity="0.9"/>
-          <!-- Fenêtres lumineuses -->
-          <rect x="49" y="12" width="4" height="4" fill="rgba(255,200,100,0.6)"/>
-          <rect x="55" y="16" width="4" height="4" fill="rgba(255,200,100,0.4)"/>
+          <path d="M0,80 L0,58 L18,58 L18,42 L26,42 L26,28 L34,28 L34,42 L42,42 L42,20 L48,20 L48,10 L54,10 L54,6 L60,6 L60,10 L66,10 L66,20 L72,20 L72,42 L80,42 L80,35 L88,35 L88,22 L94,22 L94,35 L102,35 L102,48 L110,48 L110,32 L116,32 L116,18 L124,18 L124,32 L130,32 L130,48 L140,48 L140,25 L146,25 L146,14 L150,14 L150,8 L156,8 L156,14 L160,14 L160,25 L168,25 L168,52 L178,52 L178,38 L186,38 L186,22 L192,22 L192,16 L198,16 L198,22 L204,22 L204,38 L212,38 L212,52 L220,52 L220,30 L228,30 L228,18 L236,18 L236,30 L244,30 L244,45 L252,45 L252,28 L260,28 L260,12 L264,12 L264,4 L270,4 L270,12 L274,12 L274,28 L282,28 L282,45 L290,45 L290,35 L300,35 L300,50 L308,50 L308,36 L316,36 L316,20 L322,20 L322,12 L328,12 L328,20 L334,20 L334,36 L342,36 L342,50 L352,50 L352,38 L360,38 L360,24 L368,24 L368,38 L376,38 L376,55 L384,55 L384,40 L392,40 L392,26 L398,26 L398,40 L406,40 L406,55 L416,55 L416,30 L422,30 L422,16 L430,16 L430,30 L438,30 L438,44 L446,44 L446,32 L454,32 L454,18 L460,18 L460,32 L468,32 L468,48 L478,48 L478,36 L486,36 L486,22 L494,22 L494,36 L502,36 L502,52 L512,52 L512,40 L518,40 L518,28 L526,28 L526,40 L532,40 L532,55 L542,55 L542,38 L550,38 L550,24 L558,24 L558,38 L566,38 L566,52 L576,52 L576,42 L584,42 L584,55 L594,55 L594,45 L602,45 L602,60 L612,60 L612,50 L620,50 L620,38 L628,38 L628,50 L636,50 L636,60 L650,60 L650,70 L700,70 L700,80 Z" fill="url(#sg)"/>
+          <rect x="49" y="12" width="4" height="4" fill="rgba(255,200,100,0.55)"/>
+          <rect x="55" y="18" width="4" height="4" fill="rgba(255,200,100,0.35)"/>
           <rect x="147" y="16" width="4" height="4" fill="rgba(255,200,100,0.5)"/>
-          <rect x="153" y="20" width="4" height="4" fill="rgba(255,200,100,0.3)"/>
           <rect x="261" y="8"  width="4" height="4" fill="rgba(255,200,100,0.6)"/>
-          <rect x="267" y="14" width="4" height="4" fill="rgba(255,200,100,0.4)"/>
-          <rect x="323" y="14" width="4" height="4" fill="rgba(255,200,100,0.5)"/>
-          <rect x="393" y="28" width="4" height="4" fill="rgba(255,200,100,0.4)"/>
-          <rect x="423" y="18" width="4" height="4" fill="rgba(255,200,100,0.6)"/>
+          <rect x="265" y="14" width="4" height="4" fill="rgba(255,200,100,0.35)"/>
+          <rect x="323" y="14" width="4" height="4" fill="rgba(255,200,100,0.45)"/>
+          <rect x="423" y="18" width="4" height="4" fill="rgba(255,200,100,0.55)"/>
           <rect x="455" y="20" width="4" height="4" fill="rgba(255,200,100,0.3)"/>
-          <rect x="519" y="30" width="4" height="4" fill="rgba(255,200,100,0.5)"/>
           <rect x="551" y="26" width="4" height="4" fill="rgba(255,200,100,0.4)"/>
-          <rect x="621" y="40" width="4" height="4" fill="rgba(255,200,100,0.5)"/>
-          <!-- Ligne sol -->
-          <line x1="0" y1="70" x2="700" y2="70" stroke="rgba(192,57,43,0.4)" stroke-width="1"/>
+          <line x1="0" y1="70" x2="700" y2="70" stroke="rgba(192,57,43,0.35)" stroke-width="1"/>
           <defs>
-            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="80" gradientUnits="userSpaceOnUse">
-              <stop offset="0%"   stop-color="#c0392b" stop-opacity="0.9"/>
-              <stop offset="60%"  stop-color="#7a1f16" stop-opacity="0.8"/>
-              <stop offset="100%" stop-color="#1a0a08" stop-opacity="0.6"/>
+            <linearGradient id="sg" x1="0" y1="0" x2="0" y2="80" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#d04040" stop-opacity="0.95"/>
+              <stop offset="55%"  stop-color="#7a1f16" stop-opacity="0.85"/>
+              <stop offset="100%" stop-color="#1a0808" stop-opacity="0.5"/>
             </linearGradient>
           </defs>
         </svg>
       </div>
 
-      <!-- Titre -->
       <div class="title-wrap">
-        <div class="title-shadow" aria-hidden="true">NORTHSIDE RP</div>
+        <div class="title-glow" aria-hidden="true">NORTHSIDE RP</div>
         <h1 class="title">NORTHSIDE RP</h1>
       </div>
 
       <div class="subtitle">Garry's Mod &nbsp;·&nbsp; Serious Roleplay</div>
       <div class="sep"></div>
 
-      <div class="status" id="statusText">
+      <div class="status">
         <span id="statusInner">Connexion au serveur</span><span class="cursor"></span>
       </div>
 
-      <!-- Barre de progression -->
       <div class="progress-wrap">
         <div class="progress-labels">
           <span class="phase" id="phaseText">Initialisation</span>
           <span id="etaText">—</span>
         </div>
         <div class="bar-outer">
-          <div class="bar-track">
-            <div class="bar-fill" id="barFill"></div>
-          </div>
+          <div class="bar-fill" id="barFill"></div>
           <div class="bar-sweep"></div>
-          <div class="bar-percent" id="barPercent">0%</div>
         </div>
+        <div class="bar-percent" id="barPercent">0%</div>
         <div class="bar-segments" id="segments"></div>
       </div>
+
     </div>
 
     <!-- FOOTER -->
     <div class="footer">
-      <div class="footer-left">
-        <div class="tip-wrap">
-          <span class="tip-label">ASTUCE</span>
-          <span class="tip-text" id="tipText">Utilise /me pour décrire les actions de ton personnage.</span>
-        </div>
+      <div class="tip-wrap">
+        <span class="tip-label">ASTUCE</span>
+        <span class="tip-text" id="tipText">Utilise /me pour décrire précisément les actions de ton personnage.</span>
       </div>
       <div class="footer-right">
         <button class="btn" id="musicBtn">♫ MUSIQUE</button>
         <div class="server-info">
-          <span>Northside RP &nbsp;<strong>v2.0</strong></span>
-          <span id="dateDisplay">—</span>
+          <div>Northside RP &nbsp;<strong>v2.0</strong></div>
+          <div id="dateDisplay">—</div>
         </div>
       </div>
     </div>
@@ -721,68 +542,55 @@
   </audio>
 
   <script>
-    // ─── PARTICULES ───
+    // Particules
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    let particles = [];
-
-    function resizeCanvas() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
+    const particles = [];
     class Particle {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size  = Math.random() * 1.2 + 0.2;
-        this.speedX = (Math.random() - 0.5) * 0.3;
-        this.speedY = -Math.random() * 0.4 - 0.1;
-        this.life  = 0;
-        this.maxLife = Math.random() * 200 + 100;
-        this.type  = Math.random() > 0.7 ? 'ember' : 'dust';
+      constructor() { this.reset(true); }
+      reset(init) {
+        this.type = Math.random() > 0.65 ? 'ember' : 'dust';
         if (this.type === 'ember') {
           this.x = Math.random() * canvas.width;
-          this.y = canvas.height + 10;
-          this.speedY = -Math.random() * 0.8 - 0.3;
-          this.speedX = (Math.random() - 0.5) * 0.6;
-          this.size   = Math.random() * 1.5 + 0.5;
+          this.y = init ? Math.random() * canvas.height : canvas.height + 5;
+          this.vx = (Math.random() - 0.5) * 0.5;
+          this.vy = -(Math.random() * 0.7 + 0.2);
+          this.size = Math.random() * 1.4 + 0.4;
+          this.life = 0; this.maxLife = Math.random() * 180 + 80;
+        } else {
+          this.x = Math.random() * canvas.width;
+          this.y = init ? Math.random() * canvas.height : canvas.height + 5;
+          this.vx = (Math.random() - 0.5) * 0.2;
+          this.vy = -(Math.random() * 0.2 + 0.05);
+          this.size = Math.random() * 0.8 + 0.2;
+          this.life = 0; this.maxLife = Math.random() * 300 + 150;
         }
       }
       update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        this.life++;
-        if (this.life > this.maxLife || this.y < -10) this.reset();
+        this.x += this.vx; this.y += this.vy; this.life++;
+        if (this.life > this.maxLife || this.y < -10) this.reset(false);
       }
       draw() {
-        const prog = this.life / this.maxLife;
-        const alpha = this.type === 'ember'
-          ? Math.sin(prog * Math.PI) * 0.7
-          : (prog < 0.2 ? prog / 0.2 : prog > 0.8 ? (1 - prog) / 0.2 : 1) * 0.25;
+        const t = this.life / this.maxLife;
+        const a = Math.sin(t * Math.PI);
         if (this.type === 'ember') {
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${192 + Math.random()*40}, ${57 + Math.random()*30}, 43, ${alpha})`;
+          ctx.fillStyle = `rgba(220,${60 + Math.random()*40},40,${a * 0.65})`;
           ctx.fill();
         } else {
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(232, 228, 222, ${alpha * 0.4})`;
+          ctx.fillStyle = `rgba(232,228,222,${a * 0.18})`;
           ctx.fill();
         }
       }
     }
-
-    for (let i = 0; i < 120; i++) {
-      const p = new Particle();
-      p.life = Math.random() * p.maxLife;
-      particles.push(p);
-    }
-
+    for (let i = 0; i < 130; i++) particles.push(new Particle());
     function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => { p.update(); p.draw(); });
@@ -790,17 +598,15 @@
     }
     animateParticles();
 
-    // ─── SEGMENTS ───
-    const segCount = 20;
+    // Segments
+    const segCount = 24;
     const segWrap = document.getElementById('segments');
     for (let i = 0; i < segCount; i++) {
       const s = document.createElement('div');
-      s.className = 'seg';
-      s.id = 'seg' + i;
+      s.className = 'seg'; s.id = 'seg' + i;
       segWrap.appendChild(s);
     }
 
-    // ─── DONNÉES ───
     const tips = [
       "Utilise /me pour décrire précisément les actions de ton personnage.",
       "Un personnage cohérent et réaliste rend le roleplay plus immersif.",
@@ -808,20 +614,15 @@
       "Lis le règlement et les annexes avant de rejoindre une faction.",
       "Le serious RP repose autant sur l'ambiance que sur le respect mutuel.",
       "Reste dans le personnage même dans les situations difficiles.",
-      "Communique avec les autres joueurs hors RP si nécessaire via /ooc.",
+      "Communique hors RP avec les autres joueurs via /ooc si besoin.",
     ];
     const phases = [
-      "Connexion au serveur",
-      "Vérification des ressources",
-      "Téléchargement du contenu",
-      "Chargement des modèles",
-      "Initialisation du HUD",
-      "Synchronisation des données",
-      "Préparation de la session",
-      "Finalisation...",
+      "Connexion au serveur","Vérification des ressources","Téléchargement du contenu",
+      "Chargement des modèles","Initialisation du HUD","Synchronisation des données",
+      "Préparation de la session","Finalisation...",
     ];
 
-    let tipIdx = 0, phaseIdx = 0, progress = 0;
+    let tipIdx = 0, progress = 0;
     const tipEl     = document.getElementById('tipText');
     const phaseEl   = document.getElementById('phaseText');
     const statusEl  = document.getElementById('statusInner');
@@ -836,13 +637,11 @@
       fillEl.style.width = progress + '%';
       percentEl.textContent = Math.round(progress) + '%';
       phaseEl.textContent = phases[Math.min(phases.length - 1, Math.floor(progress / (100 / phases.length)))];
-      const remaining = Math.round((100 - progress) / 3.5);
-      etaEl.textContent = progress >= 99 ? 'Prêt !' : remaining + 's restantes';
-      // Segments
-      const activeSeg = Math.floor(progress / 100 * segCount);
-      for (let i = 0; i < segCount; i++) {
-        document.getElementById('seg' + i).className = 'seg' + (i < activeSeg ? ' active' : '');
-      }
+      const rem = Math.round((100 - progress) / 3.5);
+      etaEl.textContent = progress >= 99 ? 'Prêt !' : rem + 's restantes';
+      const active = Math.floor(progress / 100 * segCount);
+      for (let i = 0; i < segCount; i++)
+        document.getElementById('seg' + i).className = 'seg' + (i < active ? ' active' : '');
     }
 
     function updateClock() {
@@ -851,70 +650,43 @@
       dateEl.textContent  = now.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
     }
 
-    // Rotation tips avec fondu
     setInterval(() => {
       tipEl.classList.add('fade');
-      setTimeout(() => {
-        tipIdx = (tipIdx + 1) % tips.length;
-        tipEl.textContent = tips[tipIdx];
-        tipEl.classList.remove('fade');
-      }, 500);
+      setTimeout(() => { tipIdx = (tipIdx + 1) % tips.length; tipEl.textContent = tips[tipIdx]; tipEl.classList.remove('fade'); }, 500);
     }, 5500);
 
-    // Auto-progress simulé (remplacé par les hooks GMod en prod)
     let autoInt = setInterval(() => {
-      if (progress < 92) {
-        const step = Math.random() * 2.5 + 0.5;
-        updateProgress(progress + step);
-      }
+      if (progress < 90) updateProgress(progress + Math.random() * 2 + 0.4);
     }, 900);
 
     setInterval(updateClock, 1000);
     updateClock();
     updateProgress(0);
 
-    // ─── HOOKS GMOD ───
-    // Ces fonctions sont appelées automatiquement par GMod
+    // Hooks GMod
     function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
       document.getElementById('playerCount').textContent = '— / ' + maxplayers;
     }
-    function SetStatusChanged(status) {
-      statusEl.textContent = status;
-    }
-    function DownloadingFile(fileName) {
-      statusEl.textContent = 'Téléchargement : ' + fileName;
-    }
-    function LoadingProgress(progress_val) {
-      clearInterval(autoInt);
-      updateProgress(progress_val * 100);
-    }
+    function SetStatusChanged(status) { statusEl.textContent = status; }
+    function DownloadingFile(fileName) { statusEl.textContent = 'Téléchargement : ' + fileName; }
+    function LoadingProgress(p) { clearInterval(autoInt); updateProgress(p * 100); }
 
-    // ─── MUSIQUE ───
+    // Musique
     const musicBtn = document.getElementById('musicBtn');
     const bgMusic  = document.getElementById('bgMusic');
     let playing = false;
     musicBtn.addEventListener('click', async () => {
       try {
-        if (!playing) {
-          await bgMusic.play();
-          playing = true;
-          musicBtn.textContent = '■ MUSIQUE';
-          musicBtn.classList.add('music-on');
-        } else {
-          bgMusic.pause();
-          playing = false;
-          musicBtn.textContent = '♫ MUSIQUE';
-          musicBtn.classList.remove('music-on');
-        }
+        if (!playing) { await bgMusic.play(); playing = true; musicBtn.textContent = '■ STOP'; musicBtn.classList.add('music-on'); }
+        else { bgMusic.pause(); playing = false; musicBtn.textContent = '♫ MUSIQUE'; musicBtn.classList.remove('music-on'); }
       } catch {}
     });
 
-    // ─── PARALLAXE SOURIS ───
+    // Parallaxe
     document.addEventListener('mousemove', e => {
       const x = (e.clientX / window.innerWidth  - 0.5) * 10;
       const y = (e.clientY / window.innerHeight - 0.5) * 8;
-      document.querySelector('.bg-image').style.transform =
-        `scale(1.08) translate(${x}px, ${y}px)`;
+      document.querySelector('.bg-image').style.transform = `scale(1.08) translate(${x}px, ${y}px)`;
     });
   </script>
 </body>
