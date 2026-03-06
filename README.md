@@ -5,7 +5,7 @@ Heberge via **GitHub Pages** — gratuit, sans serveur.
 
 ## Acces au site
 
-**https://TON_PSEUDO_GITHUB.github.io/northside-rp/**
+**https://TON_PSEUDO_GITHUB.github.io/northside-rp/**ss
 
 *(Remplace `TON_PSEUDO_GITHUB` par ton nom d'utilisateur GitHub)*
 
