@@ -3,16 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Forum &mdash; NORTHSIDE RP</title>
+<title>Forum — NORTHSIDE RP</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<canvas id="particles-canvas"></canvas>
+
 <header>
   <div class="header-top">Serveur en developpement &mdash; Ouverture prochaine</div>
   <div class="header-main">
     <a href="index.html" class="logo">
-      <div class="logo-icon">N</div>
-      <div><span class="logo-name">NORTHSIDE RP</span><span class="logo-sub">Serious Roleplay &mdash; GarrysMod</span></div>
+      <img src="logo.png" alt="Northside RP">
     </a>
     <nav>
       <a href="index.html" id="nh">Forum</a>
@@ -39,14 +41,83 @@
 </header>
 
 <div class="hero">
-  <div class="hero-bg">NORTHSIDE</div>
-  <div class="hero-lines"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-scanlines"></div>
+  <div class="hero-glow"></div>
+
+  <!-- Skyline SVG -->
+  <svg class="hero-skyline" viewBox="0 0 1400 130" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" fill="rgba(192,57,43,0.5)">
+    <rect x="0" y="80" width="40" height="50"/>
+    <rect x="20" y="60" width="20" height="20"/>
+    <rect x="50" y="50" width="30" height="80"/>
+    <rect x="55" y="40" width="8" height="10"/>
+    <rect x="90" y="70" width="25" height="60"/>
+    <rect x="120" y="40" width="50" height="90"/>
+    <rect x="130" y="30" width="10" height="10"/>
+    <rect x="175" y="60" width="20" height="70"/>
+    <rect x="200" y="30" width="60" height="100"/>
+    <rect x="220" y="20" width="12" height="10"/>
+    <rect x="265" y="55" width="25" height="75"/>
+    <rect x="295" y="45" width="40" height="85"/>
+    <rect x="340" y="65" width="20" height="65"/>
+    <rect x="365" y="25" width="55" height="105"/>
+    <rect x="378" y="15" width="8" height="10"/>
+    <rect x="425" y="50" width="30" height="80"/>
+    <rect x="460" y="70" width="22" height="60"/>
+    <rect x="487" y="35" width="48" height="95"/>
+    <rect x="500" y="25" width="10" height="10"/>
+    <rect x="540" y="55" width="28" height="75"/>
+    <rect x="573" y="42" width="45" height="88"/>
+    <rect x="590" y="30" width="10" height="12"/>
+    <rect x="623" y="68" width="22" height="62"/>
+    <rect x="650" y="20" width="60" height="110"/>
+    <rect x="665" y="10" width="10" height="10"/>
+    <rect x="715" y="50" width="32" height="80"/>
+    <rect x="752" y="62" width="24" height="68"/>
+    <rect x="781" y="38" width="50" height="92"/>
+    <rect x="795" y="28" width="10" height="10"/>
+    <rect x="836" y="55" width="28" height="75"/>
+    <rect x="869" y="45" width="42" height="85"/>
+    <rect x="884" y="35" width="8" height="10"/>
+    <rect x="916" y="72" width="20" height="58"/>
+    <rect x="941" y="28" width="55" height="102"/>
+    <rect x="955" y="18" width="10" height="10"/>
+    <rect x="1001" y="58" width="26" height="72"/>
+    <rect x="1032" y="48" width="38" height="82"/>
+    <rect x="1045" y="38" width="8" height="10"/>
+    <rect x="1075" y="65" width="22" height="65"/>
+    <rect x="1102" y="32" width="52" height="98"/>
+    <rect x="1118" y="22" width="10" height="10"/>
+    <rect x="1159" y="52" width="28" height="78"/>
+    <rect x="1192" y="42" width="42" height="88"/>
+    <rect x="1239" y="68" width="20" height="62"/>
+    <rect x="1264" y="35" width="50" height="95"/>
+    <rect x="1278" y="25" width="10" height="10"/>
+    <rect x="1319" y="55" width="30" height="75"/>
+    <rect x="1354" y="45" width="46" height="85"/>
+    <!-- Fenêtres lumineuses -->
+    <rect x="205" y="40" width="4" height="4" fill="rgba(220,180,60,0.8)"/>
+    <rect x="215" y="40" width="4" height="4" fill="rgba(220,180,60,0.6)"/>
+    <rect x="205" y="50" width="4" height="4" fill="rgba(220,180,60,0.4)"/>
+    <rect x="370" y="35" width="4" height="4" fill="rgba(220,180,60,0.9)"/>
+    <rect x="382" y="35" width="4" height="4" fill="rgba(220,180,60,0.5)"/>
+    <rect x="370" y="45" width="4" height="4" fill="rgba(220,180,60,0.7)"/>
+    <rect x="655" y="30" width="4" height="4" fill="rgba(220,180,60,0.8)"/>
+    <rect x="665" y="30" width="4" height="4" fill="rgba(220,180,60,0.5)"/>
+    <rect x="946" y="38" width="4" height="4" fill="rgba(220,180,60,0.9)"/>
+    <rect x="958" y="38" width="4" height="4" fill="rgba(220,180,60,0.6)"/>
+    <rect x="946" y="48" width="4" height="4" fill="rgba(220,180,60,0.4)"/>
+    <rect x="1107" y="42" width="4" height="4" fill="rgba(220,180,60,0.8)"/>
+    <rect x="1119" y="42" width="4" height="4" fill="rgba(220,180,60,0.5)"/>
+  </svg>
+
   <div class="hero-content">
+    <img src="logo.png" alt="Northside RP" class="hero-logo-img">
     <div class="hero-tag">Forum Officiel</div>
-    <h1>NORTHSIDE <span>RP</span></h1>
-    <p>Serious Roleplay sur Garry's Mod &mdash; Immersion totale, communaute serieuse</p>
+    <div class="hero-desc">Serious Roleplay &mdash; Garry's Mod &mdash; Immersion Totale</div>
   </div>
 </div>
+
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-dot green"></div><span class="stat-label">Serveur</span><span class="stat-value">EN LIGNE</span></div>
   <span class="sep">|</span>
@@ -58,30 +129,83 @@
   <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <span class="stat-label">IP :</span>
     <div class="server-ip" onclick="navigator.clipboard.writeText('xxx.xxx.xxx.xxx:27015');this.textContent='Copie!';setTimeout(()=>this.textContent='xxx.xxx.xxx.xxx:27015',2000)">xxx.xxx.xxx.xxx:27015</div>
-    <a href="#" class="btn btn-red" style="padding:7px 14px;font-size:11px;white-space:nowrap">Rejoindre</a>
+    <a href="#" class="btn btn-red" style="padding:7px 14px;font-size:10px;white-space:nowrap">Rejoindre</a>
   </div>
 </div>
+
 <div class="container">
 <main>
-  <div class="announcement fu"><div class="ann-icon">&#128226;</div><div><div class="ann-title">Bienvenue sur le forum officiel de Northside RP</div><div class="ann-text">Le serveur est actuellement en developpement. Inscrivez-vous pour etre parmi les premiers. Lisez le reglement avant toute candidature.</div><div class="ann-date">&mdash; L'equipe Northside RP</div></div></div>
+  <div class="announcement fu">
+    <div class="ann-icon">&#128226;</div>
+    <div>
+      <div class="ann-title">Bienvenue sur le forum officiel de Northside RP</div>
+      <div class="ann-text">Le serveur est actuellement en developpement. Inscrivez-vous pour etre parmi les premiers membres de la communaute. Lisez le reglement avant toute candidature.</div>
+      <div class="ann-date">&mdash; L'equipe Northside RP</div>
+    </div>
+  </div>
+
   <div style="margin-bottom:24px" class="fu1">
     <div class="section-header">&#127961;&#65039;&nbsp;&nbsp;<span class="section-title">Communaute</span><span class="section-meta">3 categories</span></div>
-    <a href="annonces.html" class="thread"><div class="thread-icon">&#128227;</div><div class="thread-info"><div class="thread-title">Annonces &amp; News <span class="tag tag-new">NEW</span></div><div class="thread-desc">Informations officielles, mises a jour et evenements</div></div><div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div><div class="thread-last"><div class="thread-last-title">Aucun post</div><div class="thread-last-by">&mdash;</div></div></a>
-    <a href="presentations.html" class="thread"><div class="thread-icon">&#128075;</div><div class="thread-info"><div class="thread-title">Presentations</div><div class="thread-desc">Faites connaissance avec la communaute</div></div><div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div><div class="thread-last"><div class="thread-last-title">Aucun post</div><div class="thread-last-by">&mdash;</div></div></a>
-    <a href="discussions.html" class="thread"><div class="thread-icon">&#128172;</div><div class="thread-info"><div class="thread-title">Discussions Generales</div><div class="thread-desc">Discussions libres, suggestions et questions</div></div><div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div><div class="thread-last"><div class="thread-last-title">Aucun post</div><div class="thread-last-by">&mdash;</div></div></a>
+    <a href="annonces.html" class="thread">
+      <div class="thread-icon">&#128227;</div>
+      <div class="thread-info"><div class="thread-title">Annonces &amp; News <span class="tag tag-new">NEW</span></div><div class="thread-desc">Informations officielles, mises a jour et evenements</div></div>
+      <div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div>
+      <div class="thread-last"><div class="thread-last-title">Aucun post</div><div class="thread-last-by">&mdash;</div></div>
+    </a>
+    <a href="presentations.html" class="thread">
+      <div class="thread-icon">&#128075;</div>
+      <div class="thread-info"><div class="thread-title">Presentations</div><div class="thread-desc">Faites connaissance avec la communaute</div></div>
+      <div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div>
+      <div class="thread-last"><div class="thread-last-title">Aucun post</div><div class="thread-last-by">&mdash;</div></div>
+    </a>
+    <a href="discussions.html" class="thread">
+      <div class="thread-icon">&#128172;</div>
+      <div class="thread-info"><div class="thread-title">Discussions Generales</div><div class="thread-desc">Discussions libres, suggestions et questions</div></div>
+      <div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div>
+      <div class="thread-last"><div class="thread-last-title">Aucun post</div><div class="thread-last-by">&mdash;</div></div>
+    </a>
   </div>
+
   <div style="margin-bottom:24px" class="fu2">
     <div class="section-header">&#128203;&nbsp;&nbsp;<span class="section-title">Recrutement</span><span class="section-meta">3 categories</span></div>
-    <a href="cand-police.html" class="thread"><div class="thread-icon">&#128659;</div><div class="thread-info"><div class="thread-title">Candidatures &mdash; Forces de l'Ordre</div><div class="thread-desc">Postulez pour rejoindre la police</div></div><div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div><div class="thread-last"><div class="thread-last-title">Aucune candidature</div><div class="thread-last-by">&mdash;</div></div></a>
-    <a href="cand-medical.html" class="thread"><div class="thread-icon">&#127973;</div><div class="thread-info"><div class="thread-title">Candidatures &mdash; Services Medicaux</div><div class="thread-desc">Postulez pour rejoindre les medecins</div></div><div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div><div class="thread-last"><div class="thread-last-title">Aucune candidature</div><div class="thread-last-by">&mdash;</div></div></a>
-    <a href="cand-staff.html" class="thread"><div class="thread-icon">&#11088;</div><div class="thread-info"><div class="thread-title">Candidatures &mdash; Staff</div><div class="thread-desc">Rejoignez l'equipe de moderation</div></div><div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div><div class="thread-last"><div class="thread-last-title">Aucune candidature</div><div class="thread-last-by">&mdash;</div></div></a>
+    <a href="cand-police.html" class="thread">
+      <div class="thread-icon">&#128659;</div>
+      <div class="thread-info"><div class="thread-title">Candidatures &mdash; Forces de l'Ordre</div><div class="thread-desc">Postulez pour rejoindre la police</div></div>
+      <div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div>
+      <div class="thread-last"><div class="thread-last-title">Aucune candidature</div><div class="thread-last-by">&mdash;</div></div>
+    </a>
+    <a href="cand-medical.html" class="thread">
+      <div class="thread-icon">&#127973;</div>
+      <div class="thread-info"><div class="thread-title">Candidatures &mdash; Services Medicaux</div><div class="thread-desc">Postulez pour rejoindre les medecins</div></div>
+      <div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div>
+      <div class="thread-last"><div class="thread-last-title">Aucune candidature</div><div class="thread-last-by">&mdash;</div></div>
+    </a>
+    <a href="cand-staff.html" class="thread">
+      <div class="thread-icon">&#11088;</div>
+      <div class="thread-info"><div class="thread-title">Candidatures &mdash; Staff</div><div class="thread-desc">Rejoignez l'equipe de moderation</div></div>
+      <div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div>
+      <div class="thread-last"><div class="thread-last-title">Aucune candidature</div><div class="thread-last-by">&mdash;</div></div>
+    </a>
   </div>
+
   <div style="margin-bottom:24px" class="fu3">
     <div class="section-header">&#9878;&#65039;&nbsp;&nbsp;<span class="section-title">Administration</span><span class="section-meta">2 categories</span></div>
-    <a href="signalements.html" class="thread"><div class="thread-icon">&#128680;</div><div class="thread-info"><div class="thread-title">Signalements &amp; Plaintes</div><div class="thread-desc">Signalez un joueur fautif ou comportement contraire aux regles</div></div><div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div><div class="thread-last"><div class="thread-last-title">Aucun signalement</div><div class="thread-last-by">&mdash;</div></div></a>
-    <a href="debans.html" class="thread"><div class="thread-icon">&#128275;</div><div class="thread-info"><div class="thread-title">Demandes de Deban</div><div class="thread-desc">Presentez votre demande de reconsideration ici</div></div><div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div><div class="thread-last"><div class="thread-last-title">Aucune demande</div><div class="thread-last-by">&mdash;</div></div></a>
+    <a href="signalements.html" class="thread">
+      <div class="thread-icon">&#128680;</div>
+      <div class="thread-info"><div class="thread-title">Signalements &amp; Plaintes</div><div class="thread-desc">Signalez un joueur fautif ou comportement contraire aux regles</div></div>
+      <div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div>
+      <div class="thread-last"><div class="thread-last-title">Aucun signalement</div><div class="thread-last-by">&mdash;</div></div>
+    </a>
+    <a href="debans.html" class="thread">
+      <div class="thread-icon">&#128275;</div>
+      <div class="thread-info"><div class="thread-title">Demandes de Deban</div><div class="thread-desc">Presentez votre demande de reconsideration ici</div></div>
+      <div class="thread-stats"><div class="thread-stat-num">0</div><div class="thread-stat-label">Sujets</div></div>
+      <div class="thread-last"><div class="thread-last-title">Aucune demande</div><div class="thread-last-by">&mdash;</div></div>
+    </a>
   </div>
-</main><aside class="sidebar">
+</main>
+
+<aside class="sidebar">
   <div class="discord-widget">
     <div style="font-size:28px;margin-bottom:8px">&#127918;</div>
     <div class="discord-text">Discord Officiel</div>
@@ -95,7 +219,7 @@
         <div class="online-user"><div class="online-dot admin"></div><span style="color:#e74c3c">Admin</span></div>
         <div class="online-user"><div class="online-dot"></div><span>Joueur</span></div>
       </div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:#555;text-transform:uppercase">2 membres en ligne</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:#444;text-transform:uppercase">2 membres en ligne</div>
     </div>
   </div>
   <div class="widget">
@@ -105,23 +229,86 @@
       <div class="rule-item"><div class="rule-num">02</div><div>Pas de RDM, KOS ou metagaming</div></div>
       <div class="rule-item"><div class="rule-num">03</div><div>Respectez les joueurs et le staff</div></div>
       <div class="rule-item"><div class="rule-num">04</div><div>Toute triche = ban definitif</div></div>
-      <a href="reglement.html" class="btn btn-ghost btn-full" style="margin-top:12px;font-size:11px">Reglement Complet</a>
+      <a href="reglement.html" class="btn btn-ghost btn-full" style="margin-top:12px;font-size:10px">Reglement Complet</a>
     </div>
   </div>
-</aside></div>
+</aside>
+</div>
+
 <footer>
-  <div class="footer-logo"><span>NORTH</span>SIDE RP</div>
+  <div class="footer-logo"><img src="logo.png" alt="Northside RP"></div>
   <div class="footer-links">
     <a href="reglement.html">Reglement</a>
     <a href="#">Mentions legales</a>
     <a href="#">Contact</a>
     <a href="#">Discord</a>
   </div>
-  <div class="footer-copy">2026 Northside RP &mdash; Tous droits reserves</div>
+  <div class="footer-copy">&copy; 2026 Northside RP &mdash; Tous droits reserves</div>
 </footer>
+
 <script>
-function toggleMenu(btn){btn.classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('open')}
-document.addEventListener('click',function(e){var m=document.getElementById('mobileMenu'),h=document.querySelector('.hamburger');if(m&&h&&!m.contains(e.target)&&!h.contains(e.target)){m.classList.remove('open');h.classList.remove('open')}});
+// Particles (braises + poussière style loading screen)
+(function(){
+  var canvas = document.getElementById('particles-canvas');
+  var ctx = canvas.getContext('2d');
+  var W, H, particles = [];
+
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+
+  for(var i=0;i<60;i++){
+    particles.push({
+      x: rand(0,1), y: rand(0,1),
+      vx: rand(-0.0002,0.0002), vy: rand(-0.0008,-0.0002),
+      size: rand(0.8,2.5),
+      type: Math.random()<0.4?'ember':'dust',
+      alpha: rand(0.3,0.9),
+      life: rand(0,1), speed: rand(0.0003,0.0008)
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(function(p){
+      p.life += p.speed;
+      if(p.life>1){ p.life=0; p.x=rand(0,1); p.y=1; }
+      var x=p.x*W, y=(1-p.life)*H + p.y*H*0.1;
+      x += Math.sin(p.life*Math.PI*2+p.x*10)*W*0.02;
+      var a = p.alpha * Math.sin(p.life*Math.PI);
+      if(p.type==='ember'){
+        ctx.beginPath();
+        ctx.arc(x,y,p.size,0,Math.PI*2);
+        ctx.fillStyle='rgba(220,100,40,'+a+')';
+        ctx.fill();
+        if(a>0.5){
+          ctx.beginPath();
+          ctx.arc(x,y,p.size*2.5,0,Math.PI*2);
+          ctx.fillStyle='rgba(220,100,40,'+(a*0.15)+')';
+          ctx.fill();
+        }
+      } else {
+        ctx.beginPath();
+        ctx.arc(x,y,p.size*0.6,0,Math.PI*2);
+        ctx.fillStyle='rgba(180,180,180,'+a*0.3+')';
+        ctx.fill();
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+function toggleMenu(btn){
+  btn.classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  var m=document.getElementById('mobileMenu'),h=document.querySelector('.hamburger');
+  if(m&&h&&!m.contains(e.target)&&!h.contains(e.target)){m.classList.remove('open');h.classList.remove('open')}
+});
 </script>
 <script>var el=document.getElementById('nh');if(el)el.classList.add('active');</script>
 </body>

@@ -7,13 +7,13 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<canvas id="particles-canvas"></canvas>
+
 <header>
   <div class="header-top">Serveur en developpement &mdash; Ouverture prochaine</div>
   <div class="header-main">
-    <a href="index.html" class="logo">
-      <div class="logo-icon">N</div>
-      <div><span class="logo-name">NORTHSIDE RP</span><span class="logo-sub">Serious Roleplay &mdash; GarrysMod</span></div>
-    </a>
+    <a href="index.html" class="logo"><img src="logo.png" alt="Northside RP"></a>
     <nav>
       <a href="index.html" id="nh">Forum</a>
       <a href="reglement.html" id="nr">Reglement</a>
@@ -94,7 +94,7 @@
   </div>
 </aside></div>
 <footer>
-  <div class="footer-logo"><span>NORTH</span>SIDE RP</div>
+  <div class="footer-logo"><img src="logo.png" alt="Northside RP"></div>
   <div class="footer-links">
     <a href="reglement.html">Reglement</a>
     <a href="#">Mentions legales</a>
@@ -108,5 +108,31 @@ function toggleMenu(btn){btn.classList.toggle('open');document.getElementById('m
 document.addEventListener('click',function(e){var m=document.getElementById('mobileMenu'),h=document.querySelector('.hamburger');if(m&&h&&!m.contains(e.target)&&!h.contains(e.target)){m.classList.remove('open');h.classList.remove('open')}});
 </script>
 <script>var el=document.getElementById('nh');if(el)el.classList.add('active');</script>
+
+<script>
+(function(){
+  var canvas=document.getElementById('particles-canvas');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d'),W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  window.addEventListener('resize',resize);resize();
+  function rand(a,b){return a+Math.random()*(b-a);}
+  for(var i=0;i<50;i++) particles.push({x:rand(0,1),y:rand(0,1),vx:rand(-0.0002,0.0002),vy:rand(-0.0008,-0.0002),size:rand(0.8,2.2),type:Math.random()<0.4?'ember':'dust',alpha:rand(0.3,0.9),life:rand(0,1),speed:rand(0.0003,0.0008)});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(function(p){
+      p.life+=p.speed;
+      if(p.life>1){p.life=0;p.x=rand(0,1);p.y=1;}
+      var x=p.x*W,y=(1-p.life)*H+p.y*H*0.1;
+      x+=Math.sin(p.life*Math.PI*2+p.x*10)*W*0.02;
+      var a=p.alpha*Math.sin(p.life*Math.PI);
+      if(p.type==='ember'){ctx.beginPath();ctx.arc(x,y,p.size,0,Math.PI*2);ctx.fillStyle='rgba(220,100,40,'+a+')';ctx.fill();}
+      else{ctx.beginPath();ctx.arc(x,y,p.size*0.6,0,Math.PI*2);ctx.fillStyle='rgba(180,180,180,'+a*0.3+')';ctx.fill();}
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
 </body>
 </html>
