@@ -135,16 +135,18 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
 </script>
 <script src="nrp-data.js"></script>
 <script src="nrp-auth.js"></script>
+<script src="nrp-users.js"></script>
 <script src="nrp-forum.js"></script>
 <script>
 window.addEventListener('DOMContentLoaded', function(){
   NRPForum.applyBanner();
   NRPForum.injectAdminBtn();
+  NRPUsers.applyHeader();
 });
 </script>
 <script>
 function submitPage() {
-  var pseudo = (document.getElementById('np_pseudo')||{}).value||'';
+  var pseudo = (NRPUsers.current() ? NRPUsers.current().pseudo : '') || (document.getElementById('np_pseudo') ? document.getElementById('np_pseudo').value : '') || 'Anonyme';
   var pres   = (document.getElementById('np_pres')||{}).value||'';
   NRPForum.submitForm('presentations', function() {
     if (!pseudo) { alert('Le pseudo est obligatoire.'); return null; }

@@ -30,31 +30,51 @@
     serverName:      'NorthSide RP',
     serverSlogan:    "Serious Roleplay \u2014 Garry's Mod",
     contactEmail:    '',
-    membersCount:    '0',
-    _adminToken:     null,
-    _adminExpiry:    0
+    membersCount:    '0'
   };
+
+  // ── Encodage unicode-safe (btoa natif ne supporte pas les accents) ──
+  function _encode(obj) {
+    try {
+      // encodeURIComponent échappe tout > 0x7F, btoa ne voit que de l'ASCII
+      return btoa(encodeURIComponent(JSON.stringify(obj)));
+    } catch(e) { return null; }
+  }
+  function _decode(str) {
+    try {
+      return JSON.parse(decodeURIComponent(atob(str)));
+    } catch(e) { return null; }
+  }
 
   // ── Config ─────────────────────────────────────────────
   function _loadCfg() {
     try {
       var r = localStorage.getItem(_CK);
-      return r ? Object.assign({}, DEFAULTS, JSON.parse(atob(r))) : Object.assign({}, DEFAULTS);
+      if (!r) return Object.assign({}, DEFAULTS);
+      var parsed = _decode(r);
+      return parsed ? Object.assign({}, DEFAULTS, parsed) : Object.assign({}, DEFAULTS);
     } catch(e) { return Object.assign({}, DEFAULTS); }
   }
   function _saveCfg(obj) {
-    try { localStorage.setItem(_CK, btoa(JSON.stringify(obj))); } catch(e) {}
+    try {
+      var enc = _encode(obj);
+      if (enc) localStorage.setItem(_CK, enc);
+    } catch(e) {}
   }
 
   // ── Topics ─────────────────────────────────────────────
   function _loadTopics() {
     try {
       var r = localStorage.getItem(_TK);
-      return r ? JSON.parse(atob(r)) : {};
+      if (!r) return {};
+      return _decode(r) || {};
     } catch(e) { return {}; }
   }
   function _saveTopics(obj) {
-    try { localStorage.setItem(_TK, btoa(JSON.stringify(obj))); } catch(e) {}
+    try {
+      var enc = _encode(obj);
+      if (enc) localStorage.setItem(_TK, enc);
+    } catch(e) {}
   }
 
   // ── API ────────────────────────────────────────────────
@@ -69,10 +89,7 @@
     },
     all: function() { return _loadCfg(); },
     reset: function() {
-      var d = _loadCfg();
-      var t = d._adminToken, e = d._adminExpiry;
-      var f = Object.assign({}, DEFAULTS); f._adminToken = t; f._adminExpiry = e;
-      _saveCfg(f);
+      _saveCfg(Object.assign({}, DEFAULTS));
     },
 
     /* TOPICS */
@@ -128,6 +145,55 @@
     /** Nombre de topics dans une catégorie */
     countTopics: function(cat) {
       return (_loadTopics()[cat] || []).length;
+    },
+
+    // ── REPLIES ────────────────────────────────────────────
+    /** Ajouter une réponse à un topic */
+    addReply: function(cat, topicId, reply) {
+      var all = _loadTopics();
+      var topics = all[cat] || [];
+      var t = topics.find(function(t){ return t.id === topicId; });
+      if (!t) return null;
+      if (!t.replies) t.replies = [];
+      var r = Object.assign({}, reply, {
+        id:   Date.now() + '-' + Math.random().toString(36).slice(2,6),
+        date: new Date().toLocaleDateString('fr-FR'),
+        time: new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),
+        likes: []
+      });
+      t.replies.push(r);
+      _saveTopics(all);
+      return r;
+    },
+
+    /** Supprimer une réponse */
+    deleteReply: function(cat, topicId, replyId) {
+      var all = _loadTopics();
+      var t = (all[cat]||[]).find(function(t){ return t.id === topicId; });
+      if (!t || !t.replies) return;
+      t.replies = t.replies.filter(function(r){ return r.id !== replyId; });
+      _saveTopics(all);
+    },
+
+    // ── LIKES ──────────────────────────────────────────────
+    /** Liker / unliker un post (topic ou reply). Retourne le nouveau tableau de likes */
+    toggleLike: function(cat, topicId, pseudo, replyId) {
+      var all = _loadTopics();
+      var t = (all[cat]||[]).find(function(t){ return t.id === topicId; });
+      if (!t) return [];
+      var target = replyId ? (t.replies||[]).find(function(r){ return r.id === replyId; }) : t;
+      if (!target) return [];
+      if (!target.likes) target.likes = [];
+      var idx = target.likes.indexOf(pseudo);
+      if (idx >= 0) target.likes.splice(idx, 1);
+      else target.likes.push(pseudo);
+      _saveTopics(all);
+      return target.likes;
+    },
+
+    /** Lire un topic précis */
+    getTopic: function(cat, topicId) {
+      return (_loadTopics()[cat]||[]).find(function(t){ return t.id === topicId; }) || null;
     }
   };
 

@@ -130,11 +130,13 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
 </script>
 <script src="nrp-data.js"></script>
 <script src="nrp-auth.js"></script>
+<script src="nrp-users.js"></script>
 <script src="nrp-forum.js"></script>
 <script>
 window.addEventListener('DOMContentLoaded', function(){
   NRPForum.applyBanner();
   NRPForum.injectAdminBtn();
+  NRPUsers.applyHeader();
 });
 </script>
 <script>
@@ -144,7 +146,7 @@ function submitPage() {
   NRPForum.submitForm('discussions', function() {
     if (!titre)   { alert('Le titre est obligatoire.'); return null; }
     if (!contenu) { alert('Le message est obligatoire.'); return null; }
-    return { author: 'Membre', title: titre, content: contenu };
+    return { author: (NRPUsers.current() ? NRPUsers.current().pseudo : 'Anonyme'), title: titre, content: contenu };
   }, 'discussions.html');
 }
 </script>

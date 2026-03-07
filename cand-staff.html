@@ -148,11 +148,13 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
 </script>
 <script src="nrp-data.js"></script>
 <script src="nrp-auth.js"></script>
+<script src="nrp-users.js"></script>
 <script src="nrp-forum.js"></script>
 <script>
 window.addEventListener('DOMContentLoaded', function(){
   NRPForum.applyBanner();
   NRPForum.injectAdminBtn();
+  NRPUsers.applyHeader();
 });
 </script>
 <script>
@@ -176,7 +178,7 @@ function submitPage() {
   NRPForum.submitForm('cand-staff', function() {
     if (!_pseudo) { alert('Veuillez renseigner votre pseudo.'); return null; }
     return {
-      author:  _pseudo || 'Anonyme',
+      author: (NRPUsers.current() ? NRPUsers.current().pseudo : (_pseudo || 'Anonyme')),
       title:   _pseudo + ' — Candidature',
       content: '',
       fields: {

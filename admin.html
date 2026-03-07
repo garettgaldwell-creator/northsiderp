@@ -141,8 +141,21 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 <!-- Auth guard : chargés AVANT tout rendu, bloque si non connecté -->
 <script src="nrp-data.js"></script>
 <script src="nrp-auth.js"></script>
+<script src="nrp-users.js"></script>
 <script src="nrp-forum.js"></script>
-<script>NRPAuth.requireAuth();</script>
+<script>
+// Nettoyage ancien format + vérif auth
+(function(){
+  try {
+    var raw = localStorage.getItem('nrp_cfg_v1');
+    if (raw) { JSON.parse(decodeURIComponent(atob(raw))); }
+  } catch(e) {
+    localStorage.removeItem('nrp_cfg_v1');
+    localStorage.removeItem('nrp_topics_v1');
+  }
+  NRPAuth.requireAuth();
+})();
+</script>
 
 <!-- TOPBAR -->
 <div class="atb">

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sujet — NORTHSIDE RP</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* ── POST CARD ── */
+.post-card{background:var(--dark);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:16px;overflow:hidden;transition:border-color .2s}
+.post-card.op{border-top:3px solid var(--red);}
+.post-card-header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
+.post-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.1)}
+.post-meta{flex:1;min-width:0}
+.post-pseudo{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:#f5f5ff}
+.post-role{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.post-date{font-family:'Share Tech Mono',monospace;font-size:10px;color:#444;margin-left:auto;white-space:nowrap}
+.post-body{padding:20px 18px;font-size:14px;color:#ccc;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.post-quote{background:rgba(192,57,43,.06);border-left:3px solid var(--red);padding:10px 14px;border-radius:4px;margin-bottom:12px;font-size:12px;color:#888;font-style:italic}
+.post-quote strong{color:#e74c3c;font-style:normal;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;font-size:11px}
+.post-footer{display:flex;align-items:center;gap:8px;padding:10px 18px;border-top:1px solid var(--border);background:rgba(0,0,0,.1)}
+.post-btn{background:none;border:1px solid #26263a;color:#555;border-radius:6px;padding:5px 12px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1px;transition:all .15s;display:flex;align-items:center;gap:5px}
+.post-btn:hover{border-color:#e74c3c44;color:#e74c3c}
+.post-btn.liked{border-color:#e74c3c66;color:#e74c3c;background:rgba(192,57,43,.08)}
+.post-num{font-family:'Share Tech Mono',monospace;font-size:10px;color:#333;margin-left:auto}
+/* ── REPLY BOX ── */
+.reply-box{background:var(--dark);border:1px solid var(--border-2);border-radius:var(--radius-lg);padding:20px;margin-top:24px}
+.reply-box-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:#f5f5ff;margin-bottom:14px}
+.reply-quote-preview{background:rgba(192,57,43,.07);border-left:3px solid var(--red);padding:8px 12px;border-radius:4px;margin-bottom:10px;font-size:12px;color:#888;display:none;position:relative}
+.reply-quote-preview.show{display:block}
+.reply-quote-clear{position:absolute;top:6px;right:8px;background:none;border:none;color:#555;cursor:pointer;font-size:14px}
+.reply-textarea{width:100%;background:#131318;border:1px solid #26263a;color:#e8e8f2;font-family:Rajdhani,sans-serif;font-size:14px;padding:12px;border-radius:8px;outline:none;resize:vertical;min-height:100px;box-sizing:border-box;transition:border-color .2s}
+.reply-textarea:focus{border-color:rgba(192,57,43,.5)}
+.reply-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:10px}
+/* ── STATUS BADGE ── */
+.status-badge{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:3px 9px;border-radius:3px;border:1px solid}
+/* ── BACK LINK ── */
+.back-link{display:inline-flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;color:#555;transition:color .2s;margin-bottom:16px}
+.back-link:hover{color:#e74c3c}
+/* ── LOGIN NOTICE ── */
+.login-notice{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:16px 20px;text-align:center;font-size:13px;color:#888;margin-top:24px}
+.login-notice a{color:#e74c3c;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px}
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+<header>
+  <div class="header-top" id="dyn-banner">Serveur en developpement &mdash; Ouverture prochaine</div>
+  <div class="header-main">
+    <a href="index.html" class="logo"><img src="logo.png" alt="Northside RP"></a>
+    <nav>
+      <a href="index.html" id="nh">Forum</a>
+      <a href="reglement.html" id="nr">Reglement</a>
+      <a href="candidatures.html" id="nc">Candidatures</a>
+      <a href="boutique.html" id="nb">Boutique</a>
+    </nav>
+    <div class="header-actions">
+      <a href="login.html" class="btn btn-ghost">Connexion</a>
+      <a href="register.html" class="btn btn-red">S'inscrire</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu(this)"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Forum</a>
+    <a href="reglement.html">Reglement</a>
+    <a href="candidatures.html">Candidatures</a>
+    <a href="boutique.html">Boutique</a>
+    <div class="mobile-menu-actions">
+      <a href="login.html" class="btn btn-ghost" style="flex:1">Connexion</a>
+      <a href="register.html" class="btn btn-red" style="flex:1">S'inscrire</a>
+    </div>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-bg" id="hero-bg">SUJET</div>
+  <div class="page-hero-inner">
+    <div class="breadcrumb" id="breadcrumb"><a href="index.html">Forum</a> &rsaquo; <span>Sujet</span></div>
+    <div class="page-title" id="page-title">Chargement…</div>
+    <div class="page-sub" id="page-sub"></div>
+  </div>
+</div>
+
+<div class="container">
+<main class="fu" style="max-width:800px">
+
+  <!-- Fil d'Ariane + retour -->
+  <a href="#" id="back-btn" class="back-link">&#8592; Retour à la liste</a>
+
+  <!-- Posts -->
+  <div id="posts-list"></div>
+
+  <!-- Zone réponse -->
+  <div id="reply-zone"></div>
+
+</main>
+<aside class="sidebar">
+  <div class="widget">
+    <div class="widget-header"><div class="widget-accent"></div><span class="widget-title">Ce Sujet</span></div>
+    <div class="widget-body" id="topic-meta-sidebar">
+      <div style="font-size:12px;color:#555">Chargement…</div>
+    </div>
+  </div>
+  <div class="widget">
+    <div class="widget-header"><div class="widget-accent"></div><span class="widget-title">Règles Essentielles</span></div>
+    <div class="widget-body">
+      <div class="rule-item"><div class="rule-num">01</div><div>Pas de BreakRP en jeu</div></div>
+      <div class="rule-item"><div class="rule-num">02</div><div>Respectez les autres membres</div></div>
+      <div class="rule-item"><div class="rule-num">03</div><div>Pas de spam ni flood</div></div>
+      <div class="rule-item"><div class="rule-num">04</div><div>Restez dans le sujet</div></div>
+      <a href="reglement.html" class="btn btn-ghost btn-full" style="margin-top:12px;font-size:11px">Reglement Complet</a>
+    </div>
+  </div>
+</aside>
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="logo.png" alt="Northside RP"></div>
+  <div class="footer-links">
+    <a href="reglement.html">Reglement</a>
+    <a href="#">Mentions legales</a>
+    <a href="#">Contact</a>
+    <a href="#" id="dyn-footer-discord">Discord</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Northside RP &mdash; Tous droits reserves</div>
+</footer>
+
+<script>
+function toggleMenu(btn){btn.classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('open')}
+document.addEventListener('click',function(e){var m=document.getElementById('mobileMenu'),h=document.querySelector('.hamburger');if(m&&h&&!m.contains(e.target)&&!h.contains(e.target)){m.classList.remove('open');h.classList.remove('open')}});
+</script>
+<script>
+(function(){
+  var canvas=document.getElementById('particles-canvas');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d'),W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  window.addEventListener('resize',resize);resize();
+  function rand(a,b){return a+Math.random()*(b-a);}
+  for(var i=0;i<50;i++) particles.push({x:rand(0,1),y:rand(0,1),vx:rand(-0.0002,0.0002),vy:rand(-0.0008,-0.0002),size:rand(0.8,2.2),type:Math.random()<0.4?'ember':'dust',alpha:rand(0.3,0.9),life:rand(0,1),speed:rand(0.0003,0.0008)});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(function(p){
+      p.life+=p.speed;
+      if(p.life>1){p.life=0;p.x=rand(0,1);p.y=1;}
+      var x=p.x*W,y=(1-p.life)*H+p.y*H*0.1;
+      x+=Math.sin(p.life*Math.PI*2+p.x*10)*W*0.02;
+      var a=p.alpha*Math.sin(p.life*Math.PI);
+      if(p.type==='ember'){ctx.beginPath();ctx.arc(x,y,p.size,0,Math.PI*2);ctx.fillStyle='rgba(220,100,40,'+a+')';ctx.fill();}
+      else{ctx.beginPath();ctx.arc(x,y,p.size*0.6,0,Math.PI*2);ctx.fillStyle='rgba(180,180,180,'+a*0.3+')';ctx.fill();}
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+<script src="nrp-data.js"></script>
+<script src="nrp-auth.js"></script>
+<script src="nrp-users.js"></script>
+<script src="nrp-forum.js"></script>
+<script>
+// ── Nettoyage ancien localStorage ──
+(function(){
+  try{ var r=localStorage.getItem('nrp_cfg_v1'); if(r) JSON.parse(decodeURIComponent(atob(r))); }
+  catch(e){ localStorage.removeItem('nrp_cfg_v1'); localStorage.removeItem('nrp_topics_v1'); }
+})();
+
+var _CAT_NAMES={
+  'discussions':'Discussions Générales','presentations':'Présentations','annonces':'Annonces & News',
+  'cand-police':'Candidatures Police','cand-medical':'Candidatures Médical','cand-staff':'Candidatures Staff',
+  'debans':'Demandes de Déban','signalements':'Signalements'
+};
+var _CAT_URLS={
+  'discussions':'discussions.html','presentations':'presentations.html','annonces':'annonces.html',
+  'cand-police':'cand-police.html','cand-medical':'cand-medical.html','cand-staff':'cand-staff.html',
+  'debans':'debans.html','signalements':'signalements.html'
+};
+var _STATUS_C={ouvert:'#22c55e',en_cours:'#f59e0b',accepte:'#3b9fd8',refuse:'#e74c3c',ferme:'#555'};
+var _STATUS_L={ouvert:'OUVERT',en_cours:'EN COURS',accepte:'ACCEPTÉ',refuse:'REFUSÉ',ferme:'FERMÉ'};
+
+function _esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+function _escRaw(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── Lire params URL ──────────────────────────────────────
+var _params = (function(){
+  var p={}, q=location.search.slice(1).split('&');
+  q.forEach(function(kv){var a=kv.split('=');if(a[0])p[decodeURIComponent(a[0])]=decodeURIComponent(a[1]||'');});
+  return p;
+})();
+var _CAT = _params.cat || '';
+var _TID = _params.id  || '';
+
+// ── Rendu d'un post (OP ou reply) ───────────────────────
+function _renderPost(post, idx, cat, topicId, isAdmin) {
+  var session = NRPUsers.current();
+  var pseudo  = session ? session.pseudo : null;
+  var likes   = post.likes || [];
+  var isLiked = pseudo && likes.indexOf(pseudo) >= 0;
+  var roleObj = NRPUsers.roleOf(post.author);
+  var u       = NRPUsers.get(post.author);
+  var color   = u ? u.color : '#e74c3c';
+  var initial = (post.author||'?')[0].toUpperCase();
+  var isOp    = idx === 0;
+  var canDel  = isAdmin || (pseudo && pseudo === post.author);
+  var postId  = post.id;
+
+  // Citation contenu
+  var quoteHtml = '';
+  if (post.quote) {
+    quoteHtml = '<div class="post-quote"><strong>✦ '+_escRaw(post.quoteAuthor||'Inconnu')+' a écrit :</strong><br>'+_escRaw(post.quote)+'</div>';
+  }
+
+  return '<div class="post-card'+(isOp?' op':'')+'" id="post-'+_escRaw(postId)+'">'
+    +'<div class="post-card-header">'
+    +  '<div class="post-avatar" style="background:'+color+'">'+initial+'</div>'
+    +  '<div class="post-meta">'
+    +    '<div class="post-pseudo">'+_escRaw(post.author||'Anonyme')+'</div>'
+    +    '<div class="post-role" style="color:'+roleObj.color+'">'+roleObj.label+(isOp?' &nbsp;·&nbsp; <span style=\"color:#555\">Auteur</span>':'')+'</div>'
+    +  '</div>'
+    +  '<div class="post-date">'+_escRaw(post.date)+' à '+_escRaw(post.time)+'</div>'
+    +'</div>'
+    +'<div class="post-body">'+quoteHtml+_esc(post.content||'')+'</div>'
+    +'<div class="post-footer">'
+    +  (session ? '<button class="post-btn'+(isLiked?' liked':'')+'" onclick="doLike(\''+_escRaw(postId)+'\',\''+_escRaw(topicId)+'\',this)">♥ <span class="like-count">'+likes.length+'</span></button>' : '<span style="font-size:11px;color:#333">♥ '+likes.length+'</span>')
+    +  (session ? '<button class="post-btn" onclick="doQuote(\''+_escRaw(postId)+'\',\''+_escRaw(post.author||'')+'\',this)">❝ Citer</button>' : '')
+    +  (canDel && !isOp ? '<button class="post-btn" onclick="doDeleteReply(\''+_escRaw(postId)+'\')">🗑 Sup.</button>' : '')
+    +  (isAdmin && isOp ? '<button class="post-btn" onclick="doDeleteTopic()">🗑 Topic</button>' : '')
+    +  '<span class="post-num">#'+idx+'</span>'
+    +'</div>'
+    +'</div>';
+}
+
+// ── Rendu sidebar ────────────────────────────────────────
+function _renderSidebar(topic, replies) {
+  var sc = _STATUS_C[topic.status]||'#555';
+  var sl = _STATUS_L[topic.status]||topic.status;
+  document.getElementById('topic-meta-sidebar').innerHTML =
+    '<div style="display:flex;flex-direction:column;gap:8px;font-size:12px">'
+    +'<div style="display:flex;justify-content:space-between"><span style="color:#555">Statut</span><span class="status-badge" style="background:'+sc+'18;color:'+sc+';border-color:'+sc+'44">'+sl+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between"><span style="color:#555">Auteur</span><span style="color:#f5f5ff;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:1px">'+_escRaw(topic.author||'Anonyme')+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between"><span style="color:#555">Posté le</span><span style="color:#aaa">'+_escRaw(topic.date)+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between"><span style="color:#555">Réponses</span><span style="color:#e74c3c;font-family:\'Share Tech Mono\',monospace">'+replies.length+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between"><span style="color:#555">Catégorie</span><a href="'+(_CAT_URLS[_CAT]||'#')+'" style="color:#3b9fd8;font-family:\'Barlow Condensed\',sans-serif;font-size:11px;letter-spacing:1px">'+(_CAT_NAMES[_CAT]||_CAT)+'</a></div>'
+    +'</div>';
+}
+
+// ── Rendu complet ────────────────────────────────────────
+function render() {
+  var topic = NRP.getTopic(_CAT, _TID);
+  if (!topic) {
+    document.getElementById('posts-list').innerHTML = '<div style="text-align:center;padding:60px;color:#555"><div style="font-size:40px;font-family:\'Bebas Neue\',sans-serif;letter-spacing:3px;color:#222">INTROUVABLE</div><div style="margin-top:8px">Ce sujet n\'existe pas ou a été supprimé.</div><a href="index.html" class="btn btn-ghost" style="margin-top:16px;display:inline-block">Retour au forum</a></div>';
+    return;
+  }
+
+  var isAdmin = NRPAuth.isLoggedIn();
+  var session = NRPUsers.current();
+  var replies = topic.replies || [];
+
+  // Hero
+  document.title = _escRaw(topic.title||'Sujet') + ' — NORTHSIDE RP';
+  document.getElementById('hero-bg').textContent = (_CAT_NAMES[_CAT]||'SUJET').toUpperCase();
+  document.getElementById('page-title').innerHTML = _escRaw(topic.title||'Sans titre');
+  document.getElementById('page-sub').textContent = 'Posté par ' + (topic.author||'Anonyme') + ' le ' + topic.date;
+
+  // Breadcrumb
+  var catUrl = _CAT_URLS[_CAT] || 'index.html';
+  var catName = _CAT_NAMES[_CAT] || 'Forum';
+  document.getElementById('breadcrumb').innerHTML = '<a href="index.html">Forum</a> &rsaquo; <a href="'+catUrl+'">'+catName+'</a> &rsaquo; <span>'+_escRaw((topic.title||'Sujet').substring(0,40))+'</span>';
+  document.getElementById('back-btn').href = catUrl;
+
+  // Posts
+  var html = _renderPost(topic, 0, _CAT, _TID, isAdmin);
+  replies.forEach(function(r, i) {
+    html += _renderPost(r, i+1, _CAT, _TID, isAdmin);
+  });
+  document.getElementById('posts-list').innerHTML = html;
+
+  // Sidebar
+  _renderSidebar(topic, replies);
+
+  // Zone réponse
+  renderReplyZone(topic.status);
+}
+
+function renderReplyZone(status) {
+  var session = NRPUsers.current();
+  var zone = document.getElementById('reply-zone');
+  if (!session) {
+    zone.innerHTML = '<div class="login-notice">Vous devez être <a href="login.html">connecté</a> pour répondre.<br><a href="register.html" style="color:#aaa;font-size:12px">Pas encore de compte ? S\'inscrire</a></div>';
+    return;
+  }
+  if (status === 'ferme') {
+    zone.innerHTML = '<div class="login-notice" style="color:#555">🔒 Ce sujet est fermé — les réponses sont désactivées.</div>';
+    return;
+  }
+  zone.innerHTML =
+    '<div class="reply-box">'
+    +'<div class="reply-box-title">RÉPONDRE</div>'
+    +'<div class="reply-quote-preview" id="quote-preview"><button class="reply-quote-clear" onclick="clearQuote()">✕</button><strong id="quote-from"></strong><br><span id="quote-text"></span></div>'
+    +'<textarea class="reply-textarea" id="reply-content" placeholder="Votre réponse…"></textarea>'
+    +'<div class="reply-actions">'
+    +  '<button class="btn btn-ghost" onclick="clearQuote()">Effacer citation</button>'
+    +  '<button class="btn btn-red btn-submit-topic" onclick="doReply()">Envoyer</button>'
+    +'</div>'
+    +'</div>';
+}
+
+// ── Actions ──────────────────────────────────────────────
+var _quoteData = null;
+
+function doQuote(replyId, author, btn) {
+  var topic = NRP.getTopic(_CAT, _TID);
+  if (!topic) return;
+  var post = replyId === topic.id ? topic : (topic.replies||[]).find(function(r){return r.id===replyId;});
+  if (!post) return;
+  _quoteData = { id: replyId, author: post.author, text: (post.content||'').substring(0,200) };
+  var preview = document.getElementById('quote-preview');
+  var fromEl  = document.getElementById('quote-from');
+  var textEl  = document.getElementById('quote-text');
+  if (preview && fromEl && textEl) {
+    fromEl.textContent = '✦ ' + (post.author||'Anonyme') + ' a écrit :';
+    textEl.textContent = (post.content||'').substring(0,200) + (post.content && post.content.length>200?'…':'');
+    preview.classList.add('show');
+  }
+  var ta = document.getElementById('reply-content');
+  if (ta) ta.focus();
+}
+
+function clearQuote() {
+  _quoteData = null;
+  var p = document.getElementById('quote-preview');
+  if (p) p.classList.remove('show');
+}
+
+function doReply() {
+  var session = NRPUsers.current();
+  if (!session) { alert('Connectez-vous pour répondre.'); return; }
+  var ta = document.getElementById('reply-content');
+  var content = ta ? ta.value.trim() : '';
+  if (!content) { alert('Le message est vide.'); return; }
+
+  var reply = { author: session.pseudo, content: content };
+  if (_quoteData) {
+    reply.quote = _quoteData.text;
+    reply.quoteAuthor = _quoteData.author;
+  }
+
+  NRP.addReply(_CAT, _TID, reply);
+  NRPUsers.incPosts(session.pseudo);
+  clearQuote();
+  render();
+
+  // Scroll vers le bas
+  setTimeout(function(){
+    var posts = document.getElementById('posts-list');
+    if (posts) posts.lastElementChild && posts.lastElementChild.scrollIntoView({behavior:'smooth',block:'center'});
+  }, 100);
+}
+
+function doLike(postId, topicId, btn) {
+  var session = NRPUsers.current();
+  if (!session) return;
+  var isReply = postId !== topicId;
+  var newLikes = NRP.toggleLike(_CAT, topicId, session.pseudo, isReply ? postId : null);
+  var countEl = btn.querySelector('.like-count');
+  if (countEl) countEl.textContent = newLikes.length;
+  btn.classList.toggle('liked', newLikes.indexOf(session.pseudo) >= 0);
+}
+
+function doDeleteReply(replyId) {
+  var session = NRPUsers.current();
+  if (!session && !NRPAuth.isLoggedIn()) return;
+  if (!confirm('Supprimer cette réponse ?')) return;
+  NRP.deleteReply(_CAT, _TID, replyId);
+  render();
+}
+
+function doDeleteTopic() {
+  if (!NRPAuth.isLoggedIn() && !NRPUsers.isLoggedIn()) return;
+  if (!confirm('Supprimer ce topic entier ?')) return;
+  NRP.deleteTopic(_CAT, _TID);
+  window.location.href = _CAT_URLS[_CAT] || 'index.html';
+}
+
+// ── Init ─────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.applyBanner();
+  NRPForum.injectAdminBtn();
+  NRPUsers.applyHeader();
+  if (!_CAT || !_TID) {
+    document.getElementById('posts-list').innerHTML = '<div style="text-align:center;padding:60px;color:#555">Sujet introuvable.</div>';
+    return;
+  }
+  render();
+});
+</script>
+</body>
+</html>

@@ -144,11 +144,13 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
 </script>
 <script src="nrp-data.js"></script>
 <script src="nrp-auth.js"></script>
+<script src="nrp-users.js"></script>
 <script src="nrp-forum.js"></script>
 <script>
 window.addEventListener('DOMContentLoaded', function(){
   NRPForum.applyBanner();
   NRPForum.injectAdminBtn();
+  NRPUsers.applyHeader();
 });
 </script>
 <script>
@@ -162,7 +164,7 @@ window.addEventListener('DOMContentLoaded', function(){
 </script>
 <script>
 function submitPage() {
-  var pseudo   = (document.getElementById('db_pseudo')||{}).value||'';
+  var pseudo = (NRPUsers.current() ? NRPUsers.current().pseudo : '') || (document.getElementById('db_pseudo') ? document.getElementById('db_pseudo').value : '') || 'Anonyme';
   var steam    = (document.getElementById('db_steam')||{}).value||'';
   var raison   = (document.getElementById('db_raison')||{}).value||'';
   var version  = (document.getElementById('db_version')||{}).value||'';
