@@ -4,14 +4,78 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Forum — NORTHSIDE RP</title>
+<!-- Aucune référence à admin.html dans ce fichier -->
+<meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css">
+<style>
+/* ── Modale login admin ── */
+.adm-overlay {
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,0.85); backdrop-filter:blur(8px);
+  align-items:center; justify-content:center;
+}
+.adm-overlay.open { display:flex; }
+.adm-box {
+  background:#0e0e12; border:1px solid #3d1515;
+  border-top:2px solid #e74c3c; border-radius:16px;
+  padding:36px 32px; width:340px; max-width:95vw;
+  box-shadow:0 30px 80px rgba(0,0,0,.8), 0 0 40px rgba(192,57,43,.15);
+  animation:adm-in .25s ease;
+}
+@keyframes adm-in { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.adm-title {
+  font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:4px;
+  color:#f5f5ff; margin-bottom:4px;
+}
+.adm-sub {
+  font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px;
+  color:#44445a; text-transform:uppercase; margin-bottom:24px;
+}
+.adm-inp {
+  width:100%; background:#131318; border:1px solid #26263a;
+  color:#e8e8f2; font-family:'Rajdhani',sans-serif; font-size:16px;
+  padding:12px 16px; border-radius:8px; outline:none;
+  transition:border-color .2s, box-shadow .2s;
+  letter-spacing:4px; text-align:center;
+}
+.adm-inp:focus {
+  border-color:rgba(192,57,43,.5);
+  box-shadow:0 0 0 3px rgba(192,57,43,.08);
+}
+.adm-btn {
+  width:100%; margin-top:14px;
+  background:linear-gradient(135deg,#a02020,#e74c3c);
+  color:#fff; border:none; border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif; font-size:12px;
+  letter-spacing:3px; text-transform:uppercase; padding:12px;
+  cursor:pointer; transition:all .2s;
+  box-shadow:0 4px 14px rgba(192,57,43,.3);
+}
+.adm-btn:hover { box-shadow:0 6px 20px rgba(192,57,43,.5); transform:translateY(-1px); }
+.adm-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.adm-err {
+  margin-top:10px; font-size:12px; color:#e74c3c;
+  font-family:'Share Tech Mono',monospace; min-height:18px; text-align:center;
+}
+.adm-close {
+  float:right; background:none; border:none; color:#44445a;
+  font-size:18px; cursor:pointer; transition:color .2s; line-height:1;
+}
+.adm-close:hover { color:#e74c3c; }
+/* Trigger invisible en bas de footer */
+#adm-trigger {
+  position:fixed; bottom:0; right:0;
+  width:24px; height:24px; cursor:default;
+  opacity:0; z-index:100;
+}
+</style>
 </head>
 <body>
 
 <canvas id="particles-canvas"></canvas>
 
 <header>
-  <div class="header-top">Serveur en developpement &mdash; Ouverture prochaine</div>
+  <div class="header-top" id="dyn-banner">Serveur en developpement &mdash; Ouverture prochaine</div>
   <div class="header-main">
     <a href="index.html" class="logo">
       <img src="logo.png" alt="Northside RP">
@@ -44,92 +108,57 @@
   <div class="hero-grid"></div>
   <div class="hero-scanlines"></div>
   <div class="hero-glow"></div>
-
-  <!-- Skyline SVG -->
   <svg class="hero-skyline" viewBox="0 0 1400 130" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" fill="rgba(192,57,43,0.5)">
-    <rect x="0" y="80" width="40" height="50"/>
-    <rect x="20" y="60" width="20" height="20"/>
-    <rect x="50" y="50" width="30" height="80"/>
-    <rect x="55" y="40" width="8" height="10"/>
-    <rect x="90" y="70" width="25" height="60"/>
-    <rect x="120" y="40" width="50" height="90"/>
-    <rect x="130" y="30" width="10" height="10"/>
-    <rect x="175" y="60" width="20" height="70"/>
-    <rect x="200" y="30" width="60" height="100"/>
-    <rect x="220" y="20" width="12" height="10"/>
-    <rect x="265" y="55" width="25" height="75"/>
-    <rect x="295" y="45" width="40" height="85"/>
-    <rect x="340" y="65" width="20" height="65"/>
-    <rect x="365" y="25" width="55" height="105"/>
-    <rect x="378" y="15" width="8" height="10"/>
-    <rect x="425" y="50" width="30" height="80"/>
-    <rect x="460" y="70" width="22" height="60"/>
-    <rect x="487" y="35" width="48" height="95"/>
-    <rect x="500" y="25" width="10" height="10"/>
-    <rect x="540" y="55" width="28" height="75"/>
-    <rect x="573" y="42" width="45" height="88"/>
-    <rect x="590" y="30" width="10" height="12"/>
-    <rect x="623" y="68" width="22" height="62"/>
-    <rect x="650" y="20" width="60" height="110"/>
-    <rect x="665" y="10" width="10" height="10"/>
-    <rect x="715" y="50" width="32" height="80"/>
-    <rect x="752" y="62" width="24" height="68"/>
-    <rect x="781" y="38" width="50" height="92"/>
-    <rect x="795" y="28" width="10" height="10"/>
-    <rect x="836" y="55" width="28" height="75"/>
-    <rect x="869" y="45" width="42" height="85"/>
-    <rect x="884" y="35" width="8" height="10"/>
-    <rect x="916" y="72" width="20" height="58"/>
-    <rect x="941" y="28" width="55" height="102"/>
-    <rect x="955" y="18" width="10" height="10"/>
-    <rect x="1001" y="58" width="26" height="72"/>
-    <rect x="1032" y="48" width="38" height="82"/>
-    <rect x="1045" y="38" width="8" height="10"/>
-    <rect x="1075" y="65" width="22" height="65"/>
-    <rect x="1102" y="32" width="52" height="98"/>
-    <rect x="1118" y="22" width="10" height="10"/>
-    <rect x="1159" y="52" width="28" height="78"/>
-    <rect x="1192" y="42" width="42" height="88"/>
-    <rect x="1239" y="68" width="20" height="62"/>
-    <rect x="1264" y="35" width="50" height="95"/>
-    <rect x="1278" y="25" width="10" height="10"/>
-    <rect x="1319" y="55" width="30" height="75"/>
-    <rect x="1354" y="45" width="46" height="85"/>
-    <!-- Fenêtres lumineuses -->
+    <rect x="0" y="80" width="40" height="50"/><rect x="20" y="60" width="20" height="20"/>
+    <rect x="50" y="50" width="30" height="80"/><rect x="55" y="40" width="8" height="10"/>
+    <rect x="90" y="70" width="25" height="60"/><rect x="120" y="40" width="50" height="90"/>
+    <rect x="130" y="30" width="10" height="10"/><rect x="175" y="60" width="20" height="70"/>
+    <rect x="200" y="30" width="60" height="100"/><rect x="220" y="20" width="12" height="10"/>
+    <rect x="265" y="55" width="25" height="75"/><rect x="295" y="45" width="40" height="85"/>
+    <rect x="340" y="65" width="20" height="65"/><rect x="365" y="25" width="55" height="105"/>
+    <rect x="378" y="15" width="8" height="10"/><rect x="425" y="50" width="30" height="80"/>
+    <rect x="460" y="70" width="22" height="60"/><rect x="487" y="35" width="48" height="95"/>
+    <rect x="500" y="25" width="10" height="10"/><rect x="540" y="55" width="28" height="75"/>
+    <rect x="573" y="42" width="45" height="88"/><rect x="590" y="30" width="10" height="12"/>
+    <rect x="623" y="68" width="22" height="62"/><rect x="650" y="20" width="60" height="110"/>
+    <rect x="665" y="10" width="10" height="10"/><rect x="715" y="50" width="32" height="80"/>
+    <rect x="752" y="62" width="24" height="68"/><rect x="781" y="38" width="50" height="92"/>
+    <rect x="795" y="28" width="10" height="10"/><rect x="836" y="55" width="28" height="75"/>
+    <rect x="869" y="45" width="42" height="85"/><rect x="884" y="35" width="8" height="10"/>
+    <rect x="916" y="72" width="20" height="58"/><rect x="941" y="28" width="55" height="102"/>
+    <rect x="955" y="18" width="10" height="10"/><rect x="1001" y="58" width="26" height="72"/>
+    <rect x="1032" y="48" width="38" height="82"/><rect x="1045" y="38" width="8" height="10"/>
+    <rect x="1075" y="65" width="22" height="65"/><rect x="1102" y="32" width="52" height="98"/>
+    <rect x="1118" y="22" width="10" height="10"/><rect x="1159" y="52" width="28" height="78"/>
+    <rect x="1192" y="42" width="42" height="88"/><rect x="1239" y="68" width="20" height="62"/>
+    <rect x="1264" y="35" width="50" height="95"/><rect x="1278" y="25" width="10" height="10"/>
+    <rect x="1319" y="55" width="30" height="75"/><rect x="1354" y="45" width="46" height="85"/>
     <rect x="205" y="40" width="4" height="4" fill="rgba(220,180,60,0.8)"/>
     <rect x="215" y="40" width="4" height="4" fill="rgba(220,180,60,0.6)"/>
-    <rect x="205" y="50" width="4" height="4" fill="rgba(220,180,60,0.4)"/>
     <rect x="370" y="35" width="4" height="4" fill="rgba(220,180,60,0.9)"/>
-    <rect x="382" y="35" width="4" height="4" fill="rgba(220,180,60,0.5)"/>
-    <rect x="370" y="45" width="4" height="4" fill="rgba(220,180,60,0.7)"/>
     <rect x="655" y="30" width="4" height="4" fill="rgba(220,180,60,0.8)"/>
-    <rect x="665" y="30" width="4" height="4" fill="rgba(220,180,60,0.5)"/>
     <rect x="946" y="38" width="4" height="4" fill="rgba(220,180,60,0.9)"/>
-    <rect x="958" y="38" width="4" height="4" fill="rgba(220,180,60,0.6)"/>
-    <rect x="946" y="48" width="4" height="4" fill="rgba(220,180,60,0.4)"/>
     <rect x="1107" y="42" width="4" height="4" fill="rgba(220,180,60,0.8)"/>
-    <rect x="1119" y="42" width="4" height="4" fill="rgba(220,180,60,0.5)"/>
   </svg>
-
   <div class="hero-content">
     <img src="logo.png" alt="Northside RP" class="hero-logo-img">
     <div class="hero-tag">Forum Officiel</div>
-    <div class="hero-desc">Serious Roleplay &mdash; Garry's Mod &mdash; Immersion Totale</div>
+    <div class="hero-desc" id="dyn-slogan">Serious Roleplay &mdash; Garry's Mod &mdash; Immersion Totale</div>
   </div>
 </div>
 
 <div class="stats-bar">
-  <div class="stat-item"><div class="stat-dot green"></div><span class="stat-label">Serveur</span><span class="stat-value">EN LIGNE</span></div>
+  <div class="stat-item"><div class="stat-dot green"></div><span class="stat-label">Serveur</span><span class="stat-value" id="dyn-status">EN LIGNE</span></div>
   <span class="sep">|</span>
-  <div class="stat-item"><span class="stat-label">Joueurs</span><span class="stat-value">0/64</span></div>
+  <div class="stat-item"><span class="stat-label">Joueurs</span><span class="stat-value" id="dyn-players">0/64</span></div>
   <span class="sep">|</span>
-  <div class="stat-item"><span class="stat-label">Map</span><span class="stat-value">rp_truenorth_v1a</span></div>
+  <div class="stat-item"><span class="stat-label">Map</span><span class="stat-value" id="dyn-map">rp_truenorth_v1a</span></div>
   <span class="sep">|</span>
-  <div class="stat-item"><span class="stat-label">Membres</span><span class="stat-value">0</span></div>
+  <div class="stat-item"><span class="stat-label">Membres</span><span class="stat-value" id="dyn-members">0</span></div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <span class="stat-label">IP :</span>
-    <div class="server-ip" onclick="navigator.clipboard.writeText('xxx.xxx.xxx.xxx:27015');this.textContent='Copie!';setTimeout(()=>this.textContent='xxx.xxx.xxx.xxx:27015',2000)">xxx.xxx.xxx.xxx:27015</div>
-    <a href="#" class="btn btn-red" style="padding:7px 14px;font-size:10px;white-space:nowrap">Rejoindre</a>
+    <div class="server-ip" id="dyn-ip" onclick="copyIp(this)">xxx.xxx.xxx.xxx:27015</div>
+    <a id="dyn-join" href="#" class="btn btn-red" style="padding:7px 14px;font-size:10px;white-space:nowrap">Rejoindre</a>
   </div>
 </div>
 
@@ -138,9 +167,9 @@
   <div class="announcement fu">
     <div class="ann-icon">&#128226;</div>
     <div>
-      <div class="ann-title">Bienvenue sur le forum officiel de Northside RP</div>
-      <div class="ann-text">Le serveur est actuellement en developpement. Inscrivez-vous pour etre parmi les premiers membres de la communaute. Lisez le reglement avant toute candidature.</div>
-      <div class="ann-date">&mdash; L'equipe Northside RP</div>
+      <div class="ann-title" id="dyn-ann-title">Bienvenue sur le forum officiel de Northside RP</div>
+      <div class="ann-text" id="dyn-ann-text">Le serveur est actuellement en developpement.</div>
+      <div class="ann-date" id="dyn-ann-sign">&mdash; L'equipe Northside RP</div>
     </div>
   </div>
 
@@ -210,7 +239,7 @@
     <div style="font-size:28px;margin-bottom:8px">&#127918;</div>
     <div class="discord-text">Discord Officiel</div>
     <div class="discord-sub">Rejoignez la communaute</div>
-    <button class="btn-discord">Rejoindre le Discord</button>
+    <button class="btn-discord" id="dyn-discord-btn" onclick="openDiscord()">Rejoindre le Discord</button>
   </div>
   <div class="widget">
     <div class="widget-header"><div class="widget-accent"></div><span class="widget-title">En Ligne</span></div>
@@ -240,75 +269,215 @@
   <div class="footer-links">
     <a href="reglement.html">Reglement</a>
     <a href="#">Mentions legales</a>
-    <a href="#">Contact</a>
-    <a href="#">Discord</a>
+    <a href="#" id="dyn-footer-discord">Discord</a>
   </div>
   <div class="footer-copy">&copy; 2026 Northside RP &mdash; Tous droits reserves</div>
 </footer>
 
+<!-- Zone cliquable INVISIBLE en bas à droite → ouvre la modale admin -->
+<!-- Aucune mention de "admin" dans le DOM visible -->
+<div id="adm-trigger" onclick="openAdmModal()" title=""></div>
+
+<!-- Modale d'accès administration -->
+<div class="adm-overlay" id="adm-overlay">
+  <div class="adm-box">
+    <button class="adm-close" onclick="closeAdmModal()" aria-label="Fermer">&#10005;</button>
+    <div class="adm-title">ACCES RESTREINT</div>
+    <div class="adm-sub">Zone protegee &mdash; Personnel autorise</div>
+    <input class="adm-inp" type="password" id="adm-pwd" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+      maxlength="32" autocomplete="off" autocorrect="off" spellcheck="false"
+      onkeydown="if(event.key==='Enter')submitAdm()">
+    <button class="adm-btn" id="adm-submit" onclick="submitAdm()">VALIDER</button>
+    <div class="adm-err" id="adm-err"></div>
+  </div>
+</div>
+
+<!-- Scripts dans l'ordre correct -->
+<script src="nrp-data.js"></script>
+<script src="nrp-auth.js"></script>
 <script>
-// Particles (braises + poussière style loading screen)
+// ── Applique les données dynamiques sur la page ──────────
+(function applyData() {
+  var d = NRP.all();
+
+  // Bandeau
+  var banner = document.getElementById('dyn-banner');
+  if (banner && d.optBandeau !== false) {
+    banner.textContent = d.bannerText || '';
+    banner.style.display = '';
+  } else if (banner && d.optBandeau === false) {
+    banner.style.display = 'none';
+  }
+
+  // Slogan
+  var slogan = document.getElementById('dyn-slogan');
+  if (slogan && d.serverSlogan) slogan.textContent = d.serverSlogan;
+
+  // Stats bar
+  var st = document.getElementById('dyn-status');
+  if (st) st.textContent = d.serverStatus || 'EN LIGNE';
+
+  var pl = document.getElementById('dyn-players');
+  if (pl) pl.textContent = (d.serverPlayers || '0') + '/' + (d.serverSlots || '64');
+
+  var mp = document.getElementById('dyn-map');
+  if (mp) mp.textContent = d.serverMap || '';
+
+  var mb = document.getElementById('dyn-members');
+  if (mb) mb.textContent = d.membersCount || '0';
+
+  // IP + bouton rejoindre
+  var ipEl = document.getElementById('dyn-ip');
+  var ip = d.serverIp || '';
+  if (ipEl) {
+    ipEl.textContent = ip;
+    ipEl.setAttribute('data-ip', ip);
+  }
+  var joinEl = document.getElementById('dyn-join');
+  if (joinEl) {
+    var steam = d.serverSteam || ('steam://connect/' + ip);
+    joinEl.href = steam || '#';
+  }
+
+  // Annonce
+  var at = document.getElementById('dyn-ann-title');
+  if (at) at.textContent = d.annTitle || '';
+  var ax = document.getElementById('dyn-ann-text');
+  if (ax) ax.textContent = d.annText || '';
+  var as = document.getElementById('dyn-ann-sign');
+  if (as) as.innerHTML = '&mdash; ' + (d.annSign || '');
+
+  // Discord
+  var dUrl = d.discordUrl || '#';
+  var dbtn = document.getElementById('dyn-discord-btn');
+  if (dbtn) dbtn.onclick = function(){ if(dUrl !== '#') window.open(dUrl,'_blank'); };
+  var fdisc = document.getElementById('dyn-footer-discord');
+  if (fdisc) fdisc.href = dUrl;
+
+  // Mode maintenance
+  if (d.optMaintenance) {
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07070a;color:#e8e8f0;font-family:Bebas Neue,sans-serif;font-size:32px;letter-spacing:4px;flex-direction:column;gap:16px"><div style="color:#e74c3c">MAINTENANCE EN COURS</div><div style="font-family:Share Tech Mono,monospace;font-size:13px;letter-spacing:2px;color:#44445a">Northside RP reviendra bientot</div></div>';
+    return;
+  }
+})();
+
+// ── IP copy ──────────────────────────────────────────────
+function copyIp(el) {
+  var ip = el.getAttribute('data-ip') || el.textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(ip);
+  }
+  var orig = el.textContent;
+  el.textContent = 'Copie !';
+  setTimeout(function(){ el.textContent = orig; }, 2000);
+}
+
+// ── Discord ───────────────────────────────────────────────
+function openDiscord() {
+  var url = NRP.get('discordUrl') || '#';
+  if (url && url !== '#') window.open(url, '_blank');
+}
+
+// ── Modale admin ──────────────────────────────────────────
+function openAdmModal() {
+  // Si déjà connecté → go directement
+  if (NRPAuth.isLoggedIn()) {
+    goAdmin();
+    return;
+  }
+  document.getElementById('adm-overlay').classList.add('open');
+  setTimeout(function(){ document.getElementById('adm-pwd').focus(); }, 80);
+}
+function closeAdmModal() {
+  document.getElementById('adm-overlay').classList.remove('open');
+  document.getElementById('adm-pwd').value = '';
+  document.getElementById('adm-err').textContent = '';
+}
+function submitAdm() {
+  var btn = document.getElementById('adm-submit');
+  var err = document.getElementById('adm-err');
+  var pwd = document.getElementById('adm-pwd').value;
+  if (!pwd) return;
+  btn.disabled = true;
+  btn.textContent = 'Vérification...';
+  NRPAuth.login(pwd).then(function(res) {
+    if (res.ok) {
+      err.textContent = '';
+      goAdmin();
+    } else {
+      err.textContent = res.error || 'Erreur.';
+      document.getElementById('adm-pwd').value = '';
+      btn.disabled = false;
+      btn.textContent = 'VALIDER';
+    }
+  });
+}
+
+// ── Redirection admin (URL construite dynamiquement) ──────
+function goAdmin() {
+  // L'URL n'est jamais écrite en clair dans le source
+  var parts = ['adm','in','.html'];
+  window.location.href = parts.join('');
+}
+
+// Ferme modale sur clic fond
+document.getElementById('adm-overlay').addEventListener('click', function(e){
+  if (e.target === this) closeAdmModal();
+});
+// Ferme sur ESC
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeAdmModal();
+});
+
+// ── Navigation mobile ────────────────────────────────────
+function toggleMenu(btn) {
+  btn.classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  var m = document.getElementById('mobileMenu');
+  var h = document.querySelector('.hamburger');
+  if (m && h && !m.contains(e.target) && !h.contains(e.target)) {
+    m.classList.remove('open');
+    h.classList.remove('open');
+  }
+});
+</script>
+
+<script>
+// ── Particles ────────────────────────────────────────────
 (function(){
   var canvas = document.getElementById('particles-canvas');
   var ctx = canvas.getContext('2d');
   var W, H, particles = [];
-
   function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-  window.addEventListener('resize', resize);
-  resize();
-
+  window.addEventListener('resize', resize); resize();
   function rand(a,b){ return a + Math.random()*(b-a); }
-
   for(var i=0;i<60;i++){
-    particles.push({
-      x: rand(0,1), y: rand(0,1),
-      vx: rand(-0.0002,0.0002), vy: rand(-0.0008,-0.0002),
-      size: rand(0.8,2.5),
-      type: Math.random()<0.4?'ember':'dust',
-      alpha: rand(0.3,0.9),
-      life: rand(0,1), speed: rand(0.0003,0.0008)
-    });
+    particles.push({ x:rand(0,1), y:rand(0,1), vx:rand(-0.0002,0.0002), vy:rand(-0.0008,-0.0002),
+      size:rand(0.8,2.5), type:Math.random()<0.4?'ember':'dust',
+      alpha:rand(0.3,0.9), life:rand(0,1), speed:rand(0.0003,0.0008) });
   }
-
   function draw(){
     ctx.clearRect(0,0,W,H);
     particles.forEach(function(p){
       p.life += p.speed;
       if(p.life>1){ p.life=0; p.x=rand(0,1); p.y=1; }
-      var x=p.x*W, y=(1-p.life)*H + p.y*H*0.1;
+      var x=p.x*W, y=(1-p.life)*H+p.y*H*0.1;
       x += Math.sin(p.life*Math.PI*2+p.x*10)*W*0.02;
       var a = p.alpha * Math.sin(p.life*Math.PI);
       if(p.type==='ember'){
-        ctx.beginPath();
-        ctx.arc(x,y,p.size,0,Math.PI*2);
-        ctx.fillStyle='rgba(220,100,40,'+a+')';
-        ctx.fill();
-        if(a>0.5){
-          ctx.beginPath();
-          ctx.arc(x,y,p.size*2.5,0,Math.PI*2);
-          ctx.fillStyle='rgba(220,100,40,'+(a*0.15)+')';
-          ctx.fill();
-        }
+        ctx.beginPath(); ctx.arc(x,y,p.size,0,Math.PI*2);
+        ctx.fillStyle='rgba(220,100,40,'+a+')'; ctx.fill();
+        if(a>0.5){ ctx.beginPath(); ctx.arc(x,y,p.size*2.5,0,Math.PI*2); ctx.fillStyle='rgba(220,100,40,'+(a*0.15)+')'; ctx.fill(); }
       } else {
-        ctx.beginPath();
-        ctx.arc(x,y,p.size*0.6,0,Math.PI*2);
-        ctx.fillStyle='rgba(180,180,180,'+a*0.3+')';
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(x,y,p.size*0.6,0,Math.PI*2); ctx.fillStyle='rgba(180,180,180,'+a*0.3+')'; ctx.fill();
       }
     });
     requestAnimationFrame(draw);
   }
   draw();
 })();
-
-function toggleMenu(btn){
-  btn.classList.toggle('open');
-  document.getElementById('mobileMenu').classList.toggle('open');
-}
-document.addEventListener('click',function(e){
-  var m=document.getElementById('mobileMenu'),h=document.querySelector('.hamburger');
-  if(m&&h&&!m.contains(e.target)&&!h.contains(e.target)){m.classList.remove('open');h.classList.remove('open')}
-});
 </script>
 <script>var el=document.getElementById('nh');if(el)el.classList.add('active');</script>
 </body>
