@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Administration — NORTHSIDE RP</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root {
+  --sidebar-w: 230px;
+  --topbar-h:  54px;
+  --green:     #1a9e4a;
+  --green-b:   #22c55e;
+  --blue:      #1d6fa4;
+  --blue-b:    #3b9fd8;
+  --amber:     #b86a00;
+  --amber-b:   #f59e0b;
+}
+body.admin-body { display:flex; flex-direction:column; min-height:100vh; overflow-x:hidden; }
+.admin-shell { display:flex; flex:1; min-height:calc(100vh - var(--topbar-h)); }
+.admin-topbar {
+  height:var(--topbar-h); background:rgba(7,7,10,0.98);
+  border-bottom:1px solid var(--border-red); backdrop-filter:blur(20px);
+  position:sticky; top:0; z-index:300;
+  display:flex; align-items:center; padding:0 20px; gap:14px;
+}
+.admin-topbar .logo img { height:36px; filter:drop-shadow(0 0 10px var(--red-glow)); }
+.admin-topbar-badge {
+  font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:3px;
+  color:var(--red-bright); background:rgba(192,57,43,0.1);
+  border:1px solid rgba(192,57,43,0.25); padding:4px 10px; border-radius:4px;
+}
+.admin-topbar-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.admin-user { display:flex; align-items:center; gap:8px; font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:1px; color:var(--text-dim); }
+.admin-avatar { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--red-dark),var(--red)); border:1px solid rgba(192,57,43,0.4); display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:14px; color:#fff; }
+.topbar-link { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border-radius:6px; border:1px solid var(--border-2); color:var(--text-dim); cursor:pointer; background:transparent; transition:all .2s; }
+.topbar-link:hover { color:var(--white); border-color:var(--border-red); background:rgba(192,57,43,0.08); }
+.admin-sidebar {
+  width:var(--sidebar-w); background:rgba(10,10,15,0.98);
+  border-right:1px solid var(--border); display:flex; flex-direction:column;
+  position:sticky; top:var(--topbar-h); height:calc(100vh - var(--topbar-h));
+  overflow-y:auto; flex-shrink:0; padding-bottom:20px;
+}
+.admin-sidebar::-webkit-scrollbar { width:2px; }
+.admin-sidebar::-webkit-scrollbar-thumb { background:var(--red-dark); }
+.sb-section { padding:18px 0 6px; }
+.sb-label { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--text-muted); padding:0 16px 8px; }
+.sb-item {
+  display:flex; align-items:center; gap:9px; padding:9px 16px; cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:1px;
+  color:var(--text-dim); border-left:2px solid transparent; transition:all .18s;
+}
+.sb-item:hover { color:var(--white); background:rgba(255,255,255,0.03); }
+.sb-item.active { color:var(--white); background:rgba(192,57,43,0.08); border-left-color:var(--red-bright); }
+.sb-icon { font-size:15px; width:20px; text-align:center; flex-shrink:0; }
+.sb-badge {
+  margin-left:auto; font-family:'Share Tech Mono',monospace; font-size:9px;
+  padding:2px 7px; border-radius:3px; background:rgba(192,57,43,0.18);
+  color:var(--red-bright); border:1px solid rgba(192,57,43,0.25);
+  animation:badge-pulse 2.5s ease infinite;
+}
+@keyframes badge-pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+.sb-sep { height:1px; background:var(--border); margin:6px 16px; }
+.admin-main { flex:1; padding:28px 32px; overflow-y:auto; min-width:0; }
+.apage { display:none; }
+.apage.active { display:block; animation:apIn .25s ease; }
+@keyframes apIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.ph { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:26px; gap:14px; flex-wrap:wrap; }
+.ph-title { font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:4px; color:var(--white); line-height:1; }
+.ph-title em { color:var(--red-bright); font-style:normal; }
+.ph-sub { font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:2px; color:var(--text-muted); margin-top:4px; text-transform:uppercase; }
+.sc-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:14px; margin-bottom:26px; }
+.sc { background:var(--dark); border:1px solid var(--border-2); border-radius:var(--radius-md); padding:16px 18px; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
+.sc:hover { transform:translateY(-2px); border-color:var(--border-red); }
+.sc::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.sc.s-red::before   { background:linear-gradient(90deg,var(--red-dark),var(--red-bright),var(--red-dark)); }
+.sc.s-green::before { background:linear-gradient(90deg,var(--green),var(--green-b),var(--green)); }
+.sc.s-blue::before  { background:linear-gradient(90deg,var(--blue),var(--blue-b),var(--blue)); }
+.sc.s-amber::before { background:linear-gradient(90deg,var(--amber),var(--amber-b),var(--amber)); }
+.sc-label { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--text-muted); margin-bottom:8px; }
+.sc-val { font-family:'Bebas Neue',sans-serif; font-size:34px; color:var(--white); line-height:1; }
+.sc.s-green .sc-val { color:var(--green-b); }
+.sc-hint { font-size:11px; color:var(--text-muted); margin-top:3px; }
+.card { background:var(--dark); border:1px solid var(--border-2); border-radius:var(--radius-md); overflow:hidden; margin-bottom:18px; }
+.card-hd { padding:13px 18px; background:linear-gradient(135deg,var(--dark3) 0%,var(--dark2) 100%); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.card-title { font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:3px; color:var(--white); display:flex; align-items:center; gap:8px; }
+.card-title::before { content:''; width:3px; height:14px; border-radius:2px; background:linear-gradient(180deg,var(--red-bright),var(--red-dark)); flex-shrink:0; }
+.card-body { padding:18px; }
+.card-flush { padding:0; }
+.tbl { width:100%; border-collapse:collapse; }
+.tbl th { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); padding:10px 14px; border-bottom:1px solid var(--border); text-align:left; background:var(--dark3); }
+.tbl td { padding:11px 14px; border-bottom:1px solid var(--border); font-size:13px; color:var(--text-dim); vertical-align:middle; }
+.tbl tr:last-child td { border-bottom:none; }
+.tbl tbody tr { transition:background .15s; }
+.tbl tbody tr:hover td { background:rgba(255,255,255,0.018); }
+.td-name { color:var(--white); font-weight:600; font-size:14px; }
+.td-meta { font-size:11px; color:var(--text-muted); margin-top:1px; }
+.tag { display:inline-block; font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.t-red   { background:rgba(192,57,43,0.18); color:var(--red-bright); border:1px solid rgba(192,57,43,0.28); }
+.t-green { background:rgba(34,197,94,0.12); color:var(--green-b); border:1px solid rgba(34,197,94,0.22); }
+.t-blue  { background:rgba(59,159,216,0.12); color:var(--blue-b); border:1px solid rgba(59,159,216,0.22); }
+.t-amber { background:rgba(245,158,11,0.12); color:var(--amber-b); border:1px solid rgba(245,158,11,0.22); }
+.t-gray  { background:rgba(255,255,255,0.05); color:var(--text-dim); border:1px solid var(--border-2); }
+.t-pin   { background:rgba(255,210,50,0.1); color:#f0c060; border:1px solid rgba(255,210,50,0.2); }
+.btn { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; padding:8px 16px; border:none; cursor:pointer; border-radius:var(--radius-sm); transition:all .18s; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+.btn-red   { background:linear-gradient(135deg,#a02020,var(--red-bright)); color:#fff; box-shadow:0 3px 10px rgba(192,57,43,0.3); }
+.btn-red:hover { box-shadow:0 5px 18px rgba(192,57,43,0.5); transform:translateY(-1px); }
+.btn-green { background:linear-gradient(135deg,var(--green),var(--green-b)); color:#fff; }
+.btn-green:hover { transform:translateY(-1px); }
+.btn-blue  { background:linear-gradient(135deg,var(--blue),var(--blue-b)); color:#fff; }
+.btn-blue:hover { transform:translateY(-1px); }
+.btn-ghost { background:rgba(255,255,255,0.04); color:var(--text-dim); border:1px solid var(--border-2); }
+.btn-ghost:hover { color:var(--white); border-color:var(--border-red); background:rgba(192,57,43,0.07); }
+.btn-danger { background:rgba(192,57,43,0.12); color:var(--red-bright); border:1px solid rgba(192,57,43,0.25); }
+.btn-danger:hover { background:rgba(192,57,43,0.25); }
+.btn-sm { padding:5px 11px; font-size:10px; }
+.btn-xs { padding:4px 9px; font-size:9px; }
+.fg { display:flex; flex-direction:column; gap:6px; }
+.fg-row { display:grid; gap:14px; }
+.fg-row.c2 { grid-template-columns:1fr 1fr; }
+.fg-row.c3 { grid-template-columns:1fr 1fr 1fr; }
+.fl { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); }
+.fi,.fta,.fsel { background:var(--dark3); border:1px solid var(--border-2); color:var(--text); font-family:'Rajdhani',sans-serif; font-size:14px; padding:9px 13px; border-radius:var(--radius-sm); outline:none; transition:border-color .18s,box-shadow .18s; -webkit-appearance:none; width:100%; }
+.fi:focus,.fta:focus,.fsel:focus { border-color:rgba(192,57,43,0.45); box-shadow:0 0 0 3px rgba(192,57,43,0.07); }
+.fta { min-height:90px; resize:vertical; line-height:1.6; }
+.fsel option { background:var(--dark3); }
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--border); }
+.toggle-row:last-child { border-bottom:none; }
+.toggle-info h4 { font-size:14px; color:var(--white); font-weight:600; margin-bottom:2px; }
+.toggle-info p  { font-size:11px; color:var(--text-muted); }
+.tgl { position:relative; width:42px; height:22px; flex-shrink:0; }
+.tgl input { opacity:0; width:0; height:0; }
+.tgl-sl { position:absolute; inset:0; background:var(--dark4); border-radius:999px; cursor:pointer; border:1px solid var(--border-2); transition:background .2s,border-color .2s; }
+.tgl-sl::before { content:''; position:absolute; width:14px; height:14px; border-radius:50%; background:var(--text-muted); top:3px; left:3px; transition:transform .2s,background .2s; }
+.tgl input:checked + .tgl-sl { background:rgba(192,57,43,0.25); border-color:rgba(192,57,43,0.4); }
+.tgl input:checked + .tgl-sl::before { transform:translateX(20px); background:var(--red-bright); }
+.urow { display:flex; align-items:center; gap:10px; }
+.uav { width:34px; height:34px; border-radius:50%; flex-shrink:0; background:var(--dark4); border:1px solid var(--border-2); display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:14px; color:var(--text-dim); }
+.uav.u-admin { background:linear-gradient(135deg,var(--red-dark),var(--red)); color:#fff; border-color:rgba(192,57,43,0.4); }
+.uav.u-mod   { background:linear-gradient(135deg,#0d4a7a,var(--blue-b)); color:#fff; border-color:rgba(59,159,216,0.3); }
+.u-name  { font-size:14px; color:var(--white); font-weight:600; }
+.u-email { font-size:11px; color:var(--text-muted); }
+.log-item { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); }
+.log-item:last-child { border-bottom:none; }
+.log-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+.ld-r { background:var(--red-bright); box-shadow:0 0 5px rgba(231,76,60,.45); }
+.ld-g { background:var(--green-b); box-shadow:0 0 5px rgba(34,197,94,.35); }
+.ld-b { background:var(--blue-b); }
+.ld-a { background:var(--amber-b); }
+.log-text { font-size:12px; color:var(--text-dim); line-height:1.5; flex:1; }
+.log-text b { color:var(--white); }
+.log-time { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); margin-top:2px; }
+.moverlay { position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(5px); z-index:800; display:none; align-items:center; justify-content:center; padding:20px; }
+.moverlay.open { display:flex; animation:apIn .2s ease; }
+.modal { background:var(--dark); border:1px solid var(--border-2); border-top:2px solid var(--red); border-radius:var(--radius-lg); width:100%; max-width:540px; max-height:90vh; overflow-y:auto; box-shadow:0 30px 80px rgba(0,0,0,0.7),0 0 40px rgba(192,57,43,0.08); }
+.modal::-webkit-scrollbar { width:3px; }
+.modal::-webkit-scrollbar-thumb { background:var(--red-dark); }
+.modal-hd { padding:18px 22px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.modal-title { font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:3px; color:var(--white); }
+.modal-close { width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid var(--border-2); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--text-dim); transition:all .18s; line-height:1; }
+.modal-close:hover { background:rgba(192,57,43,0.18); color:var(--red-bright); }
+.modal-body { padding:20px 22px; display:flex; flex-direction:column; gap:14px; }
+.modal-ft { padding:14px 22px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:8px; }
+.qa-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.qa-btn { background:var(--dark3); border:1px solid var(--border-2); border-radius:var(--radius-md); padding:16px 12px; text-align:center; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim); transition:all .18s; }
+.qa-btn:hover { border-color:var(--border-red); color:var(--white); background:rgba(192,57,43,0.07); transform:translateY(-1px); }
+.qa-icon { font-size:22px; display:block; margin-bottom:6px; }
+.srv-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.srv-row:last-child { border-bottom:none; }
+.srv-key { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--text-muted); }
+.srv-val { color:var(--white); font-weight:600; }
+.status-online { display:inline-flex; align-items:center; gap:7px; font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:2px; color:var(--green-b); }
+.status-dot { width:10px; height:10px; border-radius:50%; background:var(--green-b); box-shadow:0 0 8px rgba(34,197,94,.6); animation:sdot 2s ease infinite; }
+@keyframes sdot { 0%,100%{opacity:1} 50%{opacity:.4} }
+#toast-wrap { position:fixed; bottom:22px; right:22px; z-index:900; pointer-events:none; display:flex; flex-direction:column; gap:8px; }
+.toast { background:var(--dark3); border:1px solid var(--border-2); border-left:3px solid var(--green-b); border-radius:var(--radius-md); padding:11px 16px; display:flex; align-items:center; gap:9px; font-size:13px; color:var(--text); box-shadow:0 8px 28px rgba(0,0,0,0.45); animation:tIn .28s ease,tOut .28s ease 2.5s forwards; }
+.toast.t-err  { border-left-color:var(--red-bright); }
+.toast.t-warn { border-left-color:var(--amber-b); }
+@keyframes tIn  { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
+@keyframes tOut { to{transform:translateX(110%);opacity:0} }
+@media(max-width:860px) { .admin-sidebar{display:none;} .fg-row.c2,.fg-row.c3{grid-template-columns:1fr;} .qa-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:600px) { .admin-main{padding:18px 14px;} .sc-grid{grid-template-columns:1fr 1fr;} }
+</style>
+</head>
+<body class="admin-body">
+<canvas id="particles-canvas"></canvas>
+
+<!-- TOPBAR -->
+<div class="admin-topbar">
+  <a href="index.html" class="logo"><img src="logo.png" alt="NorthSide RP"></a>
+  <span class="admin-topbar-badge">ADMINISTRATION</span>
+  <div class="admin-topbar-right">
+    <div class="admin-user">
+      <div class="admin-avatar">A</div>
+      <span>Admin</span>
+    </div>
+    <a href="index.html" class="topbar-link">← Forum</a>
+    <button class="topbar-link" onclick="notify('Déconnexion...','warn')">Déconnexion</button>
+  </div>
+</div>
+
+<div class="admin-shell">
+
+<!-- SIDEBAR -->
+<nav class="admin-sidebar">
+  <div class="sb-section">
+    <div class="sb-label">Dashboard</div>
+    <div class="sb-item active" data-page="dashboard"><span class="sb-icon">📊</span> Vue d'ensemble</div>
+    <div class="sb-item" data-page="activity"><span class="sb-icon">📋</span> Journal</div>
+  </div>
+  <div class="sb-sep"></div>
+  <div class="sb-section">
+    <div class="sb-label">Contenu</div>
+    <div class="sb-item" data-page="topics"><span class="sb-icon">💬</span> Topics <span class="sb-badge">4</span></div>
+    <div class="sb-item" data-page="create-topic"><span class="sb-icon">✏️</span> Créer un topic</div>
+    <div class="sb-item" data-page="categories"><span class="sb-icon">📁</span> Catégories</div>
+    <div class="sb-item" data-page="announcements"><span class="sb-icon">📣</span> Annonces</div>
+  </div>
+  <div class="sb-sep"></div>
+  <div class="sb-section">
+    <div class="sb-label">Communauté</div>
+    <div class="sb-item" data-page="users"><span class="sb-icon">👥</span> Utilisateurs</div>
+    <div class="sb-item" data-page="reports"><span class="sb-icon">🚨</span> Signalements <span class="sb-badge">3</span></div>
+    <div class="sb-item" data-page="bans"><span class="sb-icon">🔒</span> Bans</div>
+  </div>
+  <div class="sb-sep"></div>
+  <div class="sb-section">
+    <div class="sb-label">Serveur</div>
+    <div class="sb-item" data-page="server"><span class="sb-icon">🖥️</span> Serveur GMod</div>
+    <div class="sb-item" data-page="settings"><span class="sb-icon">⚙️</span> Paramètres</div>
+  </div>
+</nav>
+
+<main class="admin-main">
+
+<!-- DASHBOARD -->
+<div class="apage active" id="pg-dashboard">
+  <div class="ph">
+    <div><div class="ph-title">VUE D'<em>ENSEMBLE</em></div><div class="ph-sub">NorthSide RP — Panneau d'administration</div></div>
+  </div>
+  <div class="sc-grid">
+    <div class="sc s-green"><div class="sc-label">Statut serveur</div><div class="sc-val">ONLINE</div><div class="sc-hint">32 / 64 joueurs</div></div>
+    <div class="sc s-red"><div class="sc-label">Membres</div><div class="sc-val">247</div><div class="sc-hint">+12 cette semaine</div></div>
+    <div class="sc s-blue"><div class="sc-label">Topics</div><div class="sc-val">84</div><div class="sc-hint">4 en attente</div></div>
+    <div class="sc s-amber"><div class="sc-label">Signalements</div><div class="sc-val">3</div><div class="sc-hint">À traiter</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Activité récente</div></div>
+      <div class="card-body">
+        <div class="log-item"><div class="log-dot ld-g"></div><div><div class="log-text"><b>Raeken</b> a créé un topic dans Candidatures Police</div><div class="log-time">Il y a 5 min</div></div></div>
+        <div class="log-item"><div class="log-dot ld-r"></div><div><div class="log-text"><b>Admin</b> a supprimé le topic "test_spam"</div><div class="log-time">Il y a 22 min</div></div></div>
+        <div class="log-item"><div class="log-dot ld-b"></div><div><div class="log-text"><b>NovaStar</b> s'est inscrit</div><div class="log-time">Il y a 1h</div></div></div>
+        <div class="log-item"><div class="log-dot ld-a"></div><div><div class="log-text">Nouveau signalement par <b>DarkWolf</b></div><div class="log-time">Il y a 2h</div></div></div>
+        <div class="log-item"><div class="log-dot ld-r"></div><div><div class="log-text"><b>Zephyr</b> a été banni par <b>Admin</b></div><div class="log-time">Il y a 3h</div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Accès rapides</div></div>
+      <div class="card-body">
+        <div class="qa-grid">
+          <div class="qa-btn" onclick="goPage('create-topic')"><span class="qa-icon">✏️</span>Créer topic</div>
+          <div class="qa-btn" onclick="goPage('announcements')"><span class="qa-icon">📣</span>Annonce</div>
+          <div class="qa-btn" onclick="goPage('users')"><span class="qa-icon">👥</span>Utilisateurs</div>
+          <div class="qa-btn" onclick="goPage('reports')"><span class="qa-icon">🚨</span>Signalements</div>
+          <div class="qa-btn" onclick="goPage('server')"><span class="qa-icon">🖥️</span>Serveur</div>
+          <div class="qa-btn" onclick="goPage('settings')"><span class="qa-icon">⚙️</span>Paramètres</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div class="apage" id="pg-topics">
+  <div class="ph">
+    <div><div class="ph-title">GESTION DES <em>TOPICS</em></div><div class="ph-sub">Modérer, modifier ou supprimer les sujets</div></div>
+    <button class="btn btn-red" onclick="goPage('create-topic')">✏️ Créer un topic</button>
+  </div>
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title">Tous les topics</div>
+      <select class="fsel" style="width:auto;padding:6px 12px;font-size:12px" id="filter-cat" onchange="filterTopics()">
+        <option value="">Toutes catégories</option>
+        <option>Communauté</option><option>Recrutement</option><option>Administration</option>
+      </select>
+    </div>
+    <div class="card-flush">
+      <div style="padding:14px 16px 0">
+        <input class="fi" type="text" id="topics-search" placeholder="Rechercher un topic..." oninput="filterTopics()">
+      </div>
+      <table class="tbl" style="margin-top:10px">
+        <thead><tr><th>Titre</th><th>Catégorie</th><th>Auteur</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
+        <tbody id="topics-tbody">
+          <tr data-cat="Recrutement">
+            <td><div class="td-name">Candidature Police — Raeken</div></td>
+            <td><div class="td-meta">Recrutement / Police</div></td>
+            <td>Raeken</td><td>Aujourd'hui</td>
+            <td><span class="tag t-amber">En attente</span></td>
+            <td><div style="display:flex;gap:5px">
+              <button class="btn btn-blue btn-xs" onclick="openModal('m-edit-topic')" title="Modifier">✏️</button>
+              <button class="btn btn-ghost btn-xs" onclick="togglePin(this)" title="Épingler">📌</button>
+              <button class="btn btn-ghost btn-xs" onclick="toggleLock(this)" title="Fermer">🔒</button>
+              <button class="btn btn-danger btn-xs" onclick="askDelete('ce topic')" title="Supprimer">🗑️</button>
+            </div></td>
+          </tr>
+          <tr data-cat="Communauté">
+            <td><div class="td-name">Présentation — NovaStar</div></td>
+            <td><div class="td-meta">Communauté / Présentations</div></td>
+            <td>NovaStar</td><td>Hier</td>
+            <td><span class="tag t-green">Ouvert</span></td>
+            <td><div style="display:flex;gap:5px">
+              <button class="btn btn-blue btn-xs" onclick="openModal('m-edit-topic')">✏️</button>
+              <button class="btn btn-ghost btn-xs" onclick="togglePin(this)">📌</button>
+              <button class="btn btn-ghost btn-xs" onclick="toggleLock(this)">🔒</button>
+              <button class="btn btn-danger btn-xs" onclick="askDelete('ce topic')">🗑️</button>
+            </div></td>
+          </tr>
+          <tr data-cat="Administration">
+            <td><div class="td-name">Signalement — DarkWolf vs Zephyr</div></td>
+            <td><div class="td-meta">Administration / Signalements</div></td>
+            <td>DarkWolf</td><td>Il y a 2j</td>
+            <td><span class="tag t-red">Urgent</span></td>
+            <td><div style="display:flex;gap:5px">
+              <button class="btn btn-blue btn-xs" onclick="openModal('m-edit-topic')">✏️</button>
+              <button class="btn btn-ghost btn-xs" onclick="togglePin(this)">📌</button>
+              <button class="btn btn-ghost btn-xs" onclick="toggleLock(this)">🔒</button>
+              <button class="btn btn-danger btn-xs" onclick="askDelete('ce topic')">🗑️</button>
+            </div></td>
+          </tr>
+          <tr data-cat="Administration">
+            <td><div class="td-name">Demande de déban — Zephyr</div><span class="tag t-pin" style="margin-top:3px">📌 Épinglé</span></td>
+            <td><div class="td-meta">Administration / Débans</div></td>
+            <td>Zephyr</td><td>Il y a 3j</td>
+            <td><span class="tag t-gray">Fermé</span></td>
+            <td><div style="display:flex;gap:5px">
+              <button class="btn btn-blue btn-xs" onclick="openModal('m-edit-topic')">✏️</button>
+              <button class="btn btn-ghost btn-xs" onclick="togglePin(this)">📌</button>
+              <button class="btn btn-ghost btn-xs" onclick="toggleLock(this)">🔓</button>
+              <button class="btn btn-danger btn-xs" onclick="askDelete('ce topic')">🗑️</button>
+            </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CRÉER TOPIC -->
+<div class="apage" id="pg-create-topic">
+  <div class="ph">
+    <div><div class="ph-title">CRÉER UN <em>TOPIC</em></div><div class="ph-sub">Publier un nouveau sujet en tant qu'admin</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Nouveau topic</div></div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:16px">
+      <div class="fg"><label class="fl">Titre du topic *</label><input class="fi" type="text" id="ct-title" placeholder="Ex: Bienvenue sur NorthSide RP !"></div>
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Catégorie *</label>
+          <select class="fsel" id="ct-cat">
+            <option>Annonces & News</option><option>Présentations</option><option>Discussions Générales</option>
+            <option>Candidatures — Police</option><option>Candidatures — Médical</option><option>Candidatures — Staff</option>
+            <option>Signalements & Plaintes</option><option>Demandes de Déban</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Statut</label>
+          <select class="fsel" id="ct-status"><option>Ouvert</option><option>Fermé</option><option>Épinglé</option><option>Annonce officielle</option></select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Contenu *</label><textarea class="fta" id="ct-content" style="min-height:160px" placeholder="Rédige le contenu du topic..."></textarea></div>
+      <div class="fg-row c3">
+        <div class="fg"><label class="fl">Auteur affiché</label><input class="fi" type="text" value="Admin" id="ct-author"></div>
+        <div class="fg"><label class="fl">Tag</label><select class="fsel" id="ct-tag"><option value="">Aucun</option><option>NEW</option><option>IMPORTANT</option><option>OFFICIEL</option><option>URGENT</option></select></div>
+        <div class="fg"><label class="fl">Visibilité</label><select class="fsel"><option>Tous les membres</option><option>Staff uniquement</option><option>Admins uniquement</option></select></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:6px">
+        <button class="btn btn-ghost" onclick="goPage('topics')">Annuler</button>
+        <button class="btn btn-red" onclick="publishTopic()">📤 Publier le topic</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATÉGORIES -->
+<div class="apage" id="pg-categories">
+  <div class="ph">
+    <div><div class="ph-title">GESTION DES <em>CATÉGORIES</em></div><div class="ph-sub">Organiser la structure du forum</div></div>
+    <button class="btn btn-red" onclick="openModal('m-cat')">+ Nouvelle catégorie</button>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Catégories actuelles</div></div>
+    <div class="card-flush">
+      <table class="tbl">
+        <thead><tr><th>Icône</th><th>Nom</th><th>Section</th><th>Topics</th><th>Ordre</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td style="font-size:20px">📢</td><td><div class="td-name">Annonces & News</div></td><td>Communauté</td><td>8</td><td>1</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-sm" onclick="openModal('m-cat')">✏️ Modifier</button><button class="btn btn-danger btn-sm" onclick="askDelete('cette catégorie')">🗑️</button></div></td></tr>
+          <tr><td style="font-size:20px">👋</td><td><div class="td-name">Présentations</div></td><td>Communauté</td><td>24</td><td>2</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-sm" onclick="openModal('m-cat')">✏️ Modifier</button><button class="btn btn-danger btn-sm" onclick="askDelete('cette catégorie')">🗑️</button></div></td></tr>
+          <tr><td style="font-size:20px">💬</td><td><div class="td-name">Discussions Générales</div></td><td>Communauté</td><td>31</td><td>3</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-sm" onclick="openModal('m-cat')">✏️ Modifier</button><button class="btn btn-danger btn-sm" onclick="askDelete('cette catégorie')">🗑️</button></div></td></tr>
+          <tr><td style="font-size:20px">🚔</td><td><div class="td-name">Candidatures Police</div></td><td>Recrutement</td><td>12</td><td>1</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-sm" onclick="openModal('m-cat')">✏️ Modifier</button><button class="btn btn-danger btn-sm" onclick="askDelete('cette catégorie')">🗑️</button></div></td></tr>
+          <tr><td style="font-size:20px">🚨</td><td><div class="td-name">Signalements & Plaintes</div></td><td>Administration</td><td>5</td><td>1</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-sm" onclick="openModal('m-cat')">✏️ Modifier</button><button class="btn btn-danger btn-sm" onclick="askDelete('cette catégorie')">🗑️</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ANNONCES -->
+<div class="apage" id="pg-announcements">
+  <div class="ph">
+    <div><div class="ph-title">GESTION DES <em>ANNONCES</em></div><div class="ph-sub">Bannière principale et messages importants</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Annonce principale (accueil forum)</div></div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+      <div class="fg"><label class="fl">Titre de l'annonce</label><input class="fi" type="text" value="Bienvenue sur le forum officiel de Northside RP"></div>
+      <div class="fg"><label class="fl">Corps du texte</label><textarea class="fta">Le serveur est actuellement en developpement. Inscrivez-vous pour etre parmi les premiers membres de la communaute. Lisez le reglement avant toute candidature.</textarea></div>
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Signataire</label><input class="fi" type="text" value="L'equipe Northside RP"></div>
+        <div class="fg"><label class="fl">Bandeau supérieur</label><input class="fi" type="text" value="Serveur en developpement — Ouverture prochaine"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end">
+        <button class="btn btn-red" onclick="notify('Annonce mise à jour !','ok')">💾 Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UTILISATEURS -->
+<div class="apage" id="pg-users">
+  <div class="ph">
+    <div><div class="ph-title">GESTION DES <em>UTILISATEURS</em></div><div class="ph-sub">Membres inscrits — rôles et permissions</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title">Membres</div>
+      <select class="fsel" style="width:auto;padding:6px 12px;font-size:12px" id="user-rf" onchange="filterUsers()">
+        <option value="">Tous les rôles</option><option>Admin</option><option>Modérateur</option><option>Membre</option><option>Banni</option>
+      </select>
+    </div>
+    <div class="card-flush">
+      <div style="padding:14px 16px 0"><input class="fi" type="text" id="user-search" placeholder="Rechercher un utilisateur..." oninput="filterUsers()"></div>
+      <table class="tbl" style="margin-top:10px">
+        <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Inscription</th><th>Dernière visite</th><th>Actions</th></tr></thead>
+        <tbody id="users-tbody">
+          <tr data-role="Admin"><td><div class="urow"><div class="uav u-admin">A</div><div><div class="u-name">Admin</div><div class="u-email">admin@northside.rp</div></div></div></td><td><span class="tag t-red">Admin</span></td><td>01/01/2026</td><td>Maintenant</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-sm" onclick="openModal('m-edit-user')">✏️ Modifier</button></div></td></tr>
+          <tr data-role="Modérateur"><td><div class="urow"><div class="uav u-mod">M</div><div><div class="u-name">Moderateur</div><div class="u-email">modo@northside.rp</div></div></div></td><td><span class="tag t-blue">Modérateur</span></td><td>05/01/2026</td><td>Il y a 2h</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-sm" onclick="openModal('m-edit-user')">✏️</button><button class="btn btn-danger btn-sm" onclick="openModal('m-ban')">🔒 Bannir</button></div></td></tr>
+          <tr data-role="Membre"><td><div class="urow"><div class="uav">R</div><div><div class="u-name">Raeken</div><div class="u-email">raeken@mail.com</div></div></div></td><td><span class="tag t-gray">Membre</span></td><td>10/02/2026</td><td>Aujourd'hui</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-sm" onclick="openModal('m-edit-user')">✏️</button><button class="btn btn-danger btn-sm" onclick="openModal('m-ban')">🔒 Bannir</button></div></td></tr>
+          <tr data-role="Membre"><td><div class="urow"><div class="uav">N</div><div><div class="u-name">NovaStar</div><div class="u-email">nova@mail.com</div></div></div></td><td><span class="tag t-gray">Membre</span></td><td>12/02/2026</td><td>Il y a 30 min</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-sm" onclick="openModal('m-edit-user')">✏️</button><button class="btn btn-danger btn-sm" onclick="openModal('m-ban')">🔒 Bannir</button></div></td></tr>
+          <tr data-role="Banni"><td><div class="urow"><div class="uav" style="border-color:rgba(192,57,43,.35)">Z</div><div><div class="u-name">Zephyr</div><div class="u-email">zephyr@mail.com</div></div></div></td><td><span class="tag t-red">Banni</span></td><td>12/01/2026</td><td>Il y a 3j</td><td><div style="display:flex;gap:5px"><button class="btn btn-green btn-sm" onclick="notify('Débanni !','ok')">🔓 Débannir</button><button class="btn btn-danger btn-sm" onclick="askDelete('cet utilisateur')">🗑️</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNALEMENTS -->
+<div class="apage" id="pg-reports">
+  <div class="ph">
+    <div><div class="ph-title">SIGNALEMENTS <em>& PLAINTES</em></div><div class="ph-sub">3 signalements en attente de modération</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">En attente</div></div>
+    <div class="card-flush">
+      <table class="tbl">
+        <thead><tr><th>Contenu</th><th>Signalé par</th><th>Raison</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td><div class="td-name">Post de Zephyr</div><div class="td-meta">Discussions Générales</div></td><td>DarkWolf</td><td><span class="tag t-red">Insultes</span></td><td>Il y a 2h</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-xs" onclick="openModal('m-edit-topic')">👁️</button><button class="btn btn-danger btn-xs" onclick="notify('Contenu supprimé.','err')">🗑️</button><button class="btn btn-ghost btn-xs" onclick="notify('Ignoré.','ok')">✓</button></div></td></tr>
+          <tr><td><div class="td-name">Présentation de NoFake99</div><div class="td-meta">Présentations</div></td><td>Raeken</td><td><span class="tag t-amber">Spam</span></td><td>Il y a 5h</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-xs">👁️</button><button class="btn btn-danger btn-xs" onclick="notify('Contenu supprimé.','err')">🗑️</button><button class="btn btn-ghost btn-xs" onclick="notify('Ignoré.','ok')">✓</button></div></td></tr>
+          <tr><td><div class="td-name">Candidature Staff de BotUser</div><div class="td-meta">Candidatures Staff</div></td><td>Moderateur</td><td><span class="tag t-blue">Faux profil</span></td><td>Hier</td><td><div style="display:flex;gap:5px"><button class="btn btn-blue btn-xs">👁️</button><button class="btn btn-danger btn-xs" onclick="notify('Contenu supprimé.','err')">🗑️</button><button class="btn btn-ghost btn-xs" onclick="notify('Ignoré.','ok')">✓</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- BANS -->
+<div class="apage" id="pg-bans">
+  <div class="ph">
+    <div><div class="ph-title">GESTION DES <em>BANS</em></div><div class="ph-sub">Bannissements actifs sur le forum</div></div>
+    <button class="btn btn-red" onclick="openModal('m-ban')">+ Nouveau ban</button>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Bans actifs</div></div>
+    <div class="card-flush">
+      <table class="tbl">
+        <thead><tr><th>Utilisateur</th><th>Raison</th><th>Posé par</th><th>Durée</th><th>Expiration</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td><div class="td-name">Zephyr</div></td><td>Insultes répétées</td><td>Admin</td><td><span class="tag t-red">Permanent</span></td><td>—</td><td><button class="btn btn-green btn-sm" onclick="notify('Ban levé !','ok')">🔓 Lever</button></td></tr>
+          <tr><td><div class="td-name">NoFake99</div></td><td>Spam / faux compte</td><td>Moderateur</td><td>7 jours</td><td>14/03/2026</td><td><button class="btn btn-green btn-sm" onclick="notify('Ban levé !','ok')">🔓 Lever</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SERVEUR GMOD -->
+<div class="apage" id="pg-server">
+  <div class="ph">
+    <div><div class="ph-title">SERVEUR <em>GMOD</em></div><div class="ph-sub">Informations affichées sur le forum</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Statut affiché</div></div>
+      <div class="card-body">
+        <div class="status-online" style="margin-bottom:18px"><div class="status-dot"></div> EN LIGNE</div>
+        <div class="srv-row"><span class="srv-key">IP SERVEUR</span><span class="srv-val" id="disp-ip">xxx.xxx.xxx.xxx:27015</span></div>
+        <div class="srv-row"><span class="srv-key">JOUEURS</span><span class="srv-val">32 / 64</span></div>
+        <div class="srv-row"><span class="srv-key">MAP</span><span class="srv-val" id="disp-map">rp_truenorth_v1a</span></div>
+        <div class="srv-row"><span class="srv-key">DISCORD</span><span class="srv-val" id="disp-discord" style="font-size:11px;word-break:break-all">discord.gg/northsidexp</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Modifier les informations</div></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+        <div class="fg"><label class="fl">IP du serveur</label><input class="fi" type="text" id="inp-ip" value="xxx.xxx.xxx.xxx:27015"></div>
+        <div class="fg"><label class="fl">Lien Discord</label><input class="fi" type="text" id="inp-discord" value="https://discord.gg/northsidexp"></div>
+        <div class="fg"><label class="fl">Bouton Rejoindre (steam://)</label><input class="fi" type="text" id="inp-steam" placeholder="steam://connect/xxx.xxx.xxx.xxx:27015"></div>
+        <div class="fg"><label class="fl">Map actuelle</label><input class="fi" type="text" id="inp-map" value="rp_truenorth_v1a"></div>
+        <div class="fg"><label class="fl">Slots serveur</label><input class="fi" type="number" id="inp-slots" value="64"></div>
+        <button class="btn btn-red" onclick="applyServer()">💾 Appliquer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PARAMÈTRES -->
+<div class="apage" id="pg-settings">
+  <div class="ph">
+    <div><div class="ph-title">PARAMÈTRES DU <em>FORUM</em></div><div class="ph-sub">Configuration générale</div></div>
+    <button class="btn btn-red" onclick="notify('Paramètres sauvegardés !','ok')">💾 Tout sauvegarder</button>
+  </div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="card-hd"><div class="card-title">Informations générales</div></div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Nom du serveur</label><input class="fi" type="text" value="NorthSide RP"></div>
+        <div class="fg"><label class="fl">Slogan</label><input class="fi" type="text" value="Serious Roleplay — Garry's Mod"></div>
+      </div>
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Email contact</label><input class="fi" type="email" placeholder="contact@northside.rp"></div>
+        <div class="fg"><label class="fl">Langue par défaut</label><select class="fsel"><option>Français</option><option>English</option></select></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="card-hd"><div class="card-title">Réseaux sociaux</div></div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Discord</label><input class="fi" type="text" value="https://discord.gg/northsidexp"></div>
+        <div class="fg"><label class="fl">Steam Group</label><input class="fi" type="text" placeholder="https://steamcommunity.com/groups/..."></div>
+      </div>
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Twitter / X</label><input class="fi" type="text" placeholder="https://twitter.com/..."></div>
+        <div class="fg"><label class="fl">YouTube</label><input class="fi" type="text" placeholder="https://youtube.com/..."></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end"><button class="btn btn-red" onclick="notify('Liens sauvegardés !','ok')">💾 Sauvegarder</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Options</div></div>
+    <div class="card-body">
+      <div class="toggle-row"><div class="toggle-info"><h4>Inscriptions ouvertes</h4><p>Autoriser les nouveaux membres à s'inscrire</p></div><label class="tgl"><input type="checkbox" checked><span class="tgl-sl"></span></label></div>
+      <div class="toggle-row"><div class="toggle-info"><h4>Modération préalable des topics</h4><p>Valider manuellement les topics avant publication</p></div><label class="tgl"><input type="checkbox"><span class="tgl-sl"></span></label></div>
+      <div class="toggle-row"><div class="toggle-info"><h4>Mode maintenance</h4><p>Afficher une page de maintenance aux visiteurs</p></div><label class="tgl"><input type="checkbox"><span class="tgl-sl"></span></label></div>
+      <div class="toggle-row"><div class="toggle-info"><h4>Bandeau d'information</h4><p>Afficher la barre de statut en haut du site</p></div><label class="tgl"><input type="checkbox" checked><span class="tgl-sl"></span></label></div>
+      <div class="toggle-row"><div class="toggle-info"><h4>Particules braises</h4><p>Animation d'ambiance en arrière-plan</p></div><label class="tgl"><input type="checkbox" checked><span class="tgl-sl"></span></label></div>
+    </div>
+  </div>
+</div>
+
+<!-- JOURNAL -->
+<div class="apage" id="pg-activity">
+  <div class="ph">
+    <div><div class="ph-title">JOURNAL <em>D'ACTIVITÉ</em></div><div class="ph-sub">Historique des actions administratives</div></div>
+    <button class="btn btn-danger" onclick="askDelete('tout le journal')">🗑️ Vider</button>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Dernières actions</div></div>
+    <div class="card-body">
+      <div class="log-item"><div class="log-dot ld-r"></div><div><div class="log-text"><b>Admin</b> a supprimé le topic "test_spam"</div><div class="log-time">Aujourd'hui 14:22</div></div></div>
+      <div class="log-item"><div class="log-dot ld-r"></div><div><div class="log-text"><b>Admin</b> a banni <b>Zephyr</b> — Insultes répétées</div><div class="log-time">Aujourd'hui 13:10</div></div></div>
+      <div class="log-item"><div class="log-dot ld-b"></div><div><div class="log-text"><b>Moderateur</b> a fermé le topic "Déban Zephyr"</div><div class="log-time">Aujourd'hui 12:45</div></div></div>
+      <div class="log-item"><div class="log-dot ld-g"></div><div><div class="log-text"><b>Admin</b> a mis à jour les paramètres du forum</div><div class="log-time">Aujourd'hui 10:00</div></div></div>
+      <div class="log-item"><div class="log-dot ld-a"></div><div><div class="log-text"><b>Admin</b> a publié une annonce officielle</div><div class="log-time">Hier 22:15</div></div></div>
+      <div class="log-item"><div class="log-dot ld-b"></div><div><div class="log-text"><b>Moderateur</b> a promu <b>Raeken</b> au rôle Membre</div><div class="log-time">Hier 18:30</div></div></div>
+      <div class="log-item"><div class="log-dot ld-r"></div><div><div class="log-text"><b>Admin</b> a supprimé le compte <b>SpamBot44</b></div><div class="log-time">Il y a 2j 09:12</div></div></div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div><!-- /admin-shell -->
+
+<!-- MODALS -->
+<div class="moverlay" id="m-edit-topic">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title">MODIFIER LE TOPIC</div><div class="modal-close" onclick="closeModal('m-edit-topic')">✕</div></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Titre</label><input class="fi" type="text" value="Candidature Police — Raeken"></div>
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Statut</label><select class="fsel"><option>Ouvert</option><option selected>En attente</option><option>Fermé</option><option>Épinglé</option><option>Urgent</option></select></div>
+        <div class="fg"><label class="fl">Catégorie</label><select class="fsel"><option selected>Candidatures Police</option><option>Discussions</option><option>Annonces</option><option>Signalements</option></select></div>
+      </div>
+      <div class="fg"><label class="fl">Contenu</label><textarea class="fta">Contenu du topic ici...</textarea></div>
+      <div class="fg"><label class="fl">Note interne (invisible aux membres)</label><textarea class="fta" style="min-height:60px" placeholder="Note admin..."></textarea></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('m-edit-topic')">Annuler</button>
+      <button class="btn btn-red" onclick="notify('Topic modifié !','ok');closeModal('m-edit-topic')">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<div class="moverlay" id="m-edit-user">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title">MODIFIER L'UTILISATEUR</div><div class="modal-close" onclick="closeModal('m-edit-user')">✕</div></div>
+    <div class="modal-body">
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Pseudo</label><input class="fi" type="text" value="Raeken"></div>
+        <div class="fg"><label class="fl">Email</label><input class="fi" type="email" value="raeken@mail.com"></div>
+      </div>
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Rôle</label><select class="fsel"><option>Membre</option><option>Modérateur</option><option>Admin</option><option>Banni</option></select></div>
+        <div class="fg"><label class="fl">Nouveau mot de passe</label><input class="fi" type="password" placeholder="Laisser vide = inchangé"></div>
+      </div>
+      <div class="fg"><label class="fl">Note interne</label><textarea class="fta" style="min-height:70px" placeholder="Note sur cet utilisateur..."></textarea></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('m-edit-user')">Annuler</button>
+      <button class="btn btn-red" onclick="notify('Utilisateur mis à jour !','ok');closeModal('m-edit-user')">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<div class="moverlay" id="m-cat">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title">CATÉGORIE</div><div class="modal-close" onclick="closeModal('m-cat')">✕</div></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Nom de la catégorie</label><input class="fi" type="text" placeholder="Ex: Discussions Générales"></div>
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Section parente</label><select class="fsel"><option>Communauté</option><option>Recrutement</option><option>Administration</option></select></div>
+        <div class="fg"><label class="fl">Ordre d'affichage</label><input class="fi" type="number" value="1"></div>
+      </div>
+      <div class="fg"><label class="fl">Description courte</label><input class="fi" type="text" placeholder="Courte description..."></div>
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Icône (emoji)</label><input class="fi" type="text" placeholder="💬" style="font-size:20px;text-align:center"></div>
+        <div class="fg"><label class="fl">Visible par</label><select class="fsel"><option>Tous</option><option>Membres</option><option>Staff</option><option>Admins</option></select></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('m-cat')">Annuler</button>
+      <button class="btn btn-red" onclick="notify('Catégorie sauvegardée !','ok');closeModal('m-cat')">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<div class="moverlay" id="m-ban">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title">BANNIR UN UTILISATEUR</div><div class="modal-close" onclick="closeModal('m-ban')">✕</div></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Utilisateur</label><input class="fi" type="text" placeholder="Pseudo..."></div>
+      <div class="fg-row c2">
+        <div class="fg"><label class="fl">Durée</label><select class="fsel"><option>1 jour</option><option>3 jours</option><option>7 jours</option><option>30 jours</option><option>Permanent</option></select></div>
+        <div class="fg"><label class="fl">Raison</label><input class="fi" type="text" placeholder="Raison du ban..."></div>
+      </div>
+      <div class="fg"><label class="fl">Message envoyé à l'utilisateur</label><textarea class="fta" style="min-height:70px" placeholder="Message visible par le banni..."></textarea></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('m-ban')">Annuler</button>
+      <button class="btn btn-danger" onclick="notify('Utilisateur banni.','err');closeModal('m-ban')">🔒 Bannir</button>
+    </div>
+  </div>
+</div>
+
+<div class="moverlay" id="m-confirm">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-hd"><div class="modal-title">CONFIRMATION</div><div class="modal-close" onclick="closeModal('m-confirm')">✕</div></div>
+    <div class="modal-body">
+      <p style="font-size:14px;color:var(--text-dim);line-height:1.6" id="confirm-msg">Êtes-vous sûr ? Cette action est irréversible.</p>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('m-confirm')">Annuler</button>
+      <button class="btn btn-danger" id="confirm-ok">🗑️ Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<script>
+// Navigation
+document.querySelectorAll('.sb-item').forEach(function(item){
+  item.addEventListener('click', function(){
+    var page = this.dataset.page;
+    if(!page) return;
+    goPage(page);
+  });
+});
+function goPage(id){
+  document.querySelectorAll('.apage').forEach(function(p){ p.classList.remove('active'); });
+  var pg = document.getElementById('pg-'+id);
+  if(pg) pg.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(function(i){
+    i.classList.toggle('active', i.dataset.page === id);
+  });
+  window.scrollTo(0,0);
+}
+
+// Modals
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.moverlay').forEach(function(o){
+  o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('open'); });
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') document.querySelectorAll('.moverlay.open').forEach(function(o){ o.classList.remove('open'); });
+});
+
+// Confirm
+var _delCb = null;
+function askDelete(label, cb){
+  document.getElementById('confirm-msg').textContent = 'Êtes-vous sûr de vouloir supprimer '+label+' ? Cette action est irréversible.';
+  _delCb = cb||null;
+  openModal('m-confirm');
+}
+document.getElementById('confirm-ok').addEventListener('click',function(){
+  closeModal('m-confirm');
+  if(_delCb){ _delCb(); _delCb=null; }
+  else notify('Élément supprimé.','err');
+});
+
+// Toasts
+function notify(msg, type){
+  var wrap = document.getElementById('toast-wrap');
+  var el = document.createElement('div');
+  var icon = type==='err'?'⚠️':type==='warn'?'⚡':'✓';
+  el.className = 'toast'+(type==='err'?' t-err':type==='warn'?' t-warn':'');
+  el.innerHTML = '<span>'+icon+'</span> '+msg;
+  wrap.appendChild(el);
+  setTimeout(function(){ if(el.parentNode) el.remove(); }, 2900);
+}
+
+// Topic actions
+function togglePin(btn){
+  var pinned = btn.textContent.includes('📌');
+  btn.textContent = pinned ? '📍' : '📌';
+  notify(pinned ? 'Topic épinglé !' : 'Topic désépinglé !','ok');
+}
+function toggleLock(btn){
+  var locked = btn.textContent.includes('🔒');
+  btn.textContent = locked ? '🔓' : '🔒';
+  notify(locked ? 'Topic réouvert !' : 'Topic fermé !','ok');
+}
+
+// Publish topic
+function publishTopic(){
+  var title = document.getElementById('ct-title').value.trim();
+  var content = document.getElementById('ct-content').value.trim();
+  if(!title){ notify('Le titre est obligatoire.','err'); return; }
+  if(!content){ notify('Le contenu est obligatoire.','err'); return; }
+  notify('Topic "'+title+'" publié !','ok');
+  goPage('topics');
+}
+
+// Filter topics
+function filterTopics(){
+  var q = document.getElementById('topics-search').value.toLowerCase();
+  var cat = document.getElementById('filter-cat').value;
+  document.querySelectorAll('#topics-tbody tr').forEach(function(row){
+    var matchQ = !q || row.textContent.toLowerCase().includes(q);
+    var matchC = !cat || (row.dataset.cat||'')===cat;
+    row.style.display = (matchQ&&matchC)?'':'none';
+  });
+}
+
+// Filter users
+function filterUsers(){
+  var q = document.getElementById('user-search').value.toLowerCase();
+  var role = document.getElementById('user-rf').value;
+  document.querySelectorAll('#users-tbody tr').forEach(function(row){
+    var matchQ = !q || row.textContent.toLowerCase().includes(q);
+    var matchR = !role || (row.dataset.role||'')===role;
+    row.style.display = (matchQ&&matchR)?'':'none';
+  });
+}
+
+// Server
+function applyServer(){
+  var ip = document.getElementById('inp-ip').value;
+  var discord = document.getElementById('inp-discord').value;
+  var map = document.getElementById('inp-map').value;
+  document.getElementById('disp-ip').textContent = ip;
+  document.getElementById('disp-discord').textContent = discord.replace('https://','');
+  document.getElementById('disp-map').textContent = map;
+  notify('Paramètres serveur appliqués !','ok');
+}
+
+// Particles (same as forum)
+(function(){
+  var c = document.getElementById('particles-canvas');
+  if(!c) return;
+  var ctx = c.getContext('2d');
+  var W,H,pts=[];
+  function resize(){ W=c.width=window.innerWidth; H=c.height=window.innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  for(var i=0;i<50;i++) pts.push({ x:Math.random()*1920, y:Math.random()*1080, vx:(Math.random()-.5)*.45, vy:-Math.random()*.75-.18, sz:Math.random()*1.8+.3, a:Math.random()*.45+.1, life:Math.random()*200+80, max:280 });
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(function(p){
+      p.x+=p.vx; p.y+=p.vy; p.life--;
+      if(p.life<=0){ p.x=Math.random()*W; p.y=H+10; p.life=p.max; }
+      var t=p.life/p.max;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.sz,0,Math.PI*2);
+      ctx.fillStyle='rgba('+(180+75*t)+','+(40*t)+',0,'+p.a*t+')'; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+</script>
+</body>
+</html>
