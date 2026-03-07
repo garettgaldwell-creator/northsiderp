@@ -52,18 +52,26 @@
     <div class="form-title">Signaler un joueur</div>
     <div class="form-sub">Remplissez le formulaire ci-dessous avec les informations necessaires.</div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Votre pseudo</label><input class="form-input" placeholder="Votre pseudo in-game"></div>
-      <div class="form-group"><label class="form-label">Pseudo du joueur signale</label><input class="form-input" placeholder="Pseudo du fautif"></div>
+      <div class="form-group"><label class="form-label">Votre pseudo</label><input class="form-input" placeholder="Votre pseudo in-game" id="sg_pseudo"></div>
+      <div class="form-group"><label class="form-label">Pseudo du joueur signale</label><input class="form-input" placeholder="Pseudo du fautif" id="sg_fautif"></div>
     </div>
-    <div class="form-group"><label class="form-label">SteamID du joueur signale</label><input class="form-input" placeholder="STEAM_0:X:XXXXXXXX (optionnel)"></div>
+    <div class="form-group"><label class="form-label">SteamID du joueur signale</label><input class="form-input" placeholder="STEAM_0:X:XXXXXXXX (optionnel)" id="sg_steam"></div>
     <div class="form-group"><label class="form-label">Motif du signalement</label><select class="form-select"><option>RDM (Random Deathmatch)</option><option>BreakRP / Fail RP</option><option>Metagaming</option><option>Insultes / Harcelement</option><option>Triche / Exploit</option><option>Autre</option></select></div>
-    <div class="form-group"><label class="form-label">Description des faits</label><textarea class="form-textarea" style="min-height:180px" placeholder="Decrivez precisement ce qui s'est passe, avec l'heure approximative des evenements..."></textarea></div>
+    <div class="form-group"><label class="form-label">Description des faits</label><textarea class="form-textarea" id="sg_desc" placeholder="Decrivez precisement ce qui s'est passe, avec l'heure approximative des evenements..."></textarea></div>
     <div class="form-group"><label class="form-label">Preuves (liens screenshots / videos)</label><input class="form-input" placeholder="https://imgur.com/... ou https://youtube.com/..."></div>
     <hr class="form-divider">
     <div style="display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap">
       <a href="index.html" class="btn btn-ghost">Annuler</a>
-      <button class="btn btn-red" onclick="this.textContent='Envoye!';setTimeout(()=>window.location='index.html',900)">Soumettre le signalement</button>
+      <button class="btn btn-red btn-submit-topic" onclick="submitPage()">Envoyer le signalement</button>
     </div>
+  </div>
+
+  <div style="margin-top:32px">
+    <div class="section-header">
+      <span class="section-title">Signalements en cours</span>
+      <span class="section-meta" id="topics-list-count">0</span>
+    </div>
+    <div id="topics-list"></div>
   </div>
 </main><aside class="sidebar">
   <div class="discord-widget">
@@ -133,6 +141,38 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
   }
   draw();
 })();
+</script>
+<script src="nrp-data.js"></script>
+<script src="nrp-auth.js"></script>
+<script src="nrp-forum.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.applyBanner();
+  NRPForum.injectAdminBtn();
+});
+</script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.renderTopics('signalements', 'topics-list', {
+    icon: '🚨',
+    emptyMsg: 'Aucun signalement en cours',
+    
+  });
+});
+</script>
+<script>
+function submitPage() {
+  var pseudo = (document.getElementById('sg_pseudo')||{}).value||'';
+  var fautif = (document.getElementById('sg_fautif')||{}).value||'';
+  var desc   = (document.getElementById('sg_desc')||{}).value||'';
+  NRPForum.submitForm('signalements', function() {
+    if (!pseudo) { alert('Veuillez renseigner votre pseudo.'); return null; }
+    return { author: pseudo, title: 'Signalement : ' + fautif, content: desc, fields: { fautif: fautif } };
+  }, 'signalements.html');
+}
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.renderTopics('signalements', 'topics-list', { icon: '🚨', emptyMsg: 'Aucun signalement en cours' });
+});
 </script>
 </body>
 </html>

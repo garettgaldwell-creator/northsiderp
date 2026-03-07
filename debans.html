@@ -52,18 +52,26 @@
     <div class="form-title">Demande de Deban</div>
     <div class="form-sub">Remplissez ce formulaire de facon honnete et complete.</div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Votre pseudo in-game</label><input class="form-input" placeholder="Pseudo au moment du ban"></div>
-      <div class="form-group"><label class="form-label">Votre SteamID</label><input class="form-input" placeholder="STEAM_0:X:XXXXXXXX"></div>
+      <div class="form-group"><label class="form-label">Votre pseudo in-game</label><input class="form-input" placeholder="Pseudo au moment du ban" id="db_pseudo"></div>
+      <div class="form-group"><label class="form-label">Votre SteamID</label><input class="form-input" id="db_steam" placeholder="STEAM_0:X:XXXXXXXX"></div>
     </div>
-    <div class="form-group"><label class="form-label">Date approximative du ban</label><input class="form-input" type="date"></div>
-    <div class="form-group"><label class="form-label">Raison indiquee lors du ban</label><input class="form-input" placeholder="La raison affichee quand vous vous connectez"></div>
-    <div class="form-group"><label class="form-label">Votre version des faits</label><textarea class="form-textarea" style="min-height:160px" placeholder="Expliquez ce qui s'est passe selon vous..."></textarea></div>
+    <div class="form-group"><label class="form-label">Date approximative du ban</label><input class="form-input" type="date" id="db_date"></div>
+    <div class="form-group"><label class="form-label">Raison indiquee lors du ban</label><input class="form-input" id="db_raison" placeholder="La raison affichee quand vous vous connectez"></div>
+    <div class="form-group"><label class="form-label">Votre version des faits</label><textarea class="form-textarea" id="db_version" placeholder="Expliquez ce qui s'est passe selon vous..."></textarea></div>
     <div class="form-group"><label class="form-label">Pourquoi devriez-vous etre debanni ?</label><textarea class="form-textarea" placeholder="Pourquoi meritez-vous une seconde chance ? Qu'avez-vous retenu ?"></textarea></div>
     <hr class="form-divider">
     <div style="display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap">
       <a href="index.html" class="btn btn-ghost">Annuler</a>
-      <button class="btn btn-red" onclick="this.textContent='Envoyee!';setTimeout(()=>window.location='index.html',900)">Envoyer ma demande</button>
+      <button class="btn btn-red btn-submit-topic" onclick="submitPage()">Envoyer la demande</button>
     </div>
+  </div>
+
+  <div style="margin-top:32px">
+    <div class="section-header">
+      <span class="section-title">Demandes en cours</span>
+      <span class="section-meta" id="topics-list-count">0</span>
+    </div>
+    <div id="topics-list"></div>
   </div>
 </main><aside class="sidebar">
   <div class="discord-widget">
@@ -133,6 +141,39 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
   }
   draw();
 })();
+</script>
+<script src="nrp-data.js"></script>
+<script src="nrp-auth.js"></script>
+<script src="nrp-forum.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.applyBanner();
+  NRPForum.injectAdminBtn();
+});
+</script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.renderTopics('debans', 'topics-list', {
+    icon: '🔓',
+    emptyMsg: 'Aucune demande en cours',
+    
+  });
+});
+</script>
+<script>
+function submitPage() {
+  var pseudo   = (document.getElementById('db_pseudo')||{}).value||'';
+  var steam    = (document.getElementById('db_steam')||{}).value||'';
+  var raison   = (document.getElementById('db_raison')||{}).value||'';
+  var version  = (document.getElementById('db_version')||{}).value||'';
+  NRPForum.submitForm('debans', function() {
+    if (!pseudo) { alert('Veuillez renseigner votre pseudo.'); return null; }
+    return { author: pseudo, title: pseudo + ' — Demande de déban', content: version, fields: { steam: steam, raison: raison } };
+  }, 'debans.html');
+}
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.renderTopics('debans', 'topics-list', { icon: '🔓', emptyMsg: 'Aucune demande en cours' });
+});
 </script>
 </body>
 </html>

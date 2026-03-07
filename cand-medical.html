@@ -52,22 +52,30 @@
     <div class="form-title">Candidature &mdash; Services Medicaux</div>
     <div class="form-sub">Remplissez le formulaire ci-dessous. Resultat sous 72h.</div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Pseudo in-game</label><input class="form-input" placeholder="Votre pseudo RP"></div>
-      <div class="form-group"><label class="form-label">SteamID</label><input class="form-input" placeholder="STEAM_0:X:XXXXXXXX"></div>
+      <div class="form-group"><label class="form-label">Pseudo in-game</label><input class="form-input" placeholder="Votre pseudo RP" id="pseudo"></div>
+      <div class="form-group"><label class="form-label">SteamID</label><input class="form-input" placeholder="STEAM_0:X:XXXXXXXX" id="steamid"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Age</label><input class="form-input" type="number" placeholder="18"></div>
+      <div class="form-group"><label class="form-label">Age</label><input class="form-input" type="number" placeholder="18" id="age"></div>
       <div class="form-group"><label class="form-label">Disponibilite / semaine</label><select class="form-select"><option>Moins de 5h</option><option>5h a 10h</option><option>10h a 20h</option><option>Plus de 20h</option></select></div>
     </div>
-    <div class="form-group"><label class="form-label">Experience RP</label><textarea class="form-textarea" placeholder="Decrivez votre experience sur d'autres serveurs RP (nom, duree, role...)"></textarea></div>
-    <div class="form-group"><label class="form-label">Pourquoi voulez-vous rejoindre ce corps ?</label><textarea class="form-textarea" placeholder="Expliquez votre motivation..."></textarea></div>
+    <div class="form-group"><label class="form-label">Experience RP</label><textarea class="form-textarea" placeholder="Decrivez votre experience sur d'autres serveurs RP (nom, duree, role...)" id="xp_rp"></textarea></div>
+    <div class="form-group"><label class="form-label">Pourquoi voulez-vous rejoindre ce corps ?</label><textarea class="form-textarea" placeholder="Expliquez votre motivation..." id="motiv"></textarea></div>
     <div class="form-group"><label class="form-label">Connaissez-vous l'addon Advanced Medic Mod ?</label><select class="form-select"><option>Oui, je l'ai deja utilise</option><option>Non mais je suis pret a apprendre</option></select></div>
     <div class="form-group"><label class="form-label">Avez-vous lu et accepte le reglement ?</label><select class="form-select"><option>Oui, je l'ai lu et l'accepte</option><option>Non (votre candidature sera refusee)</option></select></div>
     <hr class="form-divider">
     <div style="display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap">
       <a href="candidatures.html" class="btn btn-ghost">Annuler</a>
-      <button class="btn btn-red" onclick="this.textContent='Envoyee!';setTimeout(()=>window.location='candidatures.html',900)">Envoyer la candidature</button>
+      <button class="btn btn-red btn-submit-topic" onclick="submitPage()">Envoyer la candidature</button>
     </div>
+  </div>
+
+  <div style="margin-top:32px">
+    <div class="section-header">
+      <span class="section-title">Candidatures déposées</span>
+      <span class="section-meta" id="topics-list-count">0 sujet</span>
+    </div>
+    <div id="topics-list"></div>
   </div>
 </main><aside class="sidebar">
   <div class="discord-widget">
@@ -137,6 +145,58 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
   }
   draw();
 })();
+</script>
+<script src="nrp-data.js"></script>
+<script src="nrp-auth.js"></script>
+<script src="nrp-forum.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.applyBanner();
+  NRPForum.injectAdminBtn();
+});
+</script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.renderTopics('cand-medical', 'topics-list', {
+    icon: '🏥',
+    emptyMsg: 'Aucune candidature pour le moment',
+    newUrl: 'cand-medical.html'
+  });
+});
+</script>
+<script>
+function submitPage() {
+        var _pseudo = (document.getElementById('pseudo')||{}).value||'';
+        var _steamid = (document.getElementById('steamid')||{}).value||'';
+        var _age = (document.getElementById('age')||{}).value||'';
+        var _dispo = (document.getElementById('dispo')||{}).value||'';
+        var _xp_rp = (document.getElementById('xp_rp')||{}).value||'';
+        var _motiv = (document.getElementById('motiv')||{}).value||'';
+
+  NRPForum.submitForm('cand-medical', function() {
+    if (!_pseudo) { alert('Veuillez renseigner votre pseudo.'); return null; }
+    return {
+      author:  _pseudo || 'Anonyme',
+      title:   _pseudo + ' — Candidature',
+      content: '',
+      fields: {
+                  'pseudo': _pseudo,
+                  'steamid': _steamid,
+                  'age': _age,
+                  'dispo': _dispo,
+                  'xp_rp': _xp_rp,
+                  'motiv': _motiv,
+      }
+    };
+  }, 'cand-medical.html');
+}
+
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.renderTopics('cand-medical', 'topics-list', {
+    icon: '🏥',
+    emptyMsg: 'Aucune candidature pour le moment'
+  });
+});
 </script>
 </body>
 </html>

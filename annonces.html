@@ -48,9 +48,13 @@
 <div class="container">
 <main>
   <div class="announcement fu"><div class="ann-icon">&#128680;</div><div><div class="ann-title">Aucune annonce pour le moment</div><div class="ann-text">Cette section est reservee aux annonces officielles de l'equipe Northside RP. Revenez bientot !</div><div class="ann-date">Ouverture prochaine</div></div></div>
-  <div class="fu1"><div class="section-header"><span class="section-title">Derniers Posts</span><span class="section-meta">0 sujet</span></div>
-  <div class="thread" style="justify-content:center;padding:40px;background:var(--dark);border:1px solid var(--border);border-top:none">
-    <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:#2a2a2a;letter-spacing:3px">VIDE</div><div style="font-size:13px;color:#555;margin-top:4px">Aucune annonce pour le moment</div></div>
+  <div class="fu1">
+  <div class="section-header">
+    <span class="section-title">Annonces & News</span>
+    <span class="section-meta" id="topics-list-count">0 sujet</span>
+  </div>
+  <div id="topics-list"></div>
+</div>
   </div></div>
 </main><aside class="sidebar">
   <div class="discord-widget">
@@ -120,6 +124,24 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
   }
   draw();
 })();
+</script>
+<script src="nrp-data.js"></script>
+<script src="nrp-auth.js"></script>
+<script src="nrp-forum.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.applyBanner();
+  NRPForum.injectAdminBtn();
+});
+</script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.renderTopics('annonces', 'topics-list', {
+    icon: '📢',
+    emptyMsg: 'Aucune annonce pour le moment',
+    
+  });
+});
 </script>
 </body>
 </html>

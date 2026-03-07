@@ -1,123 +1,133 @@
 /**
- * NorthSide RP — Stockage central
- * Toutes les pages lisent/écrivent via NRP.get() / NRP.set()
- * Les données persistent dans localStorage sous clé chiffrée.
+ * NorthSide RP — Store central v2
+ * Config  : localStorage clé nrp_cfg_v1  (base64 JSON)
+ * Topics  : localStorage clé nrp_topics_v1 (base64 JSON)
  */
 (function(w) {
   'use strict';
 
-  var _K = 'nrp_cfg_v1';
+  var _CK = 'nrp_cfg_v1';
+  var _TK = 'nrp_topics_v1';
 
-  // ── Valeurs par défaut du forum ──────────────────────────
   var DEFAULTS = {
-    // Serveur
-    serverIp:      'xxx.xxx.xxx.xxx:27015',
-    serverSteam:   '',
-    serverMap:     'rp_truenorth_v1a',
-    serverSlots:   '64',
-    serverStatus:  'EN LIGNE',
-    serverPlayers: '0',
-
-    // Discord
-    discordUrl:    'https://discord.gg/northsidexp',
-
-    // Bandeau
-    bannerText:    'Serveur en developpement \u2014 Ouverture prochaine',
-
-    // Annonce principale
-    annTitle:      'Bienvenue sur le forum officiel de Northside RP',
-    annText:       'Le serveur est actuellement en developpement. Inscrivez-vous pour etre parmi les premiers membres de la communaute. Lisez le reglement avant toute candidature.',
-    annSign:       "L'equipe Northside RP",
-
-    // Réseau sociaux
-    socialSteam:   '',
-    socialTwitter: '',
-    socialYoutube: '',
-
-    // Options forum
+    serverIp:        'xxx.xxx.xxx.xxx:27015',
+    serverSteam:     '',
+    serverMap:       'rp_truenorth_v1a',
+    serverSlots:     '64',
+    serverStatus:    'EN LIGNE',
+    serverPlayers:   '0',
+    discordUrl:      'https://discord.gg/northsidexp',
+    bannerText:      'Serveur en developpement \u2014 Ouverture prochaine',
+    annTitle:        'Bienvenue sur le forum officiel de Northside RP',
+    annText:         'Le serveur est actuellement en developpement. Inscrivez-vous pour etre parmi les premiers membres de la communaute.',
+    annSign:         "L'equipe Northside RP",
+    socialSteam:     '',
+    socialTwitter:   '',
+    socialYoutube:   '',
     optInscriptions: true,
     optMaintenance:  false,
     optBandeau:      true,
-
-    // Paramètres généraux
-    serverName:    'NorthSide RP',
-    serverSlogan:  'Serious Roleplay \u2014 Garry\'s Mod',
-    contactEmail:  '',
-
-    // Membres (compteur affiché)
-    membersCount:  '0',
-
-    // Sécurité : token de session admin (null = non connecté)
-    _adminToken:   null,
-    _adminExpiry:  0
+    serverName:      'NorthSide RP',
+    serverSlogan:    "Serious Roleplay \u2014 Garry's Mod",
+    contactEmail:    '',
+    membersCount:    '0',
+    _adminToken:     null,
+    _adminExpiry:    0
   };
 
-  // ── Lecture / Écriture ──────────────────────────────────
-  function _load() {
+  // ── Config ─────────────────────────────────────────────
+  function _loadCfg() {
     try {
-      var raw = localStorage.getItem(_K);
-      if (!raw) return Object.assign({}, DEFAULTS);
-      var parsed = JSON.parse(atob(raw));
-      // Merge avec defaults pour les nouvelles clés
-      return Object.assign({}, DEFAULTS, parsed);
-    } catch(e) {
-      return Object.assign({}, DEFAULTS);
-    }
+      var r = localStorage.getItem(_CK);
+      return r ? Object.assign({}, DEFAULTS, JSON.parse(atob(r))) : Object.assign({}, DEFAULTS);
+    } catch(e) { return Object.assign({}, DEFAULTS); }
+  }
+  function _saveCfg(obj) {
+    try { localStorage.setItem(_CK, btoa(JSON.stringify(obj))); } catch(e) {}
   }
 
-  function _save(obj) {
+  // ── Topics ─────────────────────────────────────────────
+  function _loadTopics() {
     try {
-      // On ne stocke jamais le mot de passe, seulement le token de session
-      var toStore = Object.assign({}, obj);
-      localStorage.setItem(_K, btoa(JSON.stringify(toStore)));
-    } catch(e) {}
+      var r = localStorage.getItem(_TK);
+      return r ? JSON.parse(atob(r)) : {};
+    } catch(e) { return {}; }
+  }
+  function _saveTopics(obj) {
+    try { localStorage.setItem(_TK, btoa(JSON.stringify(obj))); } catch(e) {}
   }
 
-  // ── API publique ────────────────────────────────────────
+  // ── API ────────────────────────────────────────────────
   var NRP = {
-    /**
-     * Lire une valeur
-     * @param {string} key
-     * @returns {*}
-     */
-    get: function(key) {
-      var data = _load();
-      return (key in data) ? data[key] : undefined;
-    },
 
-    /**
-     * Écrire une ou plusieurs valeurs
-     * @param {string|Object} keyOrObj
-     * @param {*} [val]
-     */
-    set: function(keyOrObj, val) {
-      var data = _load();
-      if (typeof keyOrObj === 'object') {
-        Object.assign(data, keyOrObj);
-      } else {
-        data[keyOrObj] = val;
-      }
-      _save(data);
+    /* CONFIG */
+    get: function(k) { var d = _loadCfg(); return k in d ? d[k] : undefined; },
+    set: function(kOrObj, val) {
+      var d = _loadCfg();
+      if (typeof kOrObj === 'object') Object.assign(d, kOrObj); else d[kOrObj] = val;
+      _saveCfg(d);
     },
-
-    /**
-     * Lire tout le store (copie)
-     */
-    all: function() {
-      return _load();
-    },
-
-    /**
-     * Réinitialiser aux valeurs par défaut (garde le token admin)
-     */
+    all: function() { return _loadCfg(); },
     reset: function() {
-      var data = _load();
-      var token   = data._adminToken;
-      var expiry  = data._adminExpiry;
-      var fresh   = Object.assign({}, DEFAULTS);
-      fresh._adminToken  = token;
-      fresh._adminExpiry = expiry;
-      _save(fresh);
+      var d = _loadCfg();
+      var t = d._adminToken, e = d._adminExpiry;
+      var f = Object.assign({}, DEFAULTS); f._adminToken = t; f._adminExpiry = e;
+      _saveCfg(f);
+    },
+
+    /* TOPICS */
+    /**
+     * Ajouter un topic dans une catégorie
+     * @param {string} cat  ex: 'discussions', 'cand-police', 'debans'
+     * @param {Object} post { author, title, content, [fields], [status] }
+     * @returns {Object} topic avec id, date, time
+     */
+    addTopic: function(cat, post) {
+      var all = _loadTopics();
+      if (!all[cat]) all[cat] = [];
+      var now = new Date();
+      var topic = Object.assign({}, post, {
+        id:     now.getTime() + '-' + Math.random().toString(36).slice(2, 7),
+        date:   now.toLocaleDateString('fr-FR'),
+        time:   now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}),
+        status: post.status || 'ouvert'
+      });
+      all[cat].unshift(topic);
+      _saveTopics(all);
+      return topic;
+    },
+
+    /** Lire les topics d'une catégorie */
+    getTopics: function(cat) {
+      return _loadTopics()[cat] || [];
+    },
+
+    /** Tous les topics de toutes catégories */
+    getAllTopics: function() {
+      return _loadTopics();
+    },
+
+    /** Supprimer un topic */
+    deleteTopic: function(cat, id) {
+      var all = _loadTopics();
+      if (!all[cat]) return;
+      all[cat] = all[cat].filter(function(t){ return t.id !== id; });
+      _saveTopics(all);
+    },
+
+    /** Changer le statut d'un topic */
+    setTopicStatus: function(cat, id, status) {
+      var all = _loadTopics();
+      if (!all[cat]) return;
+      all[cat] = all[cat].map(function(t){
+        return t.id === id ? Object.assign({}, t, {status: status}) : t;
+      });
+      _saveTopics(all);
+    },
+
+    /** Nombre de topics dans une catégorie */
+    countTopics: function(cat) {
+      return (_loadTopics()[cat] || []).length;
     }
   };
 

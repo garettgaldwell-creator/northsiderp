@@ -141,6 +141,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 <!-- Auth guard : chargés AVANT tout rendu, bloque si non connecté -->
 <script src="nrp-data.js"></script>
 <script src="nrp-auth.js"></script>
+<script src="nrp-forum.js"></script>
 <script>NRPAuth.requireAuth();</script>
 
 <!-- TOPBAR -->
@@ -167,6 +168,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
   <div class="sbs">
     <div class="sbl">Forum</div>
     <div class="sbi" data-p="announcements"><span class="sic">📣</span> Annonces</div>
+    <div class="sbi" data-p="topics"><span class="sic">💬</span> Topics & Candidatures</div>
     <div class="sbi" data-p="create-topic"><span class="sic">✏️</span> Créer un topic</div>
   </div>
   <div class="sbsep"></div>
@@ -367,6 +369,46 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 </div>
 
 <!-- ══ CRÉER TOPIC ══ -->
+<!-- ══ TOPICS & CANDIDATURES ══ -->
+<div class="ap" id="pg-topics">
+  <div class="ph">
+    <div><div class="pht">TOPICS & <em>CANDIDATURES</em></div><div class="phs">Tous les posts soumis par les membres — modération en direct</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="adminLoadTopics()">🔄 Actualiser</button>
+  </div>
+
+  <!-- Filtres -->
+  <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+    <select id="adm-topics-cat" onchange="adminLoadTopics()" style="background:var(--dark3);border:1px solid var(--border-2);color:var(--text-dim);font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;padding:7px 12px;border-radius:6px;cursor:pointer">
+      <option value="">Toutes les catégories</option>
+      <option value="discussions">Discussions</option>
+      <option value="presentations">Présentations</option>
+      <option value="annonces">Annonces</option>
+      <option value="cand-police">Candidatures Police</option>
+      <option value="cand-medical">Candidatures Médical</option>
+      <option value="cand-staff">Candidatures Staff</option>
+      <option value="debans">Demandes de Déban</option>
+      <option value="signalements">Signalements</option>
+    </select>
+    <select id="adm-topics-status" onchange="adminLoadTopics()" style="background:var(--dark3);border:1px solid var(--border-2);color:var(--text-dim);font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;padding:7px 12px;border-radius:6px;cursor:pointer">
+      <option value="">Tous les statuts</option>
+      <option value="ouvert">Ouvert</option>
+      <option value="en_cours">En cours</option>
+      <option value="accepte">Accepté</option>
+      <option value="refuse">Refusé</option>
+      <option value="ferme">Fermé</option>
+    </select>
+  </div>
+
+  <!-- Tableau des topics -->
+  <div class="card">
+    <div class="chd">
+      <div class="ct">Topics</div>
+      <span id="adm-topics-total" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted)">0 entrée(s)</span>
+    </div>
+    <div id="adm-topics-list" style="padding:0"></div>
+  </div>
+</div>
+
 <div class="ap" id="pg-create-topic">
   <div class="ph"><div><div class="pht">CRÉER UN <em>TOPIC</em></div><div class="phs">Publier un sujet officiel</div></div></div>
   <div class="card">
@@ -605,6 +647,7 @@ function pubTopic(){
 // ═══════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', function(){
   loadAll();
+  adminLoadTopics();
   // Vérif session toutes les 60s
   setInterval(function(){
     if(!NRPAuth.isLoggedIn()){
@@ -613,6 +656,108 @@ window.addEventListener('DOMContentLoaded', function(){
     }
   }, 60000);
 });
+
+// ═══════════════════════════════════════════════
+//  TOPICS ADMIN
+// ═══════════════════════════════════════════════
+var CAT_LABELS = {
+  'discussions':'Discussions','presentations':'Présentations','annonces':'Annonces',
+  'cand-police':'Cand. Police','cand-medical':'Cand. Médical','cand-staff':'Cand. Staff',
+  'debans':'Débans','signalements':'Signalements'
+};
+var STATUS_COLORS = {
+  ouvert:'#22c55e', en_cours:'#f59e0b', accepte:'#3b9fd8', refuse:'#e74c3c', ferme:'#555'
+};
+var STATUS_LABELS = { ouvert:'OUVERT', en_cours:'EN COURS', accepte:'ACCEPTÉ', refuse:'REFUSÉ', ferme:'FERMÉ' };
+
+function adminLoadTopics() {
+  var filterCat    = (document.getElementById('adm-topics-cat')||{}).value    || '';
+  var filterStatus = (document.getElementById('adm-topics-status')||{}).value || '';
+  var el = document.getElementById('adm-topics-list');
+  if (!el) return;
+
+  var all = NRP.getAllTopics();
+  var rows = [];
+
+  var cats = filterCat ? [filterCat] : Object.keys(CAT_LABELS);
+  cats.forEach(function(cat) {
+    var topics = all[cat] || [];
+    topics.forEach(function(t) {
+      if (filterStatus && t.status !== filterStatus) return;
+      rows.push({ cat: cat, topic: t });
+    });
+  });
+
+  var tot = document.getElementById('adm-topics-total');
+  if (tot) tot.textContent = rows.length + ' entrée(s)';
+
+  if (!rows.length) {
+    el.innerHTML = '<div style="padding:32px;text-align:center;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:1px;color:var(--text-muted);font-size:13px">Aucun topic pour le moment</div>';
+    return;
+  }
+
+  var html = '<table class="data-tbl"><thead><tr>'
+    + '<th>Catégorie</th><th>Titre</th><th>Auteur</th><th>Date</th><th>Statut</th><th>Actions</th>'
+    + '</tr></thead><tbody>';
+
+  rows.forEach(function(r) {
+    var t = r.topic;
+    var sc = STATUS_COLORS[t.status] || '#555';
+    var sl = STATUS_LABELS[t.status] || t.status;
+    var excerpt = (t.content||'').substring(0,60) + (t.content && t.content.length>60 ? '…':'');
+
+    html += '<tr data-cat="'+r.cat+'" data-id="'+t.id+'">'
+      + '<td><span style="font-size:10px;font-family:\'Share Tech Mono\',monospace;letter-spacing:1px;color:var(--red-bright)">'+(CAT_LABELS[r.cat]||r.cat)+'</span></td>'
+      + '<td>'
+      +   '<div class="td-name">'+_escH(t.title||'Sans titre')+'</div>'
+      +   (excerpt ? '<div class="td-meta">'+_escH(excerpt)+'</div>' : '')
+      + '</td>'
+      + '<td style="color:var(--white)">'+_escH(t.author||'Anonyme')+'</td>'
+      + '<td style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--text-muted)">'+t.date+'<br>'+t.time+'</td>'
+      + '<td>'
+      +   '<select onchange="adminChangeStatus(\''+r.cat+'\',\''+t.id+'\',this.value,this)" '
+      +   'style="background:'+sc+'18;border:1px solid '+sc+'44;color:'+sc+';font-family:\'Share Tech Mono\',monospace;font-size:9px;letter-spacing:1px;padding:3px 7px;border-radius:4px;cursor:pointer">'
+      +   ['ouvert','en_cours','accepte','refuse','ferme'].map(function(s){
+            return '<option value="'+s+'"'+(t.status===s?' selected':'')+'>'+STATUS_LABELS[s]+'</option>';
+          }).join('')
+      +   '</select>'
+      + '</td>'
+      + '<td>'
+      +   '<button onclick="adminDeleteTopic(\''+r.cat+'\',\''+t.id+'\',this)" '
+      +   'style="background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.25);color:var(--red-bright);border-radius:4px;padding:5px 10px;cursor:pointer;font-size:11px;transition:all .15s" '
+      +   'title="Supprimer">🗑 Supprimer</button>'
+      + '</td>'
+      + '</tr>';
+  });
+
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function _escH(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function adminChangeStatus(cat, id, status, sel) {
+  NRP.setTopicStatus(cat, id, status);
+  if (sel) sel.style.background = (STATUS_COLORS[status]||'#555')+'18';
+  if (sel) sel.style.borderColor = (STATUS_COLORS[status]||'#555')+'44';
+  if (sel) sel.style.color       =  STATUS_COLORS[status]||'#555';
+  toast('Statut mis à jour → ' + (STATUS_LABELS[status]||status));
+  logA('<b>Statut</b> topic mis à jour → '+STATUS_LABELS[status]+' ('+cat+')');
+  // Aussi rafraîchir le compteur dashboard
+  refreshDash();
+}
+
+function adminDeleteTopic(cat, id, btn) {
+  if (!confirm('Supprimer ce topic définitivement ?')) return;
+  NRP.deleteTopic(cat, id);
+  var row = btn.closest('tr');
+  if (row) { row.style.opacity='0'; row.style.transition='opacity .3s'; setTimeout(function(){ row.remove(); adminLoadTopics(); },300); }
+  toast('Topic supprimé.','warn');
+  logA('<b>Topic supprimé</b> ('+cat+')');
+  refreshDash();
+}
 </script>
 
 <script>

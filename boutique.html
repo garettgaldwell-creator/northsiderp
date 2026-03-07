@@ -94,5 +94,14 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
   draw();
 })();
 </script>
+<script src="nrp-data.js"></script>
+<script src="nrp-auth.js"></script>
+<script src="nrp-forum.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.applyBanner();
+  NRPForum.injectAdminBtn();
+});
+</script>
 </body>
 </html>

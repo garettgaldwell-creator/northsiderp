@@ -48,10 +48,11 @@
 <div class="container">
 <main class="fu">
   <div style="margin-bottom:16px;display:flex;justify-content:flex-end"><a href="nouvelle-presentation.html" class="btn btn-red">+ Nouvelle presentation</a></div>
-  <div class="section-header"><span class="section-title">Presentations</span><span class="section-meta">0 sujet</span></div>
-  <div class="thread" style="justify-content:center;padding:40px;background:var(--dark);border:1px solid var(--border);border-top:none">
-    <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:#2a2a2a;letter-spacing:3px">VIDE</div><div style="font-size:13px;color:#555;margin-top:4px">Soyez le premier a vous presenter !</div><a href="nouvelle-presentation.html" style="display:inline-block;margin-top:16px" class="btn btn-red">Me presenter</a></div>
+  <div class="section-header">
+    <span class="section-title" id="topics-list-title">Topics</span>
+    <span class="section-meta" id="topics-list-count">0 sujet</span>
   </div>
+  <div id="topics-list"></div>
 </main><aside class="sidebar">
   <div class="discord-widget">
     <div style="font-size:28px;margin-bottom:8px">&#127918;</div>
@@ -120,6 +121,24 @@ document.addEventListener('click',function(e){var m=document.getElementById('mob
   }
   draw();
 })();
+</script>
+<script src="nrp-data.js"></script>
+<script src="nrp-auth.js"></script>
+<script src="nrp-forum.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.applyBanner();
+  NRPForum.injectAdminBtn();
+});
+</script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  NRPForum.renderTopics('presentations', 'topics-list', {
+    icon: '👋',
+    emptyMsg: 'Soyez le premier a vous presenter !',
+    newUrl: 'nouvelle-presentation.html'
+  });
+});
 </script>
 </body>
 </html>

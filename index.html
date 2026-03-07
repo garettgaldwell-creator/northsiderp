@@ -270,13 +270,13 @@
     <a href="reglement.html">Reglement</a>
     <a href="#">Mentions legales</a>
     <a href="#" id="dyn-footer-discord">Discord</a>
+    <a href="#" id="adm-trigger" onclick="openAdmModal();return false;"
+       style="opacity:.22;transition:opacity .2s;font-size:10px;letter-spacing:1px"
+       onmouseenter="this.style.opacity='.9'" onmouseleave="this.style.opacity='.22'"
+       title="Administration">🔐 Admin</a>
   </div>
   <div class="footer-copy">&copy; 2026 Northside RP &mdash; Tous droits reserves</div>
 </footer>
-
-<!-- Zone cliquable INVISIBLE en bas à droite → ouvre la modale admin -->
-<!-- Aucune mention de "admin" dans le DOM visible -->
-<div id="adm-trigger" onclick="openAdmModal()" title=""></div>
 
 <!-- Modale d'accès administration -->
 <div class="adm-overlay" id="adm-overlay">
@@ -295,6 +295,7 @@
 <!-- Scripts dans l'ordre correct -->
 <script src="nrp-data.js"></script>
 <script src="nrp-auth.js"></script>
+<script src="nrp-forum.js"></script>
 <script>
 // ── Applique les données dynamiques sur la page ──────────
 (function applyData() {
