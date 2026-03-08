@@ -364,15 +364,28 @@ function renderAvatar(u) {
   var imgEl  = document.getElementById('pf-av-img');
   var initEl = document.getElementById('pf-av-init');
   var rmBtn  = document.getElementById('pf-rm-av-btn');
+  var r = window._NRP_ROLES[u.role] || window._NRP_ROLES.membre;
+  var rc = r.color;
+  var shadow = '0 0 10px ' + rc + '99';
+  // Applique le contour couleur de grade à l'anneau
+  var ring = document.querySelector('.pf-avatar-ring');
+  if (ring) {
+    ring.style.outline = '3px solid ' + rc;
+    ring.style.outlineOffset = '2px';
+    ring.style.borderRadius = '50%';
+    ring.style.boxShadow = shadow;
+  }
   if (u.avatar) {
     imgEl.src = u.avatar;
     imgEl.style.display = 'block';
+    imgEl.style.border = '3px solid ' + rc;
     initEl.style.display = 'none';
     rmBtn.style.display = 'block';
   } else {
     imgEl.style.display = 'none';
     initEl.style.display = 'flex';
     initEl.style.background = u.color || '#e74c3c';
+    initEl.style.border = '3px solid ' + rc;
     initEl.textContent = u.pseudo[0].toUpperCase();
     rmBtn.style.display = 'none';
   }
@@ -424,7 +437,12 @@ function removeAvatar() {
   var rmBtn  = document.getElementById('pf-rm-av-btn');
   imgEl.style.display = 'none';
   initEl.style.display = 'flex';
-  if (u) { initEl.style.background = u.color || '#e74c3c'; initEl.textContent = u.pseudo[0].toUpperCase(); }
+  if (u) {
+    var r = window._NRP_ROLES[u.role] || window._NRP_ROLES.membre;
+    initEl.style.background = u.color || '#e74c3c';
+    initEl.style.border = '3px solid ' + r.color;
+    initEl.textContent = u.pseudo[0].toUpperCase();
+  }
   rmBtn.style.display = 'none';
 }
 

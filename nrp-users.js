@@ -153,11 +153,12 @@
         var fullUser=this.getById(s.id);
         var r=ROLES[s.role]||ROLES.membre;
         var av;
+        var rc=r.color;
         if(fullUser&&fullUser.avatar){
-          av='<img src="'+fullUser.avatar+'" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.18);flex-shrink:0" alt="avatar">';
+          av='<img src="'+fullUser.avatar+'" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid '+rc+';box-shadow:0 0 7px '+rc+'88;flex-shrink:0" alt="avatar">';
         } else {
           var initial=s.pseudo[0].toUpperCase();
-          av='<div style="width:32px;height:32px;border-radius:50%;background:'+_esc(s.color||'#e74c3c')+';display:inline-flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:15px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.15)">'+initial+'</div>';
+          av='<div style="width:32px;height:32px;border-radius:50%;background:'+_esc(s.color||'#e74c3c')+';display:inline-flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:15px;color:#fff;flex-shrink:0;border:2px solid '+rc+';box-shadow:0 0 7px '+rc+'88">'+initial+'</div>';
         }
         actions.innerHTML='<div style="display:flex;align-items:center;gap:10px"><a href="profile.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;transition:opacity .2s" onmouseover="this.style.opacity=\'.8\'" onmouseout="this.style.opacity=\'1\'">'+av+'<div style="display:flex;flex-direction:column;gap:1px"><span style="font-family:\'Bebas Neue\',sans-serif;font-size:14px;letter-spacing:2px;color:#f5f5ff">'+_esc(s.pseudo)+'</span><span style="font-family:\'Share Tech Mono\',monospace;font-size:9px;letter-spacing:1px;color:'+r.color+'">'+r.label+'</span></div></a><button onclick="NRPUsers.logout();location.reload()" class="btn btn-ghost" style="padding:5px 10px;font-size:10px;letter-spacing:2px">D&eacute;co</button></div>';
         if(mobileActions) mobileActions.innerHTML='<a href="profile.html" class="btn btn-ghost" style="flex:1">Mon profil</a><button onclick="NRPUsers.logout();location.reload()" class="btn btn-ghost" style="flex:1">D&eacute;connexion</button>';
