@@ -246,11 +246,8 @@
   <div class="widget">
     <div class="widget-header"><div class="widget-accent"></div><span class="widget-title">En Ligne</span></div>
     <div class="widget-body">
-      <div class="online-list">
-        <div class="online-user"><div class="online-dot admin"></div><span style="color:#e74c3c">Admin</span></div>
-        <div class="online-user"><div class="online-dot"></div><span>Joueur</span></div>
-      </div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:#444;text-transform:uppercase">2 membres en ligne</div>
+      <div class="online-list" id="online-list"></div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:#444;text-transform:uppercase" id="online-count"></div>
     </div>
   </div>
   <div class="widget">
@@ -504,14 +501,44 @@ document.addEventListener('click', function(e) {
 <script>
 window.addEventListener('DOMContentLoaded', function(){
   NRPUsers.applyHeader();
-  // Mettre à jour les compteurs de catégories
+
+  // ── Widget "En Ligne" : membres avec couleur de grade ──
+  (function(){
+    function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    var users = NRPUsers.all().filter(function(u){ return !u.banned; });
+    var listEl  = document.getElementById('online-list');
+    var countEl = document.getElementById('online-count');
+    if (!listEl) return;
+    if (!users.length) {
+      listEl.innerHTML = '<div style="font-size:12px;color:#333">Aucun membre inscrit</div>';
+      if (countEl) countEl.textContent = '0 membre inscrit';
+      return;
+    }
+    var ROLES = window._NRP_ROLES || {};
+    var ORDER = ['fondateur','admin','moderateur','staff','vip','membre'];
+    users.sort(function(a,b){
+      return ORDER.indexOf(a.role||'membre') - ORDER.indexOf(b.role||'membre');
+    });
+    var html = '';
+    users.slice(0, 10).forEach(function(u){
+      var r = ROLES[u.role] || ROLES.membre || {color:'#aaa'};
+      html += '<div class="online-user">'
+        + '<div class="online-dot" style="background:'+r.color+';box-shadow:0 0 5px '+r.color+'"></div>'
+        + '<span style="color:'+r.color+';font-family:\'Barlow Condensed\',sans-serif;font-size:13px;letter-spacing:1px">'+esc(u.pseudo)+'</span>'
+        + '</div>';
+    });
+    listEl.innerHTML = html;
+    var n = users.length;
+    if (countEl) countEl.textContent = n + ' membre'+(n>1?'s':'')+' inscrit'+(n>1?'s':'');
+  })();
+
+  // ── Compteurs de catégories ──
   var cats=['annonces','presentations','discussions','cand-police','cand-medical','cand-staff','signalements','debans'];
   cats.forEach(function(cat){
     var el=document.getElementById('cnt-'+cat);
     if(!el) return;
     var topics=NRP.getTopics(cat);
     el.textContent=topics.length;
-    // Dernier post
     var row=el.closest('.thread');
     if(!row) return;
     var lastTitle=row.querySelector('.thread-last-title');
