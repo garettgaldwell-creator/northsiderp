@@ -25,11 +25,12 @@
   function _color(p){var h=0;for(var i=0;i<p.length;i++)h+=p.charCodeAt(i);return COLORS[h%COLORS.length];}
 
   var ROLES={
-    membre:    {label:'Membre',     color:'#aaa'},
-    vip:       {label:'VIP',        color:'#f59e0b'},
-    staff:     {label:'Staff',      color:'#3b9fd8'},
+    fondateur: {label:'Fondateur',  color:'#ffd700'},
+    admin:     {label:'Admin',      color:'#e74c3c'},
     moderateur:{label:'Modérateur', color:'#8b5cf6'},
-    admin:     {label:'Admin',      color:'#e74c3c'}
+    staff:     {label:'Staff',      color:'#3b9fd8'},
+    vip:       {label:'VIP',        color:'#f59e0b'},
+    membre:    {label:'Membre',     color:'#aaa'}
   };
 
   function _esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -96,6 +97,40 @@
     },
 
     all: function(){return _loadUsers();},
+
+    getById: function(id){
+      return _loadUsers().find(function(u){return u.id===id;})||null;
+    },
+
+    setRole: function(id, role){
+      if(!ROLES[role]) return false;
+      var users=_loadUsers();
+      var u=users.find(function(u){return u.id===id;});
+      if(!u) return false;
+      u.role=role;
+      _saveUsers(users);
+      var s=_loadSess();
+      if(s&&s.id===id){s.role=role;_saveSess(s);}
+      return true;
+    },
+
+    setBan: function(id, banned){
+      var users=_loadUsers();
+      var u=users.find(function(u){return u.id===id;});
+      if(!u) return false;
+      u.banned=!!banned;
+      _saveUsers(users);
+      return true;
+    },
+
+    updateUser: function(id, data){
+      var users=_loadUsers();
+      var u=users.find(function(u){return u.id===id;});
+      if(!u) return false;
+      ['email','bio','steamid'].forEach(function(k){if(data[k]!==undefined)u[k]=data[k];});
+      _saveUsers(users);
+      return true;
+    },
 
     /* Rend le header dynamique selon connexion */
     applyHeader: function(){

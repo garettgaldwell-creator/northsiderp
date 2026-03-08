@@ -28,7 +28,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 .sbi{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;color:var(--text-dim);border-left:2px solid transparent;transition:all .18s;user-select:none}
 .sbi:hover{color:var(--white);background:rgba(255,255,255,.03)}
 .sbi.on{color:var(--white);background:rgba(192,57,43,.08);border-left-color:var(--red-bright)}
-.sic{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sic{width:18px;height:18px;flex-shrink:0;display:block;overflow:visible}
 .sbsep{height:1px;background:var(--border);margin:6px 16px}
 /* main */
 .am{flex:1;padding:28px 32px;overflow-y:auto;min-width:0}
@@ -105,7 +105,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 .qag{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .qab{background:var(--dark3);border:1px solid var(--border-2);border-radius:var(--radius-md);padding:16px 12px;text-align:center;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);transition:all .18s}
 .qab:hover{border-color:var(--border-red);color:var(--white);background:rgba(192,57,43,.07);transform:translateY(-1px)}
-.qai{font-size:22px;display:block;margin-bottom:6px}
+.qai{width:22px;height:22px;display:block;margin:0 auto 6px}
 /* log */
 .li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
 .li:last-child{border-bottom:none}
@@ -133,6 +133,18 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 @keyframes tIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes tOut{to{transform:translateX(110%);opacity:0}}
 @media(max-width:860px){.sb{display:none}.fr.c2,.fr.c3{grid-template-columns:1fr}.qag{grid-template-columns:1fr 1fr}}
+/* user mgmt */
+.data-tbl{width:100%;border-collapse:collapse;font-family:'Rajdhani',sans-serif;font-size:13px}
+.data-tbl th{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left;background:rgba(10,10,15,.6)}
+.data-tbl td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+.data-tbl tr:last-child td{border-bottom:none}
+.data-tbl tbody tr:hover td{background:rgba(255,255,255,.018)}
+.uav{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:15px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.1)}
+.rbadge{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;padding:3px 8px;border-radius:3px;white-space:nowrap}
+.sbadge-ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--green-b)}
+.sbadge-ban{background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.3);color:var(--red-bright)}
+.filt-sel{background:var(--dark3);border:1px solid var(--border-2);color:var(--text-dim);font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;padding:7px 12px;border-radius:6px;cursor:pointer;outline:none;transition:border-color .18s}
+.filt-sel:focus{border-color:rgba(192,57,43,.4)}
 </style>
 </head>
 <body class="ab">
@@ -163,7 +175,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
   <span class="abadge">ADMINISTRATION</span>
   <div class="atr">
     <div class="ausr"><div class="aav">A</div><span>Admin</span></div>
-    <button class="alink" onclick="window.open('index.html','_blank')">👁 Forum</button>
+    <button class="alink" onclick="window.open('index.html','_blank')" style="display:inline-flex;align-items:center;gap:5px"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><path d="M1 10s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7z"/><circle cx="10" cy="10" r="3"/></svg> Forum</button>
     <button class="alink" onclick="doLogout()">Déconnexion</button>
   </div>
 </div>
@@ -174,26 +186,27 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 <nav class="sb">
   <div class="sbs">
     <div class="sbl">Dashboard</div>
-    <div class="sbi on" data-p="dashboard"><span class="sic">📊</span> Vue d'ensemble</div>
-    <div class="sbi" data-p="activity"><span class="sic">📋</span> Journal</div>
+    <div class="sbi on" data-p="dashboard"><svg class="sic" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="10" width="4" height="8" rx="1"/><rect x="8" y="6" width="4" height="12" rx="1"/><rect x="14" y="2" width="4" height="16" rx="1"/></svg> Vue d'ensemble</div>
+    <div class="sbi" data-p="activity"><svg class="sic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><path d="M7 8h6M7 12h4" stroke-linecap="round"/></svg> Journal</div>
   </div>
   <div class="sbsep"></div>
   <div class="sbs">
     <div class="sbl">Forum</div>
-    <div class="sbi" data-p="announcements"><span class="sic">📣</span> Annonces</div>
-    <div class="sbi" data-p="topics"><span class="sic">💬</span> Topics & Candidatures</div>
-    <div class="sbi" data-p="create-topic"><span class="sic">✏️</span> Créer un topic</div>
+    <div class="sbi" data-p="announcements"><svg class="sic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><path d="M2 8h3l7-4v10L5 11H2V8z" stroke-linejoin="round"/><path d="M5 11v5" stroke-linecap="round"/><path d="M15 7a4 4 0 010 6" stroke-linecap="round"/></svg> Annonces</div>
+    <div class="sbi" data-p="topics"><svg class="sic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><path d="M3 4h14a1 1 0 011 1v8a1 1 0 01-1 1H7l-4 3.5V5a1 1 0 011-1z" stroke-linejoin="round"/></svg> Topics &amp; Candidatures</div>
+    <div class="sbi" data-p="create-topic"><svg class="sic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 2.5l4 4L6 18H2v-4z" stroke-linejoin="round"/><path d="M11 5l4 4" stroke-linecap="round"/></svg> Créer un topic</div>
   </div>
   <div class="sbsep"></div>
   <div class="sbs">
     <div class="sbl">Serveur</div>
-    <div class="sbi" data-p="server"><span class="sic">🖥️</span> Serveur GMod</div>
-    <div class="sbi" data-p="settings"><span class="sic">⚙️</span> Paramètres</div>
+    <div class="sbi" data-p="server"><svg class="sic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="3" width="16" height="11" rx="1.5"/><path d="M7 18h6M10 14v4" stroke-linecap="round"/></svg> Serveur GMod</div>
+    <div class="sbi" data-p="settings"><svg class="sic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="3"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.59 4.59l1.41 1.41M14 14l1.41 1.41M4.59 15.41l1.41-1.41M14 6l1.41-1.41" stroke-linecap="round"/></svg> Paramètres</div>
   </div>
   <div class="sbsep"></div>
   <div class="sbs">
     <div class="sbl">Communauté</div>
-    <div class="sbi" data-p="users"><span class="sic">👥</span> Membres</div>
+    <div class="sbi" data-p="users"><svg class="sic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="3"/><path d="M1 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/><circle cx="14.5" cy="6.5" r="2.5"/><path d="M17.5 17c0-2.5-1.3-4.6-3.5-5.5" stroke-linecap="round"/></svg> Membres</div>
+    <div class="sbi" data-p="manage-users"><svg class="sic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="6" r="3"/><path d="M2 18c0-3 2.2-5.5 5-5.9" stroke-linecap="round"/><rect x="11" y="12" width="8" height="6" rx="1.5"/><path d="M14 15l1 1 2-2" stroke-linecap="round" stroke-linejoin="round"/></svg> Gestion utilisateurs</div>
   </div>
 </nav>
 
@@ -224,12 +237,12 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
       <div class="chd"><div class="ct">Accès rapides</div></div>
       <div class="cb">
         <div class="qag">
-          <div class="qab" onclick="goP('server')"><span class="qai">🖥️</span>Serveur</div>
-          <div class="qab" onclick="goP('announcements')"><span class="qai">📣</span>Annonce</div>
-          <div class="qab" onclick="goP('settings')"><span class="qai">⚙️</span>Paramètres</div>
-          <div class="qab" onclick="goP('users')"><span class="qai">👥</span>Membres</div>
-          <div class="qab" onclick="window.open('index.html','_blank')"><span class="qai">👁️</span>Prévisualiser</div>
-          <div class="qab" onclick="goP('create-topic')"><span class="qai">✏️</span>Topic</div>
+          <div class="qab" onclick="goP('server')"><svg class="qai" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="3" width="16" height="11" rx="1.5"/><path d="M7 18h6M10 14v4" stroke-linecap="round"/></svg>Serveur</div>
+          <div class="qab" onclick="goP('announcements')"><svg class="qai" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><path d="M2 8h3l7-4v10L5 11H2V8z" stroke-linejoin="round"/><path d="M5 11v5" stroke-linecap="round"/><path d="M15 7a4 4 0 010 6" stroke-linecap="round"/></svg>Annonce</div>
+          <div class="qab" onclick="goP('settings')"><svg class="qai" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="3"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.59 4.59l1.41 1.41M14 14l1.41 1.41M4.59 15.41l1.41-1.41M14 6l1.41-1.41" stroke-linecap="round"/></svg>Paramètres</div>
+          <div class="qab" onclick="goP('manage-users')"><svg class="qai" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="3"/><path d="M1 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/><circle cx="14.5" cy="6.5" r="2.5"/><path d="M17.5 17c0-2.5-1.3-4.6-3.5-5.5" stroke-linecap="round"/></svg>Membres</div>
+          <div class="qab" onclick="window.open('index.html','_blank')"><svg class="qai" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><path d="M1 10s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7z"/><circle cx="10" cy="10" r="3"/></svg>Prévisualiser</div>
+          <div class="qab" onclick="goP('create-topic')"><svg class="qai" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 2.5l4 4L6 18H2v-4z" stroke-linejoin="round"/><path d="M11 5l4 4" stroke-linecap="round"/></svg>Topic</div>
         </div>
       </div>
     </div>
@@ -240,7 +253,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 <div class="ap" id="pg-announcements">
   <div class="ph">
     <div><div class="pht">ANNONCE <em>PRINCIPALE</em></div><div class="phs">Modifie ce qui est affiché sur l'index en temps réel</div></div>
-    <button class="btn btn-red" onclick="saveAnn()">💾 Appliquer sur l'index</button>
+    <button class="btn btn-red" onclick="saveAnn()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><rect x="6" y="2" width="8" height="5" fill="currentColor" stroke="none" rx=".5"/><rect x="5" y="11" width="10" height="6" rx=".5"/></svg> Appliquer sur l'index</button>
   </div>
   <div class="card">
     <div class="chd"><div class="ct">Bandeau supérieur (barre rouge haut de page)</div></div>
@@ -251,7 +264,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
         <span class="fhint">Visible uniquement si l'option « Bandeau » est activée dans Paramètres</span>
       </div>
       <div style="display:flex;justify-content:flex-end">
-        <button class="btn btn-red" onclick="saveAnn()">💾 Appliquer</button>
+        <button class="btn btn-red" onclick="saveAnn()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><rect x="6" y="2" width="8" height="5" fill="currentColor" stroke="none" rx=".5"/><rect x="5" y="11" width="10" height="6" rx=".5"/></svg> Appliquer</button>
       </div>
     </div>
   </div>
@@ -262,7 +275,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
       <div class="fg"><label class="fl">Corps du texte</label><textarea class="fta" id="ann-text"></textarea></div>
       <div class="fg"><label class="fl">Signataire (affiché après le tiret)</label><input class="fi" type="text" id="ann-sign"></div>
       <div style="display:flex;justify-content:flex-end">
-        <button class="btn btn-red" onclick="saveAnn()">💾 Appliquer sur l'index</button>
+        <button class="btn btn-red" onclick="saveAnn()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><rect x="6" y="2" width="8" height="5" fill="currentColor" stroke="none" rx=".5"/><rect x="5" y="11" width="10" height="6" rx=".5"/></svg> Appliquer sur l'index</button>
       </div>
     </div>
   </div>
@@ -272,7 +285,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 <div class="ap" id="pg-server">
   <div class="ph">
     <div><div class="pht">SERVEUR <em>GMOD</em></div><div class="phs">Données affichées dans la stats-bar et sidebar de l'index</div></div>
-    <button class="btn btn-red" onclick="saveSrv()">💾 Appliquer sur le forum</button>
+    <button class="btn btn-red" onclick="saveSrv()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><rect x="6" y="2" width="8" height="5" fill="currentColor" stroke="none" rx=".5"/><rect x="5" y="11" width="10" height="6" rx=".5"/></svg> Appliquer sur le forum</button>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
     <div class="card">
@@ -306,7 +319,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
             </select>
           </div>
         </div>
-        <button class="btn btn-red" onclick="saveSrv()">💾 Appliquer sur le forum</button>
+        <button class="btn btn-red" onclick="saveSrv()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><rect x="6" y="2" width="8" height="5" fill="currentColor" stroke="none" rx=".5"/><rect x="5" y="11" width="10" height="6" rx=".5"/></svg> Appliquer sur le forum</button>
       </div>
     </div>
   </div>
@@ -316,7 +329,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 <div class="ap" id="pg-settings">
   <div class="ph">
     <div><div class="pht">PARAMÈTRES DU <em>FORUM</em></div><div class="phs">Toutes les modifications sont appliquées à l'index au prochain chargement</div></div>
-    <button class="btn btn-red" onclick="saveCfg()">💾 Tout sauvegarder</button>
+    <button class="btn btn-red" onclick="saveCfg()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><rect x="6" y="2" width="8" height="5" fill="currentColor" stroke="none" rx=".5"/><rect x="5" y="11" width="10" height="6" rx=".5"/></svg> Tout sauvegarder</button>
   </div>
   <div class="card" style="margin-bottom:18px">
     <div class="chd"><div class="ct">Informations générales</div></div>
@@ -362,22 +375,71 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
     </div>
   </div>
   <div style="display:flex;justify-content:flex-end;padding-top:4px">
-    <button class="btn btn-red" onclick="saveCfg()">💾 Sauvegarder et appliquer sur le forum</button>
+    <button class="btn btn-red" onclick="saveCfg()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><rect x="6" y="2" width="8" height="5" fill="currentColor" stroke="none" rx=".5"/><rect x="5" y="11" width="10" height="6" rx=".5"/></svg> Sauvegarder et appliquer sur le forum</button>
   </div>
 </div>
 
+<!-- ══ MEMBRES (compteur caché pour compatibilité loadAll) ══ -->
+<input type="hidden" id="u-members">
+
 <!-- ══ MEMBRES ══ -->
 <div class="ap" id="pg-users">
-  <div class="ph"><div><div class="pht">GESTION DES <em>MEMBRES</em></div><div class="phs">Compteur affiché sur l'index</div></div></div>
+  <div class="ph">
+    <div><div class="pht">GESTION DES <em>MEMBRES</em></div><div class="phs">Compteur affiché sur l'index</div></div>
+  </div>
   <div class="card">
     <div class="chd"><div class="ct">Compteur membres (stats-bar de l'index)</div></div>
     <div class="cb" style="display:flex;gap:14px;align-items:flex-end">
       <div class="fg" style="flex:1">
         <label class="fl">Nombre de membres à afficher</label>
-        <input class="fi" type="text" id="u-members" placeholder="247">
+        <input class="fi" type="text" id="u-members-vis" placeholder="247">
       </div>
-      <button class="btn btn-red" onclick="saveMembers()" style="margin-bottom:0">💾 Mettre à jour l'index</button>
+      <button class="btn btn-red" onclick="saveMembers()" style="margin-bottom:0"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><rect x="6" y="2" width="8" height="5" fill="currentColor" stroke="none" rx=".5"/><rect x="5" y="11" width="10" height="6" rx=".5"/></svg> Mettre à jour l'index</button>
     </div>
+  </div>
+</div>
+
+<!-- ══ GESTION UTILISATEURS ══ -->
+<div class="ap" id="pg-manage-users">
+  <div class="ph">
+    <div><div class="pht">GESTION DES <em>UTILISATEURS</em></div><div class="phs">Profils, grades et modération des membres</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="admLoadUsers()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 3.5A8 8 0 014 14" stroke-linecap="round"/><path d="M3.5 16.5A8 8 0 0116 6" stroke-linecap="round"/><path d="M16 3v4h-4M4 17v-4h4" stroke-linecap="round" stroke-linejoin="round"/></svg> Actualiser</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="sg" style="margin-bottom:20px">
+    <div class="sc sg2"><div class="scl">Total membres</div><div class="scv" id="ust-total">0</div><div class="sch">inscrits</div></div>
+    <div class="sc sr"><div class="scl">Fondateurs &amp; Admins</div><div class="scv" id="ust-admins">0</div><div class="sch">comptes élevés</div></div>
+    <div class="sc sb2"><div class="scl">Modérateurs</div><div class="scv" id="ust-mods">0</div><div class="sch">en activité</div></div>
+    <div class="sc sa"><div class="scl">Bannis</div><div class="scv" id="ust-banned">0</div><div class="sch">comptes suspendus</div></div>
+  </div>
+
+  <!-- Filtres -->
+  <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;align-items:center">
+    <input class="fi" type="text" id="usr-search" placeholder="Rechercher un pseudo…" style="max-width:220px" oninput="admLoadUsers()">
+    <select class="filt-sel" id="usr-filter-role" onchange="admLoadUsers()">
+      <option value="">Tous les grades</option>
+      <option value="fondateur">Fondateur</option>
+      <option value="admin">Admin</option>
+      <option value="moderateur">Modérateur</option>
+      <option value="staff">Staff</option>
+      <option value="vip">VIP</option>
+      <option value="membre">Membre</option>
+    </select>
+    <select class="filt-sel" id="usr-filter-status" onchange="admLoadUsers()">
+      <option value="">Tous les statuts</option>
+      <option value="actif">Actifs</option>
+      <option value="banni">Bannis</option>
+    </select>
+  </div>
+
+  <!-- Tableau -->
+  <div class="card">
+    <div class="chd">
+      <div class="ct">Membres</div>
+      <span id="usr-count" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted)">0 membre(s)</span>
+    </div>
+    <div id="usr-list" style="padding:0"></div>
   </div>
 </div>
 
@@ -386,7 +448,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 <div class="ap" id="pg-topics">
   <div class="ph">
     <div><div class="pht">TOPICS & <em>CANDIDATURES</em></div><div class="phs">Tous les posts soumis par les membres — modération en direct</div></div>
-    <button class="btn btn-ghost btn-sm" onclick="adminLoadTopics()">🔄 Actualiser</button>
+    <button class="btn btn-ghost btn-sm" onclick="adminLoadTopics()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 3.5A8 8 0 014 14" stroke-linecap="round"/><path d="M3.5 16.5A8 8 0 0116 6" stroke-linecap="round"/><path d="M16 3v4h-4M4 17v-4h4" stroke-linecap="round" stroke-linejoin="round"/></svg> Actualiser</button>
   </div>
 
   <!-- Filtres -->
@@ -449,7 +511,7 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
       </div>
       <div style="display:flex;gap:10px;justify-content:flex-end">
         <button class="btn btn-ghost" onclick="goP('dashboard')">Annuler</button>
-        <button class="btn btn-red" onclick="pubTopic()">📤 Publier</button>
+        <button class="btn btn-red" onclick="pubTopic()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><path d="M10 2v11" stroke-linecap="round"/><path d="M5 7l5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16h14" stroke-linecap="round"/></svg> Publier</button>
       </div>
     </div>
   </div>
@@ -465,6 +527,55 @@ body.ab{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
 </div>
 
 </main>
+</div>
+
+<!-- ══ MODAL EDIT USER ══ -->
+<div class="mo" id="mo-edit-user">
+  <div class="md" style="max-width:500px">
+    <div class="mhd">
+      <div class="mtt">MODIFIER L'UTILISATEUR</div>
+      <div class="mcl" onclick="closeMo('mo-edit-user')">✕</div>
+    </div>
+    <div class="mb">
+      <input type="hidden" id="eu-id">
+      <div class="fr c2">
+        <div class="fg">
+          <label class="fl">Pseudo</label>
+          <input class="fi" type="text" id="eu-pseudo" readonly style="opacity:.55;cursor:not-allowed">
+        </div>
+        <div class="fg">
+          <label class="fl">Grade</label>
+          <select class="fsel" id="eu-role">
+            <option value="fondateur">⭐ Fondateur</option>
+            <option value="admin">Admin</option>
+            <option value="moderateur">Modérateur</option>
+            <option value="staff">Staff</option>
+            <option value="vip">VIP</option>
+            <option value="membre">Membre</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Email</label>
+        <input class="fi" type="email" id="eu-email">
+      </div>
+      <div class="fg">
+        <label class="fl">Steam ID</label>
+        <input class="fi" type="text" id="eu-steamid" placeholder="STEAM_0:0:000000">
+      </div>
+      <div class="fg">
+        <label class="fl">Biographie</label>
+        <textarea class="fta" id="eu-bio" style="min-height:80px" placeholder="Bio du membre…"></textarea>
+      </div>
+      <div id="eu-ban-info" style="display:none;padding:10px;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);border-radius:6px;font-size:12px;color:var(--red-bright);font-family:'Share Tech Mono',monospace;letter-spacing:1px">
+        ⚠ Ce compte est actuellement BANNI
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-ghost" onclick="closeMo('mo-edit-user')">Annuler</button>
+      <button class="btn btn-red" onclick="saveEditUser()"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="14" height="16" rx="1.5"/><rect x="6" y="2" width="8" height="5" fill="currentColor" stroke="none" rx=".5"/><rect x="5" y="11" width="10" height="6" rx=".5"/></svg> Sauvegarder</button>
+    </div>
+  </div>
 </div>
 
 <div id="tw"></div>
@@ -491,7 +602,8 @@ function toast(msg, type){
   var w = document.getElementById('tw');
   var el = document.createElement('div');
   el.className = 'tst'+(type==='err'?' te':type==='warn'?' tw2':'');
-  el.innerHTML = '<span>'+(type==='err'?'⚠️':type==='warn'?'⚡':'✓')+'</span> '+msg;
+  var _ico={err:'<svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 2L2 17h16L10 2z" stroke-linejoin="round"/><path d="M10 9v3M10 15v.5" stroke-linecap="round"/></svg>',warn:'<svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M11 2L3 12h7l-1 6 9-10h-7l1-6z"/></svg>',ok:'<svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 10l5 5 9-9" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
+  el.innerHTML = '<span>'+(_ico[type]||_ico.ok)+'</span> '+msg;
   w.appendChild(el);
   setTimeout(function(){ el.remove(); }, 2900);
 }
@@ -544,6 +656,7 @@ function loadAll(){
   stgl('opt-inscr','optInscriptions'); stgl('opt-band','optBandeau'); stgl('opt-maint','optMaintenance');
   // Membres
   sv('u-members','membersCount');
+  sv('u-members-vis','membersCount');
   // Dashboard
   refreshDash(d);
   refreshSrvPreview(d);
@@ -633,14 +746,14 @@ function saveCfg(){
 }
 
 function saveMembers(){
-  var v = document.getElementById('u-members').value.trim();
+  var vEl = document.getElementById('u-members-vis')||document.getElementById('u-members');
+  var v = vEl ? vEl.value.trim() : '';
   NRP.set('membersCount', v);
-  // Sync avec cfg-members
   var cm = document.getElementById('cfg-members');
   if(cm) cm.value = v;
   refreshDash();
   logA('<b>Membres</b> : compteur mis à jour → '+v);
-  toast('✓ Compteur membres mis à jour sur l\'index !');
+  toast('Compteur membres mis à jour sur l\'index !');
 }
 
 function pubTopic(){
@@ -661,6 +774,7 @@ function pubTopic(){
 window.addEventListener('DOMContentLoaded', function(){
   loadAll();
   adminLoadTopics();
+  admLoadUsers();
   // Vérif session toutes les 60s
   setInterval(function(){
     if(!NRPAuth.isLoggedIn()){
@@ -738,7 +852,7 @@ function adminLoadTopics() {
       + '<td>'
       +   '<button onclick="adminDeleteTopic(\''+r.cat+'\',\''+t.id+'\',this)" '
       +   'style="background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.25);color:var(--red-bright);border-radius:4px;padding:5px 10px;cursor:pointer;font-size:11px;transition:all .15s" '
-      +   'title="Supprimer">🗑 Supprimer</button>'
+      +   'title="Supprimer"><svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5h14" stroke-linecap="round"/><path d="M8 5V3h4v2" stroke-linecap="round"/><path d="M6 5l1 12h6l1-12" stroke-linejoin="round"/></svg> Supprimer</button>'
       + '</td>'
       + '</tr>';
   });
@@ -770,6 +884,140 @@ function adminDeleteTopic(cat, id, btn) {
   toast('Topic supprimé.','warn');
   logA('<b>Topic supprimé</b> ('+cat+')');
   refreshDash();
+}
+</script>
+
+<script>
+// ═══════════════════════════════════════════════
+//  GESTION UTILISATEURS
+// ═══════════════════════════════════════════════
+var _ROLE_ORDER = ['fondateur','admin','moderateur','staff','vip','membre'];
+var _ROLE_COLORS = {fondateur:'#ffd700',admin:'#e74c3c',moderateur:'#8b5cf6',staff:'#3b9fd8',vip:'#f59e0b',membre:'#aaa'};
+var _ROLE_LABELS = {fondateur:'Fondateur',admin:'Admin',moderateur:'Modérateur',staff:'Staff',vip:'VIP',membre:'Membre'};
+
+function admLoadUsers() {
+  var search      = (document.getElementById('usr-search')||{}).value||'';
+  var filterRole  = (document.getElementById('usr-filter-role')||{}).value||'';
+  var filterSt    = (document.getElementById('usr-filter-status')||{}).value||'';
+  var users = NRPUsers.all();
+
+  // stats
+  var total  = users.length;
+  var admins = users.filter(function(u){return u.role==='fondateur'||u.role==='admin';}).length;
+  var mods   = users.filter(function(u){return u.role==='moderateur';}).length;
+  var banned = users.filter(function(u){return u.banned;}).length;
+  function _s(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+  _s('ust-total',total);_s('ust-admins',admins);_s('ust-mods',mods);_s('ust-banned',banned);
+
+  // filter
+  var filtered = users.filter(function(u){
+    if(search && !u.pseudo.toLowerCase().includes(search.toLowerCase())) return false;
+    if(filterRole && u.role!==filterRole) return false;
+    if(filterSt==='banni' && !u.banned) return false;
+    if(filterSt==='actif' && u.banned) return false;
+    return true;
+  });
+  var cnt=document.getElementById('usr-count');
+  if(cnt)cnt.textContent=filtered.length+' membre(s)';
+
+  // sort by role priority
+  filtered.sort(function(a,b){
+    var ai=_ROLE_ORDER.indexOf(a.role); var bi=_ROLE_ORDER.indexOf(b.role);
+    if(ai<0)ai=99; if(bi<0)bi=99;
+    if(ai!==bi)return ai-bi;
+    return a.pseudo.localeCompare(b.pseudo);
+  });
+
+  var el=document.getElementById('usr-list');
+  if(!el)return;
+  if(!filtered.length){
+    el.innerHTML='<div style="padding:32px;text-align:center;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:1px;color:var(--text-muted);font-size:13px">Aucun utilisateur trouvé</div>';
+    return;
+  }
+
+  var sess=NRPUsers.current();
+  var curId=sess?sess.id:null;
+
+  var html='<table class="data-tbl"><thead><tr>'
+    +'<th>Membre</th><th>Grade</th><th>Email</th><th>Posts</th><th>Inscription</th><th>Statut</th><th>Actions</th>'
+    +'</tr></thead><tbody>';
+
+  filtered.forEach(function(u){
+    var rc=_ROLE_COLORS[u.role]||'#aaa';
+    var rl=_ROLE_LABELS[u.role]||u.role;
+    var isSelf=(u.id===curId);
+    var av='<div class="uav" style="background:'+_escH(u.color||'#e74c3c')+'">'+_escH(u.pseudo[0].toUpperCase())+'</div>';
+    var statusBadge=u.banned
+      ?'<span class="rbadge sbadge-ban">BANNI</span>'
+      :'<span class="rbadge sbadge-ok">ACTIF</span>';
+    var banBtn=u.banned
+      ?'<button onclick="admToggleBan(\''+u.id+'\',true)" class="btn btn-sm" style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);color:var(--green-b)">Débannir</button>'
+      :'<button onclick="admToggleBan(\''+u.id+'\',false)" class="btn btn-sm btn-danger">Bannir</button>';
+
+    html+='<tr>'
+      +'<td><div style="display:flex;align-items:center;gap:10px">'+av
+      +'<div><div style="font-weight:600;color:var(--white)">'+_escH(u.pseudo)+'</div>'
+      +(u.steamid?'<div style="font-family:\'Share Tech Mono\',monospace;font-size:9px;color:var(--text-muted)">'+_escH(u.steamid)+'</div>':'')
+      +'</div></div></td>'
+      +'<td><span class="rbadge" style="background:'+rc+'18;border:1px solid '+rc+'44;color:'+rc+'">'+rl+'</span></td>'
+      +'<td style="font-size:12px;color:var(--text-dim);max-width:160px;overflow:hidden;text-overflow:ellipsis">'+_escH(u.email)+'</td>'
+      +'<td style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:var(--white)">'+(u.posts||0)+'</td>'
+      +'<td style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--text-muted)">'+_escH(u.joined||'—')+'</td>'
+      +'<td>'+statusBadge+'</td>'
+      +'<td style="white-space:nowrap;display:flex;gap:6px;align-items:center">'
+      +'<button onclick="openEditUser(\''+u.id+'\')" class="btn btn-ghost btn-sm">Modifier</button>'
+      +(!isSelf?banBtn:'<span style="font-size:10px;color:var(--text-muted);font-family:\'Share Tech Mono\',monospace">(vous)</span>')
+      +'</td>'
+      +'</tr>';
+  });
+  html+='</tbody></table>';
+  el.innerHTML=html;
+}
+
+function openEditUser(id){
+  var u=NRPUsers.getById(id);
+  if(!u){toast('Utilisateur introuvable.','err');return;}
+  document.getElementById('eu-id').value=id;
+  document.getElementById('eu-pseudo').value=u.pseudo;
+  document.getElementById('eu-role').value=u.role||'membre';
+  document.getElementById('eu-email').value=u.email||'';
+  document.getElementById('eu-steamid').value=u.steamid||'';
+  document.getElementById('eu-bio').value=u.bio||'';
+  var banInfo=document.getElementById('eu-ban-info');
+  if(banInfo)banInfo.style.display=u.banned?'block':'none';
+  document.getElementById('mo-edit-user').classList.add('on');
+}
+
+function closeMo(id){
+  var el=document.getElementById(id);
+  if(el)el.classList.remove('on');
+}
+
+function saveEditUser(){
+  var id=document.getElementById('eu-id').value;
+  var role=document.getElementById('eu-role').value;
+  var email=document.getElementById('eu-email').value.trim();
+  var steamid=document.getElementById('eu-steamid').value.trim();
+  var bio=document.getElementById('eu-bio').value.trim();
+  if(!email||!email.includes('@')){toast('Email invalide.','err');return;}
+  NRPUsers.setRole(id,role);
+  NRPUsers.updateUser(id,{email:email,steamid:steamid,bio:bio});
+  closeMo('mo-edit-user');
+  admLoadUsers();
+  var u=NRPUsers.getById(id);
+  toast('Utilisateur '+(u?u.pseudo:'')+ ' mis à jour.');
+  logA('<b>Utilisateur</b> modifié — grade: '+(_ROLE_LABELS[role]||role));
+}
+
+function admToggleBan(id,isBanned){
+  var u=NRPUsers.getById(id);
+  if(!u)return;
+  var action=isBanned?'Débannir':'Bannir';
+  if(!confirm(action+' '+u.pseudo+' ?'))return;
+  NRPUsers.setBan(id,!isBanned);
+  admLoadUsers();
+  toast((isBanned?'Débannissement':'Bannissement')+' de '+u.pseudo+' appliqué.',isBanned?'':'warn');
+  logA('<b>'+(isBanned?'Débannissement':'Bannissement')+'</b> — '+u.pseudo);
 }
 </script>
 
