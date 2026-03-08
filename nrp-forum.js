@@ -26,7 +26,7 @@
     var url      = 'sujet.html?cat='+encodeURIComponent(opt.cat)+'&id='+encodeURIComponent(topic.id);
 
     var del = isAdmin
-      ? '<button onclick="event.preventDefault();NRPForum.deleteTopic(\''+opt.cat+'\',\''+_esc(topic.id)+'\',this)" style="background:none;border:none;cursor:pointer;color:#555;font-size:13px;padding:0 4px;transition:color .15s;flex-shrink:0" title="Supprimer">🗑</button>'
+      ? '<button onclick="event.preventDefault();NRPForum.deleteTopic(\''+opt.cat+'\',\''+_esc(topic.id)+'\',this)" style="background:none;border:none;cursor:pointer;color:#555;font-size:13px;padding:0 4px;transition:color .15s;flex-shrink:0" title="Supprimer">&#10005;</button>'
       : '';
     var statusSel = isAdmin
       ? '<select onchange="event.preventDefault();NRPForum.changeStatus(\''+opt.cat+'\',\''+_esc(topic.id)+'\',this.value)" style="background:#131318;border:1px solid #26263a;color:#aaa;font-size:10px;border-radius:4px;padding:3px 6px;cursor:pointer;font-family:\'Share Tech Mono\',monospace;letter-spacing:1px">'
@@ -35,7 +35,7 @@
       : _badge(topic.status);
 
     return '<a href="'+url+'" class="thread" style="text-decoration:none">'
-      +'<div class="thread-icon" style="font-size:20px">'+(opt.icon||'💬')+'</div>'
+      +'<div class="thread-icon" style="font-size:20px">'+(opt.icon||'<svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>')+'</div>'
       +'<div class="thread-info" style="min-width:0;flex:1">'
       +  '<div class="thread-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
       +    '<span>'+_esc(topic.title||'Sans titre')+'</span>'

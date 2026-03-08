@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -230,8 +230,8 @@ function _renderPost(post, idx, cat, topicId, isAdmin) {
     +'<div class="post-footer">'
     +  (session ? '<button class="post-btn'+(isLiked?' liked':'')+'" onclick="doLike(\''+_escRaw(postId)+'\',\''+_escRaw(topicId)+'\',this)">♥ <span class="like-count">'+likes.length+'</span></button>' : '<span style="font-size:11px;color:#333">♥ '+likes.length+'</span>')
     +  (session ? '<button class="post-btn" onclick="doQuote(\''+_escRaw(postId)+'\',\''+_escRaw(post.author||'')+'\',this)">❝ Citer</button>' : '')
-    +  (canDel && !isOp ? '<button class="post-btn" onclick="doDeleteReply(\''+_escRaw(postId)+'\')">🗑 Sup.</button>' : '')
-    +  (isAdmin && isOp ? '<button class="post-btn" onclick="doDeleteTopic()">🗑 Topic</button>' : '')
+    +  (canDel && !isOp ? '<button class="post-btn" onclick="doDeleteReply(\''+_escRaw(postId)+'\')">Sup.</button>' : '')
+    +  (isAdmin && isOp ? '<button class="post-btn" onclick="doDeleteTopic()">Topic</button>' : '')
     +  '<span class="post-num">#'+idx+'</span>'
     +'</div>'
     +'</div>';
