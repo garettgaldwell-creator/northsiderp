@@ -12,7 +12,7 @@
 .post-card{background:var(--dark);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:16px;overflow:hidden;transition:border-color .2s}
 .post-card.op{border-top:3px solid var(--red);}
 .post-card-header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
-.post-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.1)}
+.post-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.1);object-fit:cover}
 .post-meta{flex:1;min-width:0}
 .post-pseudo{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:#f5f5ff}
 .post-role{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase}
@@ -205,6 +205,11 @@ function _renderPost(post, idx, cat, topicId, isAdmin) {
   var isOp    = idx === 0;
   var canDel  = isAdmin || (pseudo && pseudo === post.author);
   var postId  = post.id;
+  var rc      = roleObj.color;
+  var avStyle = 'border:2px solid '+rc+';box-shadow:0 0 7px '+rc+'88';
+  var avHtml  = (u && u.avatar)
+    ? '<img class="post-avatar" src="'+u.avatar+'" style="'+avStyle+'" alt="avatar">'
+    : '<div class="post-avatar" style="background:'+color+';'+avStyle+'">'+initial+'</div>';
 
   // Citation contenu
   var quoteHtml = '';
@@ -214,7 +219,7 @@ function _renderPost(post, idx, cat, topicId, isAdmin) {
 
   return '<div class="post-card'+(isOp?' op':'')+'" id="post-'+_escRaw(postId)+'">'
     +'<div class="post-card-header">'
-    +  '<div class="post-avatar" style="background:'+color+'">'+initial+'</div>'
+    +  avHtml
     +  '<div class="post-meta">'
     +    '<div class="post-pseudo">'+_escRaw(post.author||'Anonyme')+'</div>'
     +    '<div class="post-role" style="color:'+roleObj.color+'">'+roleObj.label+(isOp?' &nbsp;·&nbsp; <span style=\"color:#555\">Auteur</span>':'')+'</div>'
