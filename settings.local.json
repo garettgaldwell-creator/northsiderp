@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \":*)",
+      "Bash(node -e \":*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:/Users/Lucas/Desktop/forum_github_v6/_favicon.ps1\")"
+    ]
+  }
+}

@@ -127,9 +127,20 @@
       var users=_loadUsers();
       var u=users.find(function(u){return u.id===id;});
       if(!u) return false;
-      ['email','bio','steamid'].forEach(function(k){if(data[k]!==undefined)u[k]=data[k];});
+      ['email','bio','steamid','avatar'].forEach(function(k){if(data[k]!==undefined)u[k]=data[k];});
       _saveUsers(users);
       return true;
+    },
+
+    changePassword: function(id, oldPassword, newPassword){
+      var users=_loadUsers();
+      var u=users.find(function(u){return u.id===id;});
+      if(!u) return {ok:false,error:'Utilisateur introuvable.'};
+      if(u.pwd!==_hash(oldPassword)) return {ok:false,error:'Mot de passe actuel incorrect.'};
+      if(!newPassword||newPassword.length<6) return {ok:false,error:'Nouveau mot de passe trop court (6 min).'};
+      u.pwd=_hash(newPassword);
+      _saveUsers(users);
+      return {ok:true};
     },
 
     /* Rend le header dynamique selon connexion */
@@ -139,11 +150,17 @@
       var mobileActions=document.querySelector('.mobile-menu-actions');
       if(!actions) return;
       if(s){
+        var fullUser=this.getById(s.id);
         var r=ROLES[s.role]||ROLES.membre;
-        var initial=s.pseudo[0].toUpperCase();
-        var av='<div style="width:30px;height:30px;border-radius:50%;background:'+_esc(s.color||'#e74c3c')+';display:inline-flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:14px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.15)">'+initial+'</div>';
-        actions.innerHTML='<div style="display:flex;align-items:center;gap:10px">'+av+'<div style="display:flex;flex-direction:column;gap:1px"><span style="font-family:\'Bebas Neue\',sans-serif;font-size:14px;letter-spacing:2px;color:#f5f5ff">'+_esc(s.pseudo)+'</span><span style="font-family:\'Share Tech Mono\',monospace;font-size:9px;letter-spacing:1px;color:'+r.color+'">'+r.label+'</span></div><button onclick="NRPUsers.logout();location.reload()" class="btn btn-ghost" style="padding:5px 10px;font-size:10px;letter-spacing:2px">Déco</button></div>';
-        if(mobileActions) mobileActions.innerHTML='<button onclick="NRPUsers.logout();location.reload()" class="btn btn-ghost" style="flex:1">Déconnexion</button>';
+        var av;
+        if(fullUser&&fullUser.avatar){
+          av='<img src="'+fullUser.avatar+'" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.18);flex-shrink:0" alt="avatar">';
+        } else {
+          var initial=s.pseudo[0].toUpperCase();
+          av='<div style="width:32px;height:32px;border-radius:50%;background:'+_esc(s.color||'#e74c3c')+';display:inline-flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:15px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.15)">'+initial+'</div>';
+        }
+        actions.innerHTML='<div style="display:flex;align-items:center;gap:10px"><a href="profile.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;transition:opacity .2s" onmouseover="this.style.opacity=\'.8\'" onmouseout="this.style.opacity=\'1\'">'+av+'<div style="display:flex;flex-direction:column;gap:1px"><span style="font-family:\'Bebas Neue\',sans-serif;font-size:14px;letter-spacing:2px;color:#f5f5ff">'+_esc(s.pseudo)+'</span><span style="font-family:\'Share Tech Mono\',monospace;font-size:9px;letter-spacing:1px;color:'+r.color+'">'+r.label+'</span></div></a><button onclick="NRPUsers.logout();location.reload()" class="btn btn-ghost" style="padding:5px 10px;font-size:10px;letter-spacing:2px">D&eacute;co</button></div>';
+        if(mobileActions) mobileActions.innerHTML='<a href="profile.html" class="btn btn-ghost" style="flex:1">Mon profil</a><button onclick="NRPUsers.logout();location.reload()" class="btn btn-ghost" style="flex:1">D&eacute;connexion</button>';
       }
     }
   };

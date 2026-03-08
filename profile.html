@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mon Profil — NORTHSIDE RP</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="logo.png" type="image/png">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="stylesheet" href="style.css">
+<style>
+.profile-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px 60px;
+  min-height: calc(100vh - 200px);
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 18px;
+  width: 100%;
+  max-width: 860px;
+  align-items: start;
+}
+@media(max-width:680px){ .profile-grid { grid-template-columns: 1fr; } }
+
+.pf-panel {
+  background: rgba(14,14,18,0.97);
+  border: 1px solid #1a1a2e;
+  border-top: 2px solid #e74c3c;
+  border-radius: 14px;
+  padding: 28px 22px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.75);
+}
+
+/* ── Left: avatar card ── */
+.pf-avatar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.pf-avatar-ring {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.pf-avatar-ring:hover .pf-av-overlay { opacity: 1; }
+.pf-av-img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(192,57,43,.45);
+  display: block;
+}
+.pf-av-init {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px;
+  color: #fff;
+  border: 3px solid rgba(192,57,43,.45);
+}
+.pf-av-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0,0,0,.62);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.pf-av-overlay svg { width: 20px; height: 20px; fill: #fff; margin-bottom: 3px; }
+.pf-av-overlay span {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #fff;
+  text-transform: uppercase;
+}
+.pf-pseudo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: #f5f5ff;
+  text-align: center;
+}
+.pf-role {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+}
+.pf-rm-av {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #444;
+  cursor: pointer;
+  text-transform: uppercase;
+  border: none;
+  background: none;
+  padding: 2px 0;
+  transition: color .2s;
+  display: none;
+}
+.pf-rm-av:hover { color: #e74c3c; }
+.pf-hint {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #333;
+  text-transform: uppercase;
+  text-align: center;
+}
+.pf-divider { width: 100%; height: 1px; background: #1a1a2e; margin: 8px 0; }
+.pf-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid #131320;
+}
+.pf-stat-row:last-child { border-bottom: none; }
+.pf-stat-key {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #444;
+  text-transform: uppercase;
+}
+.pf-stat-val {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  color: #bbb;
+  font-weight: 600;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Right: edit panel ── */
+.pf-section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: #e74c3c;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1a1a2e;
+}
+.pf-sep { height: 1px; background: #1a1a2e; margin: 24px 0; }
+.pf-msg {
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  display: none;
+}
+.pf-msg.success { background: rgba(26,158,74,.1); border: 1px solid rgba(26,158,74,.3); color: #2ecc71; }
+.pf-msg.error   { background: rgba(192,57,43,.1);  border: 1px solid rgba(192,57,43,.3);  color: #e74c3c; }
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+
+<header>
+  <div class="header-top" id="dyn-banner">Serveur en developpement &mdash; Ouverture prochaine</div>
+  <div class="header-main">
+    <a href="index.html" class="logo"><img src="logo.png" alt="Northside RP"></a>
+    <nav>
+      <a href="index.html" id="nh">Forum</a>
+      <a href="reglement.html" id="nr">Reglement</a>
+      <a href="candidatures.html" id="nc">Candidatures</a>
+      <a href="boutique.html" id="nb">Boutique</a>
+    </nav>
+    <div class="header-actions">
+      <a href="login.html" class="btn btn-ghost">Connexion</a>
+      <a href="register.html" class="btn btn-red">S'inscrire</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu(this)"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Forum</a>
+    <a href="reglement.html">Reglement</a>
+    <a href="candidatures.html">Candidatures</a>
+    <a href="boutique.html">Boutique</a>
+    <div class="mobile-menu-actions">
+      <a href="login.html" class="btn btn-ghost" style="flex:1">Connexion</a>
+      <a href="register.html" class="btn btn-red" style="flex:1">S'inscrire</a>
+    </div>
+  </div>
+</header>
+
+<div class="profile-wrap">
+  <div class="profile-grid">
+
+    <!-- Colonne gauche -->
+    <div class="pf-panel pf-avatar-col">
+      <div class="pf-avatar-ring" onclick="triggerAvatarUpload()" title="Changer la photo de profil">
+        <div class="pf-av-init" id="pf-av-init" style="display:none"></div>
+        <img class="pf-av-img" id="pf-av-img" src="" alt="avatar" style="display:none">
+        <div class="pf-av-overlay">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 16c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm0-6c1.084 0 2 .916 2 2s-.916 2-2 2-2-.916-2-2 .916-2 2-2z"/><path d="M20 5h-2.586l-2.707-2.707A.996.996 0 0 0 14 2h-4a.996.996 0 0 0-.707.293L6.586 5H4c-1.103 0-2 .897-2 2v11c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2zm0 13H4V7h3c.266 0 .52-.105.707-.293L10.414 4h3.172l2.707 2.707A.996.996 0 0 0 17 7h3v11z"/></svg>
+          <span>Modifier</span>
+        </div>
+      </div>
+      <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="handleAvatarFile(this)">
+
+      <div class="pf-pseudo" id="pf-pseudo">—</div>
+      <div class="pf-role" id="pf-role">Membre</div>
+
+      <button class="pf-rm-av" id="pf-rm-av-btn" onclick="removeAvatar()">&#10005; Supprimer la photo</button>
+
+      <div class="pf-divider"></div>
+      <div style="width:100%">
+        <div class="pf-stat-row">
+          <span class="pf-stat-key">Messages</span>
+          <span class="pf-stat-val" id="pf-posts">0</span>
+        </div>
+        <div class="pf-stat-row">
+          <span class="pf-stat-key">Membre depuis</span>
+          <span class="pf-stat-val" id="pf-joined">—</span>
+        </div>
+        <div class="pf-stat-row">
+          <span class="pf-stat-key">SteamID</span>
+          <span class="pf-stat-val" id="pf-steam-disp" title="">—</span>
+        </div>
+      </div>
+      <div class="pf-hint">Cliquez sur la photo pour la modifier</div>
+    </div>
+
+    <!-- Colonne droite -->
+    <div class="pf-panel">
+      <!-- Section infos -->
+      <div class="pf-section-title">Informations du profil</div>
+      <div class="pf-msg success" id="pf-ok"></div>
+      <div class="pf-msg error"   id="pf-err"></div>
+
+      <div class="form-group">
+        <label class="form-label">Pseudo</label>
+        <input class="form-input" id="pf-pseudo-inp" disabled style="opacity:.45;cursor:not-allowed">
+        <div class="form-hint">Le pseudo ne peut pas etre modifie.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="pf-email" type="email" placeholder="email@exemple.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">SteamID <span style="color:#444">(optionnel)</span></label>
+        <input class="form-input" id="pf-steam" placeholder="STEAM_0:X:XXXXXXXX">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Biographie</label>
+        <textarea class="form-input" id="pf-bio" rows="4" maxlength="300"
+          placeholder="Decrivez-vous en quelques mots..."
+          style="resize:vertical;min-height:88px"
+          oninput="document.getElementById('pf-bio-count').textContent=this.value.length"></textarea>
+        <div class="form-hint"><span id="pf-bio-count">0</span>/300 caracteres</div>
+      </div>
+      <button class="btn btn-red btn-full" id="pf-save-btn" onclick="saveProfile()"
+        style="font-size:13px;padding:11px">Enregistrer les modifications</button>
+
+      <div class="pf-sep"></div>
+
+      <!-- Section mot de passe -->
+      <div class="pf-section-title">Changer le mot de passe</div>
+      <div class="pf-msg success" id="pf-pwd-ok"></div>
+      <div class="pf-msg error"   id="pf-pwd-err"></div>
+
+      <div class="form-group">
+        <label class="form-label">Mot de passe actuel</label>
+        <input class="form-input" id="pf-old-pwd" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nouveau mot de passe</label>
+          <input class="form-input" id="pf-new-pwd" type="password" placeholder="••••••••" autocomplete="new-password">
+          <div class="form-hint">6 caracteres minimum</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmation</label>
+          <input class="form-input" id="pf-new-pwd2" type="password" placeholder="••••••••" autocomplete="new-password">
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-full" id="pf-pwd-btn" onclick="changePassword()"
+        style="font-size:13px;padding:11px">Modifier le mot de passe</button>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="logo.png" alt="Northside RP"></div>
+  <div class="footer-links">
+    <a href="reglement.html">Reglement</a>
+    <a href="#">Mentions legales</a>
+    <a href="#" id="footer-discord">Discord</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Northside RP &mdash; Tous droits reserves</div>
+</footer>
+
+<script src="nrp-data.js"></script>
+<script src="nrp-auth.js"></script>
+<script src="nrp-users.js"></script>
+<script>
+// Redirige si non connecté
+(function(){
+  if (!NRPUsers.isLoggedIn()) window.location.replace('login.html?back=profile.html');
+})();
+
+var _pendingAvatar = null; // null = pas de changement, '' = suppression, 'data:...' = nouvelle image
+
+function _showMsg(id, msg) { var e=document.getElementById(id); if(e){e.textContent=msg;e.style.display='block';} }
+function _hideMsg(id)      { var e=document.getElementById(id); if(e) e.style.display='none'; }
+
+// ── Chargement du profil ──────────────────────────────────
+function loadProfile() {
+  var s = NRPUsers.current();
+  if (!s) return;
+  var u = NRPUsers.getById(s.id);
+  if (!u) return;
+  var r = window._NRP_ROLES[u.role] || window._NRP_ROLES.membre;
+
+  document.getElementById('pf-pseudo').textContent = u.pseudo;
+  document.getElementById('pf-role').textContent = r.label;
+  document.getElementById('pf-role').style.color = r.color;
+
+  // Avatar
+  renderAvatar(u);
+
+  // Stats
+  document.getElementById('pf-posts').textContent  = u.posts || 0;
+  document.getElementById('pf-joined').textContent = u.joined || '—';
+  var steamEl = document.getElementById('pf-steam-disp');
+  steamEl.textContent = u.steamid ? (u.steamid.length > 18 ? u.steamid.substring(0,17)+'…' : u.steamid) : '—';
+  steamEl.title = u.steamid || '';
+
+  // Formulaire
+  document.getElementById('pf-pseudo-inp').value = u.pseudo;
+  document.getElementById('pf-email').value  = u.email  || '';
+  document.getElementById('pf-steam').value  = u.steamid || '';
+  document.getElementById('pf-bio').value    = u.bio    || '';
+  document.getElementById('pf-bio-count').textContent = (u.bio || '').length;
+}
+
+function renderAvatar(u) {
+  var imgEl  = document.getElementById('pf-av-img');
+  var initEl = document.getElementById('pf-av-init');
+  var rmBtn  = document.getElementById('pf-rm-av-btn');
+  if (u.avatar) {
+    imgEl.src = u.avatar;
+    imgEl.style.display = 'block';
+    initEl.style.display = 'none';
+    rmBtn.style.display = 'block';
+  } else {
+    imgEl.style.display = 'none';
+    initEl.style.display = 'flex';
+    initEl.style.background = u.color || '#e74c3c';
+    initEl.textContent = u.pseudo[0].toUpperCase();
+    rmBtn.style.display = 'none';
+  }
+}
+
+// ── Upload avatar ─────────────────────────────────────────
+function triggerAvatarUpload() {
+  document.getElementById('avatar-file').click();
+}
+
+function handleAvatarFile(input) {
+  var file = input.files[0];
+  input.value = '';
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('Veuillez selectionner une image (JPG, PNG, WebP…)'); return; }
+  if (file.size > 8 * 1024 * 1024) { alert('Image trop lourde (8 Mo max).'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      // Crop carré centré, redimensionné à 200×200
+      var canvas = document.createElement('canvas');
+      canvas.width = 200; canvas.height = 200;
+      var ctx = canvas.getContext('2d');
+      var sx=0, sy=0, sw=img.width, sh=img.height;
+      if (img.width > img.height) { sx = (img.width-img.height)/2; sw = img.height; }
+      else                        { sy = (img.height-img.width)/2;  sh = img.width;  }
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 200, 200);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+      // Aperçu
+      var imgEl = document.getElementById('pf-av-img');
+      imgEl.src = dataUrl;
+      imgEl.style.display = 'block';
+      document.getElementById('pf-av-init').style.display = 'none';
+      document.getElementById('pf-rm-av-btn').style.display = 'block';
+      _pendingAvatar = dataUrl;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeAvatar() {
+  _pendingAvatar = '';
+  var s = NRPUsers.current();
+  var u = s ? NRPUsers.getById(s.id) : null;
+  var imgEl  = document.getElementById('pf-av-img');
+  var initEl = document.getElementById('pf-av-init');
+  var rmBtn  = document.getElementById('pf-rm-av-btn');
+  imgEl.style.display = 'none';
+  initEl.style.display = 'flex';
+  if (u) { initEl.style.background = u.color || '#e74c3c'; initEl.textContent = u.pseudo[0].toUpperCase(); }
+  rmBtn.style.display = 'none';
+}
+
+// ── Sauvegarde profil ─────────────────────────────────────
+function saveProfile() {
+  var s = NRPUsers.current();
+  if (!s) return;
+  var btn   = document.getElementById('pf-save-btn');
+  var email = document.getElementById('pf-email').value.trim();
+  var steam = document.getElementById('pf-steam').value.trim();
+  var bio   = document.getElementById('pf-bio').value;
+
+  if (email && !email.includes('@')) { _showMsg('pf-err','Email invalide.'); return; }
+
+  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  _hideMsg('pf-ok'); _hideMsg('pf-err');
+
+  var data = { email: email, bio: bio, steamid: steam };
+  if (_pendingAvatar !== null) data.avatar = _pendingAvatar || null;
+
+  var ok = NRPUsers.updateUser(s.id, data);
+  if (ok) {
+    _pendingAvatar = null;
+    _showMsg('pf-ok', 'Modifications enregistrees !');
+    loadProfile();
+    // Met à jour le header aussi
+    NRPUsers.applyHeader();
+  } else {
+    _showMsg('pf-err', 'Erreur lors de la sauvegarde.');
+  }
+  btn.disabled = false; btn.textContent = 'Enregistrer les modifications';
+}
+
+// ── Changement de mot de passe ────────────────────────────
+function changePassword() {
+  var s = NRPUsers.current();
+  if (!s) return;
+  var btn  = document.getElementById('pf-pwd-btn');
+  var old  = document.getElementById('pf-old-pwd').value;
+  var neu  = document.getElementById('pf-new-pwd').value;
+  var neu2 = document.getElementById('pf-new-pwd2').value;
+
+  _hideMsg('pf-pwd-ok'); _hideMsg('pf-pwd-err');
+
+  if (!old||!neu||!neu2) { _showMsg('pf-pwd-err','Remplissez tous les champs.'); return; }
+  if (neu !== neu2)       { _showMsg('pf-pwd-err','Les mots de passe ne correspondent pas.'); return; }
+
+  btn.disabled = true; btn.textContent = 'Modification…';
+  var res = NRPUsers.changePassword(s.id, old, neu);
+  if (res.ok) {
+    _showMsg('pf-pwd-ok','Mot de passe modifie avec succes !');
+    document.getElementById('pf-old-pwd').value = '';
+    document.getElementById('pf-new-pwd').value  = '';
+    document.getElementById('pf-new-pwd2').value = '';
+  } else {
+    _showMsg('pf-pwd-err', res.error || 'Erreur.');
+  }
+  btn.disabled = false; btn.textContent = 'Modifier le mot de passe';
+}
+
+// ── Menu mobile ───────────────────────────────────────────
+function toggleMenu(btn){ btn.classList.toggle('open'); document.getElementById('mobileMenu').classList.toggle('open'); }
+document.addEventListener('click', function(e){
+  var m=document.getElementById('mobileMenu'), h=document.querySelector('.hamburger');
+  if(m&&h&&!m.contains(e.target)&&!h.contains(e.target)){ m.classList.remove('open'); h.classList.remove('open'); }
+});
+
+// ── Init ──────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function(){
+  NRPUsers.applyHeader();
+  loadProfile();
+  // Bandeau
+  var d = NRP.all();
+  var banner = document.getElementById('dyn-banner');
+  if (banner) {
+    if (d.optBandeau === false) { banner.style.display = 'none'; }
+    else { banner.textContent = d.bannerText || banner.textContent; }
+  }
+  // Discord footer
+  var dUrl = d.discordUrl || '#';
+  var fd = document.getElementById('footer-discord');
+  if (fd) fd.href = dUrl;
+});
+</script>
+
+<script>
+(function(){
+  var canvas=document.getElementById('particles-canvas');
+  if(!canvas) return;
+  var ctx=canvas.getContext('2d'), W, H, particles=[];
+  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  function rand(a,b){ return a+Math.random()*(b-a); }
+  for(var i=0;i<40;i++) particles.push({x:rand(0,1),y:rand(0,1),vx:rand(-0.0002,0.0002),vy:rand(-0.0008,-0.0002),size:rand(0.8,2.2),type:Math.random()<0.4?'ember':'dust',alpha:rand(0.3,0.9),life:rand(0,1),speed:rand(0.0003,0.0008)});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(function(p){
+      p.life+=p.speed; if(p.life>1){p.life=0;p.x=rand(0,1);p.y=1;}
+      var x=p.x*W, y=(1-p.life)*H+p.y*H*0.1;
+      x+=Math.sin(p.life*Math.PI*2+p.x*10)*W*0.02;
+      var a=p.alpha*Math.sin(p.life*Math.PI);
+      if(p.type==='ember'){ ctx.beginPath(); ctx.arc(x,y,p.size,0,Math.PI*2); ctx.fillStyle='rgba(220,100,40,'+a+')'; ctx.fill(); }
+      else { ctx.beginPath(); ctx.arc(x,y,p.size*0.6,0,Math.PI*2); ctx.fillStyle='rgba(180,180,180,'+a*0.3+')'; ctx.fill(); }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
